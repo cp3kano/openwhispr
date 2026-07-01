@@ -1,0 +1,34 @@
+{
+  "name": "Common Cause Client Conversation",
+  "version": 1,
+  "status": "draft",
+  "output_format": {
+    "shape": "session-recap two-part internal",
+    "part1": ["how_it_went", "by_bucket", "anchor_phrases", "what_surprised_me"],
+    "part2": ["decided_this_session", "their_next_steps_max3", "my_next_steps", "tracking_doc_updates", "for_next_prep"],
+    "length_rule": "~1.5 screens; longer means transcribing, not synthesizing"
+  },
+  "goals": [
+    { "ord": 1, "label": "Operations", "kind": "bucket", "satisfied_when": "Client walked through how the business actually runs — a real workflow start to finish, where time goes, what's manual." },
+    { "ord": 2, "label": "People & pain", "kind": "bucket", "satisfied_when": "Friction named with a person attached: who is affected, what is stuck, what they tried and abandoned." },
+    { "ord": 3, "label": "Existing AI & tooling", "kind": "bucket", "satisfied_when": "What they use (or pretend to use) is on the table, plus where appetite and skepticism live." },
+    { "ord": 4, "label": "Future horizon", "kind": "bucket", "satisfied_when": "They said what better looks like to them — what they'd do with capacity they got back." },
+    { "ord": 5, "label": "Anchor phrase caught", "kind": "behavior", "satisfied_when": "At least one emotionally loaded verbatim quote banked — energy, frustration, or hesitation. Paraphrase doesn't count." },
+    { "ord": 6, "label": "Narrowed to three", "kind": "behavior", "satisfied_when": "Session closed on 2–3 committed next steps, not an ambitious list of five." }
+  ],
+  "definition_of_done": {
+    "required_goals": [1, 2, 3, 4],
+    "min_anchor_phrases": 1,
+    "max_next_steps": 3,
+    "note": "Coverage can be green while momentum is red — the bar shows coverage, the recap tells the truth."
+  },
+  "deploy_spec": [
+    { "kind": "recap", "destination": "file" },
+    { "kind": "hud_score", "destination": "file" },
+    { "kind": "capture_candidate", "destination": "notion_capture_inbox" },
+    { "kind": "crm_move_proposal", "destination": "crm" },
+    { "kind": "email_draft", "destination": "clipboard", "note": "Cory's voice per v2 profile; only the client's own words reflected back" }
+  ],
+  "nod_gate": "every output lands as status=candidate; nothing commits without approval",
+  "provenance": "Grounded in the discovery-prep and session-recap skills. Run #1 (Jun 22 Hammer Stars) validated all five deploy outputs structurally; in-section tuning signal deferred to Run #2+."
+}
