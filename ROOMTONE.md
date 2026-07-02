@@ -18,3 +18,16 @@ Ground rules for any session working in this repo:
 5. If a feature doesn't feed the loop or the (future) live HUD, it waits.
 
 Upstream's `CLAUDE.md` is the architecture map for the inherited code — read it before touching `src/helpers/`.
+
+## Connecting a Claude client (increment 6)
+
+The app runs a local MCP server (`src/helpers/roomtoneMcp.js`); `scripts/roomtone-mcp-bridge.js`
+is the stdio bridge for clients that can't speak HTTP directly. It re-reads
+`~/.openwhispr/roomtone-mcp.json` on every request, so it survives app restarts
+(rotating token, shifting port) with zero config maintenance.
+
+Claude Desktop (`claude_desktop_config.json`):
+    "roomtone": { "command": "node", "args": ["<repo>/scripts/roomtone-mcp-bridge.js"] }
+
+Claude Code:
+    claude mcp add roomtone -- node <repo>/scripts/roomtone-mcp-bridge.js
