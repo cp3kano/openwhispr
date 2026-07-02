@@ -2358,7 +2358,11 @@
       "attach": "Associer un modèle",
       "attached": "Modèle associé",
       "empty": "Aucun modèle pour l'instant",
-      "error": "Impossible d'associer le modèle"
+      "error": "Impossible d'associer le modèle",
+      "synthesize": "Synthétiser",
+      "synthesizing": "Synthèse en cours…",
+      "synthesized": "{{count}} candidats préparés",
+      "synthesisError": "Échec de la synthèse"
     }
   },
   "dictionary": {

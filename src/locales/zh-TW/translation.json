@@ -2242,7 +2242,11 @@
       "attach": "附加範本",
       "attached": "已附加的範本",
       "empty": "尚無範本",
-      "error": "無法附加範本"
+      "error": "無法附加範本",
+      "synthesize": "合成",
+      "synthesizing": "合成中…",
+      "synthesized": "已產生 {{count}} 個候選",
+      "synthesisError": "合成失敗"
     }
   },
   "dictionary": {
