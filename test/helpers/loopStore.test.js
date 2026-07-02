@@ -18,6 +18,7 @@ const {
   recordGoalEvent,
   createLoopOutput,
   approveLoopOutput,
+  fadeLoopOutput,
   recordTuningEvent,
   seedDefaultTemplates,
 } = require("../../src/helpers/loopStore");
@@ -286,4 +287,24 @@ test("read side: listTemplates carries goal_count; listLoopOutputsForSession sco
   assert.equal(outputs[0].id, outA);
   assert.equal(outputs[0].status, "candidate");
   db.close();
+});
+
+test("fade lifecycle: candidate -> faded; approved cannot fade; faded cannot approve", () => {
+  const db = openTempDb();
+  seedDefaultTemplates(db, TEMPLATES_DIR);
+  const template = db.prepare("SELECT id FROM templates LIMIT 1").get();
+  const sessionId = createSession(db, { templateId: template.id });
+
+  const fadeable = createLoopOutput(db, { sessionId, kind: "insight", content: "let this one go" });
+  const faded = fadeLoopOutput(db, fadeable);
+  assert.equal(faded.status, "faded");
+  assert.ok(faded.decided_at, "an explicit no is a decision — it gets a timestamp");
+  assert.throws(() => approveLoopOutput(db, fadeable), /must be 'candidate'/);
+  assert.throws(() => fadeLoopOutput(db, fadeable), /must be 'candidate'/);
+
+  const kept = createLoopOutput(db, { sessionId, kind: "insight", content: "keep this one" });
+  approveLoopOutput(db, kept);
+  assert.throws(() => fadeLoopOutput(db, kept), /must be 'candidate'/);
+
+  assert.throws(() => fadeLoopOutput(db, "nonexistent-id"), /not found/);
 });

@@ -2254,6 +2254,23 @@
       "synthesizing": "Синтез…",
       "synthesized": "Кандидатов подготовлено: {{count}}",
       "synthesisError": "Ошибка синтеза"
+    },
+    "candidates": {
+      "title": "Кандидаты",
+      "approve": "Одобрить",
+      "approved": "Одобрено",
+      "dismiss": "Отклонить",
+      "copy": "Копировать",
+      "requiredMet": "Критерии выполнены",
+      "requiredNotMet": "Критерии не выполнены",
+      "kinds": {
+        "recap": "Резюме",
+        "hud_score": "Покрытие",
+        "capture_candidate": "Захват",
+        "crm_move_proposal": "Шаг CRM",
+        "email_draft": "Черновик письма",
+        "insight": "Инсайт"
+      }
     }
   },
   "dictionary": {

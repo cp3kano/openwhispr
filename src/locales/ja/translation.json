@@ -2180,6 +2180,23 @@
       "synthesizing": "合成中…",
       "synthesized": "{{count}}件の候補を作成",
       "synthesisError": "合成に失敗しました"
+    },
+    "candidates": {
+      "title": "候補",
+      "approve": "承認",
+      "approved": "承認済み",
+      "dismiss": "却下",
+      "copy": "コピー",
+      "requiredMet": "完了条件を満たしています",
+      "requiredNotMet": "完了条件を満たしていません",
+      "kinds": {
+        "recap": "要約",
+        "hud_score": "カバレッジ",
+        "capture_candidate": "キャプチャ",
+        "crm_move_proposal": "CRM更新案",
+        "email_draft": "メール下書き",
+        "insight": "インサイト"
+      }
     }
   },
   "dictionary": {

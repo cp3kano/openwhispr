@@ -290,6 +290,24 @@ function approveLoopOutput(db, outputId) {
   return db.prepare("SELECT * FROM loop_outputs WHERE id = ?").get(outputId);
 }
 
+// The explicit "no": candidate -> faded. Same lifecycle guard as approve —
+// an approved or committed output can never be quietly faded, and a faded
+// one can never come back. Doing nothing still fades on TTL; this is just
+// Cory clearing the queue on purpose.
+function fadeLoopOutput(db, outputId) {
+  const result = db
+    .prepare(
+      "UPDATE loop_outputs SET status = 'faded', decided_at = datetime('now') WHERE id = ? AND status = 'candidate'"
+    )
+    .run(outputId);
+  if (result.changes === 0) {
+    const row = db.prepare("SELECT status FROM loop_outputs WHERE id = ?").get(outputId);
+    if (!row) throw new Error(`Loop output not found: ${outputId}`);
+    throw new Error(`Cannot fade loop output in status '${row.status}' (must be 'candidate')`);
+  }
+  return db.prepare("SELECT * FROM loop_outputs WHERE id = ?").get(outputId);
+}
+
 function recordTuningEvent(db, { sessionId, goalId = null, outputId = null, signal, note = null }) {
   const eventId = randomUUID();
   db.prepare(
@@ -329,6 +347,7 @@ module.exports = {
   recordGoalEvent,
   createLoopOutput,
   approveLoopOutput,
+  fadeLoopOutput,
   recordTuningEvent,
   seedDefaultTemplates,
 };

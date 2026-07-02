@@ -46,6 +46,7 @@ import {
 } from "../../utils/transcriptSpeakerState";
 import NoteParticipants from "./NoteParticipants";
 import NoteTemplateAttach from "./NoteTemplateAttach";
+import LoopCandidatesPanel from "./LoopCandidatesPanel";
 import type { CalendarAttendee } from "../../types/calendar";
 
 function formatNoteDate(dateStr: string): string {
@@ -878,6 +879,8 @@ export default function NoteEditor({
             </div>
           </div>
         </div>
+
+        <LoopCandidatesPanel noteId={note.id} />
 
         <div className="flex-1 relative min-h-0">
           <div className="h-full overflow-y-auto">
