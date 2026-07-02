@@ -3,6 +3,7 @@ const path = require("path");
 const fs = require("fs");
 const { randomUUID } = require("crypto");
 const debugLogger = require("./debugLogger");
+const loopStore = require("./loopStore");
 const { app } = require("electron");
 
 class DatabaseManager {
@@ -596,6 +597,19 @@ class DatabaseManager {
       this.db.exec(
         "CREATE UNIQUE INDEX IF NOT EXISTS idx_custom_dictionary_client_id ON custom_dictionary(client_dict_id)"
       );
+
+      // Roomtone loop store — additive tables beside notes
+      // (canonical DDL: docs/roomtone/loop-store.sql)
+      loopStore.initLoopStoreSchema(this.db);
+      try {
+        loopStore.seedDefaultTemplates(this.db);
+      } catch (err) {
+        debugLogger.error(
+          "Loop store template seeding failed",
+          { error: err.message },
+          "database"
+        );
+      }
 
       return true;
     } catch (error) {
