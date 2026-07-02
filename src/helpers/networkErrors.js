@@ -1,7 +1,7 @@
 const debugLogger = require("./debugLogger");
 
 const CODE_TO_KEY = {
-  ENOTFOUND: "streaming.errors.cloudUnreachable.dnsBlocked",
+  ENOTFOUND: "streaming.errors.cloudUnreachable.refused",
   ECONNREFUSED: "streaming.errors.cloudUnreachable.refused",
   ECONNRESET: "streaming.errors.cloudUnreachable.refused",
   UND_ERR_SOCKET: "streaming.errors.cloudUnreachable.refused",
