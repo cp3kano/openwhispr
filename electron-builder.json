@@ -1,13 +1,7 @@
 {
-  "appId": "com.gizmolabs.openwhispr",
+  "appId": "com.commoncauseworks.roomtone",
   "afterPack": "scripts/afterPack.js",
   "productName": "Roomtone",
-  "protocols": {
-    "name": "OpenWhispr Protocol",
-    "schemes": [
-      "openwhispr"
-    ]
-  },
   "directories": {
     "output": "dist"
   },
@@ -145,9 +139,9 @@
     "extendInfo": {
       "LSUIElement": false,
       "CFBundleIconName": "openwhispr",
-      "NSMicrophoneUsageDescription": "OpenWhispr uses the microphone to capture your voice for transcription.",
-      "NSAudioCaptureUsageDescription": "OpenWhispr uses system audio to capture other participants' audio from calls and meetings.",
-      "NSAccessibilityUsageDescription": "OpenWhispr needs accessibility permissions to paste transcribed text into other applications."
+      "NSMicrophoneUsageDescription": "Roomtone uses the microphone to capture your voice for transcription.",
+      "NSAudioCaptureUsageDescription": "Roomtone uses system audio to capture other participants' audio from calls and meetings.",
+      "NSAccessibilityUsageDescription": "Roomtone needs accessibility permissions to paste transcribed text into other applications."
     }
   },
   "win": {
@@ -260,7 +254,7 @@
   },
   "publish": {
     "provider": "github",
-    "owner": "OpenWhispr",
+    "owner": "cp3kano",
     "repo": "openwhispr",
     "private": false,
     "releaseType": "draft"

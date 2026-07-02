@@ -31,14 +31,6 @@ export const useAudioRecording = (toast, options = {}) => {
 
       audioManagerRef.current.setVoiceAgentRequested(voiceAgentRequested);
 
-      // Retry STT config fetch if it wasn't loaded on mount (e.g. auth wasn't ready)
-      if (!audioManagerRef.current.sttConfig) {
-        const config = await window.electronAPI.getSttConfig?.();
-        if (config?.success) {
-          audioManagerRef.current.setSttConfig(config);
-        }
-      }
-
       const didStart = audioManagerRef.current.shouldUseStreaming()
         ? await audioManagerRef.current.startStreamingRecording()
         : await audioManagerRef.current.startRecording();
@@ -175,18 +167,6 @@ export const useAudioRecording = (toast, options = {}) => {
             });
           }
 
-          // Cloud usage: limit reached after this transcription
-          if (result.source === "openwhispr" && result.limitReached) {
-            // Notify control panel to show UpgradePrompt dialog
-            window.electronAPI?.notifyLimitReached?.({
-              wordsUsed: result.wordsUsed,
-              limit:
-                result.wordsRemaining !== undefined
-                  ? result.wordsUsed + result.wordsRemaining
-                  : 2000,
-            });
-          }
-
           if (audioManagerRef.current.shouldUseStreaming()) {
             audioManagerRef.current.warmupStreamingConnection();
           }
@@ -195,14 +175,9 @@ export const useAudioRecording = (toast, options = {}) => {
     });
 
     audioManagerRef.current.setContext("dictation");
-    window.electronAPI.getSttConfig?.().then((config) => {
-      if (config?.success && audioManagerRef.current) {
-        audioManagerRef.current.setSttConfig(config);
-        if (audioManagerRef.current.shouldUseStreaming()) {
-          audioManagerRef.current.warmupStreamingConnection();
-        }
-      }
-    });
+    if (audioManagerRef.current.shouldUseStreaming()) {
+      audioManagerRef.current.warmupStreamingConnection();
+    }
 
     const handleToggle = async ({ voiceAgentRequested = false } = {}) => {
       if (!audioManagerRef.current) return;

@@ -125,7 +125,6 @@ const BOOLEAN_SETTINGS = new Set([
   "dictationSileroEnabled",
   "noteRecordingSileroEnabled",
   "meetingSileroEnabled",
-  "isSignedIn",
   "autoPasteEnabled",
   "keepTranscriptionInClipboard",
   "dataRetentionEnabled",
@@ -403,7 +402,6 @@ export interface SettingsState
     PrivacySettings,
     ThemeSettings,
     ChatAgentSettings {
-  isSignedIn: boolean;
   audioCuesEnabled: boolean;
   pauseMediaOnDictation: boolean;
   floatingIconAutoHide: boolean;
@@ -651,7 +649,6 @@ export interface SettingsState
   setKeepTranscriptionInClipboard: (value: boolean) => void;
   setNoteFilesEnabled: (value: boolean) => void;
   setNoteFilesPath: (value: string) => void;
-  setIsSignedIn: (value: boolean) => void;
 
   setChatAgentModel: (value: string) => void;
   setChatAgentProvider: (value: string) => void;
@@ -848,8 +845,8 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
   ),
   // Secrets aren't hydrated yet at construction; the BYOK default is set
   // post-hydration in initializeSettings.
-  cloudTranscriptionMode: readString("cloudTranscriptionMode", "openwhispr"),
-  cleanupCloudMode: readString("cleanupCloudMode", "openwhispr"),
+  cloudTranscriptionMode: readString("cloudTranscriptionMode", "byok"),
+  cleanupCloudMode: readString("cleanupCloudMode", "byok"),
   cleanupCloudBaseUrl: readString("cleanupCloudBaseUrl", API_ENDPOINTS.OPENAI_BASE),
   cortiEnvironment: readString("cortiEnvironment", "us"),
   cortiTenant: readString("cortiTenant", "base"),
@@ -985,12 +982,12 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
   keepTranscriptionInClipboard: readBoolean("keepTranscriptionInClipboard", false),
   noteFilesEnabled: readBoolean("noteFilesEnabled", false),
   noteFilesPath: readString("noteFilesPath", ""),
-  isSignedIn: readBoolean("isSignedIn", false),
 
   transcriptionMode: (() => {
-    const v = readString("transcriptionMode", "openwhispr");
-    if (v === "openwhispr" || v === "providers" || v === "local" || v === "self-hosted") return v;
-    return "openwhispr" as InferenceMode;
+    const v = readString("transcriptionMode", "local");
+    if (v === "providers" || v === "local" || v === "self-hosted") return v;
+    // Legacy hosted-cloud ("openwhispr") and unknown values fall back to local.
+    return "local" as InferenceMode;
   })(),
   remoteTranscriptionType: (() => {
     const v = readString("remoteTranscriptionType", "lan");
@@ -998,23 +995,16 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
   })(),
   remoteTranscriptionUrl: readString("remoteTranscriptionUrl", ""),
   cleanupMode: (() => {
-    const v = readString("cleanupMode", "openwhispr");
-    if (
-      v === "openwhispr" ||
-      v === "providers" ||
-      v === "local" ||
-      v === "self-hosted" ||
-      v === "enterprise"
-    )
-      return v;
-    return "openwhispr" as InferenceMode;
+    const v = readString("cleanupMode", "providers");
+    if (v === "providers" || v === "local" || v === "self-hosted" || v === "enterprise") return v;
+    return "providers" as InferenceMode;
   })(),
   cleanupRemoteUrl: readString("cleanupRemoteUrl", ""),
 
   meetingTranscriptionMode: (() => {
-    const v = readString("meetingTranscriptionMode", "openwhispr");
-    if (v === "openwhispr" || v === "providers" || v === "local" || v === "self-hosted") return v;
-    return "openwhispr" as InferenceMode;
+    const v = readString("meetingTranscriptionMode", "local");
+    if (v === "providers" || v === "local" || v === "self-hosted") return v;
+    return "local" as InferenceMode;
   })(),
   meetingUseLocalWhisper: readBoolean("meetingUseLocalWhisper", false),
   meetingWhisperModel: readString("meetingWhisperModel", ""),
@@ -1034,9 +1024,9 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
   meetingRemoteTranscriptionUrl: readString("meetingRemoteTranscriptionUrl", ""),
 
   uploadTranscriptionMode: (() => {
-    const v = readString("uploadTranscriptionMode", "openwhispr");
-    if (v === "openwhispr" || v === "providers" || v === "local" || v === "self-hosted") return v;
-    return "openwhispr" as InferenceMode;
+    const v = readString("uploadTranscriptionMode", "local");
+    if (v === "providers" || v === "local" || v === "self-hosted") return v;
+    return "local" as InferenceMode;
   })(),
   uploadUseLocalWhisper: readBoolean("uploadUseLocalWhisper", false),
   uploadWhisperModel: readString("uploadWhisperModel", ""),
@@ -1051,16 +1041,9 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
   uploadCloudTranscriptionMode: readString("uploadCloudTranscriptionMode", ""),
 
   noteFormattingMode: (() => {
-    const v = readString("noteFormattingMode", "openwhispr");
-    if (
-      v === "openwhispr" ||
-      v === "providers" ||
-      v === "local" ||
-      v === "self-hosted" ||
-      v === "enterprise"
-    )
-      return v;
-    return "openwhispr" as InferenceMode;
+    const v = readString("noteFormattingMode", "providers");
+    if (v === "providers" || v === "local" || v === "self-hosted" || v === "enterprise") return v;
+    return "providers" as InferenceMode;
   })(),
   noteFormattingProvider: readString("noteFormattingProvider", ""),
   noteFormattingModel: readString("noteFormattingModel", ""),
@@ -1122,38 +1105,24 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
   chatAgentModel: readString("chatAgentModel", "openai/gpt-oss-120b"),
   chatAgentProvider: readString("chatAgentProvider", "groq"),
   chatAgentKey: readString("chatAgentKey", ""),
-  chatAgentCloudMode: readString("chatAgentCloudMode", "openwhispr"),
+  chatAgentCloudMode: readString("chatAgentCloudMode", "byok"),
   chatAgentMode: (() => {
-    const v = readString("chatAgentMode", "openwhispr");
-    if (
-      v === "openwhispr" ||
-      v === "providers" ||
-      v === "local" ||
-      v === "self-hosted" ||
-      v === "enterprise"
-    )
-      return v;
-    return "openwhispr" as InferenceMode;
+    const v = readString("chatAgentMode", "providers");
+    if (v === "providers" || v === "local" || v === "self-hosted" || v === "enterprise") return v;
+    return "providers" as InferenceMode;
   })(),
   chatAgentRemoteUrl: readString("chatAgentRemoteUrl", ""),
   chatAgentCloudBaseUrl: readString("chatAgentCloudBaseUrl", ""),
   chatAgentCustomApiKey: readString("chatAgentCustomApiKey", ""),
 
   dictationAgentMode: (() => {
-    const v = readString("dictationAgentMode", "openwhispr");
-    if (
-      v === "openwhispr" ||
-      v === "providers" ||
-      v === "local" ||
-      v === "self-hosted" ||
-      v === "enterprise"
-    )
-      return v;
-    return "openwhispr" as InferenceMode;
+    const v = readString("dictationAgentMode", "providers");
+    if (v === "providers" || v === "local" || v === "self-hosted" || v === "enterprise") return v;
+    return "providers" as InferenceMode;
   })(),
   dictationAgentProvider: readString("dictationAgentProvider", ""),
   dictationAgentModel: readString("dictationAgentModel", ""),
-  dictationAgentCloudMode: readString("dictationAgentCloudMode", "openwhispr"),
+  dictationAgentCloudMode: readString("dictationAgentCloudMode", "byok"),
   dictationAgentCloudBaseUrl: readString("dictationAgentCloudBaseUrl", ""),
   dictationAgentRemoteUrl: readString("dictationAgentRemoteUrl", ""),
   dictationAgentCustomApiKey: readString("dictationAgentCustomApiKey", ""),
@@ -1216,11 +1185,6 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
     set({ customDictionary: words });
     window.electronAPI
       ?.setDictionary(words)
-      .then(() => {
-        void import("../services/SyncService.js").then(({ syncService }) => {
-          if (syncService.canSync()) void syncService.syncDictionaryNow();
-        });
-      })
       .catch((err) => {
         logger.warn(
           "Failed to sync dictionary to SQLite",
@@ -1581,11 +1545,6 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
   setNoteFilesEnabled: createBooleanSetter("noteFilesEnabled"),
   setNoteFilesPath: createStringSetter("noteFilesPath"),
 
-  setIsSignedIn: (value: boolean) => {
-    if (isBrowser) localStorage.setItem("isSignedIn", String(value));
-    set({ isSignedIn: value });
-  },
-
   setChatAgentModel: createStringSetter("chatAgentModel"),
   setChatAgentProvider: createStringSetter("chatAgentProvider"),
   setChatAgentKey: createRegisteredHotkeySetter(
@@ -1705,26 +1664,7 @@ export const useSettingsStore = create<SettingsState>()((set, get) => ({
 
 // --- Selectors (derived state, not stored) ---
 
-export const selectIsCloudCleanupMode = (state: SettingsState) =>
-  state.isSignedIn && state.cleanupMode === "openwhispr" && state.cleanupCloudMode === "openwhispr";
-
-export const selectEffectiveCleanupProvider = (state: SettingsState) =>
-  selectIsCloudCleanupMode(state) ? "openwhispr" : state.cleanupProvider;
-
-export const selectIsCloudChatAgentMode = (state: SettingsState) =>
-  state.isSignedIn &&
-  state.chatAgentMode === "openwhispr" &&
-  state.chatAgentCloudMode === "openwhispr";
-
-export const selectIsCloudDictationAgentMode = (state: SettingsState) =>
-  state.isSignedIn &&
-  state.dictationAgentMode === "openwhispr" &&
-  state.dictationAgentCloudMode === "openwhispr";
-
-export const selectIsCloudNoteFormattingMode = (state: SettingsState) => {
-  const cfg = selectResolvedNoteFormatting(state);
-  return state.isSignedIn && cfg.mode === "openwhispr" && cfg.cloudMode === "openwhispr";
-};
+export const selectEffectiveCleanupProvider = (state: SettingsState) => state.cleanupProvider;
 
 export interface ResolvedMeetingTranscription {
   useLocalWhisper: boolean;
@@ -1886,10 +1826,6 @@ export function setResolvedLLMConfig(
   if (Object.keys(updates).length > 0) useSettingsStore.setState(updates);
 }
 
-export function isCloudChatAgentMode() {
-  return selectIsCloudChatAgentMode(useSettingsStore.getState());
-}
-
 // --- Convenience getters for non-React code ---
 
 export function getSettings() {
@@ -1897,19 +1833,7 @@ export function getSettings() {
 }
 
 export function getEffectiveCleanupModel() {
-  const state = useSettingsStore.getState();
-  if (selectIsCloudCleanupMode(state)) {
-    return "";
-  }
-  return state.cleanupModel;
-}
-
-export function isCloudCleanupMode() {
-  return selectIsCloudCleanupMode(useSettingsStore.getState());
-}
-
-export function isCloudDictationAgentMode() {
-  return selectIsCloudDictationAgentMode(useSettingsStore.getState());
+  return useSettingsStore.getState().cleanupModel;
 }
 
 // --- Initialization ---
