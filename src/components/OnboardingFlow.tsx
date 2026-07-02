@@ -128,10 +128,6 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
   const readableVoiceAgentKey = formatHotkeyLabel(voiceAgentKey);
   const { alertDialog, confirmDialog, showAlertDialog, hideAlertDialog, hideConfirmDialog } =
     useDialogs();
-  const [connectivityDialog, setConnectivityDialog] = useState<{
-    open: boolean;
-    cause: string;
-  }>({ open: false, cause: "" });
 
   const autoRegisterInFlightRef = useRef(false);
   const hotkeyStepInitializedRef = useRef(false);
@@ -432,50 +428,13 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
           return;
         }
 
-        const cloudHealthCheck = window.electronAPI?.cloudHealthCheck;
-        if (useLocalWhisper || !cloudHealthCheck) {
-          removeCurrentStep();
-          onComplete({ openSettings });
-          return;
-        }
-
-        let result;
-        try {
-          result = await cloudHealthCheck();
-        } catch (error) {
-          logger.error("Cloud health check threw", { error }, "onboarding");
-          result = { ok: false } as Awaited<ReturnType<typeof cloudHealthCheck>>;
-        }
-
-        // Any HTTP response (even 4xx) proves the network reached the server.
-        // Only a transport-level failure with no status warrants the warning.
-        if (result.ok || result.status !== undefined) {
-          removeCurrentStep();
-          onComplete({ openSettings });
-          return;
-        }
-
-        setConnectivityDialog({
-          open: true,
-          cause: t(result.messageKey || "streaming.errors.cloudUnreachable.generic"),
-        });
+        removeCurrentStep();
+        onComplete({ openSettings });
       } finally {
         setIsFinishing(false);
       }
     },
-    [saveSettings, removeCurrentStep, onComplete, useLocalWhisper, t]
-  );
-
-  const resolveConnectivity = useCallback(
-    (useLocal: boolean) => {
-      if (useLocal) {
-        setUseLocalWhisper(true);
-      }
-      setConnectivityDialog({ open: false, cause: "" });
-      removeCurrentStep();
-      onComplete({ openSettings: openSettingsOnCompleteRef.current });
-    },
-    [setUseLocalWhisper, removeCurrentStep, onComplete]
+    [saveSettings, removeCurrentStep, onComplete]
   );
 
   const renderStep = () => {
@@ -922,17 +881,6 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
         confirmText={confirmDialog.confirmText}
         cancelText={confirmDialog.cancelText}
         onConfirm={confirmDialog.onConfirm}
-      />
-
-      <ConfirmDialog
-        open={connectivityDialog.open}
-        onOpenChange={(open) => !open && setConnectivityDialog({ open: false, cause: "" })}
-        title={t("onboarding.connectivity.title")}
-        description={t("onboarding.connectivity.body", { cause: connectivityDialog.cause })}
-        confirmText={t("onboarding.connectivity.useLocal")}
-        cancelText={t("onboarding.connectivity.continue")}
-        onConfirm={() => resolveConnectivity(true)}
-        onCancel={() => resolveConnectivity(false)}
       />
 
       <AlertDialog

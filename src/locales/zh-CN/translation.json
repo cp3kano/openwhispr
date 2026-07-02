@@ -4,7 +4,7 @@
       "sectionTitle": "语言",
       "sectionDescription": "分别设置界面语言和转录语言",
       "uiLabel": "界面语言",
-      "uiDescription": "选择 OpenWhispr 界面使用的语言",
+      "uiDescription": "选择 Roomtone 界面使用的语言",
       "transcriptionLabel": "转录语言",
       "transcriptionDescription": "选择你说话的语言，以提高转录准确率"
     },
@@ -33,12 +33,12 @@
       "hide": "隐藏听写面板"
     },
     "openControlPanel": "打开控制面板",
-    "quit": "退出 OpenWhispr",
-    "tooltip": "OpenWhispr - 语音听写"
+    "quit": "退出 Roomtone",
+    "tooltip": "Roomtone - 语音听写"
   },
   "menu": {
-    "appLabel": "OpenWhispr",
-    "quit": "退出 OpenWhispr",
+    "appLabel": "Roomtone",
+    "quit": "退出 Roomtone",
     "speech": "语音",
     "settings": "设置...",
     "help": "帮助",
@@ -57,8 +57,8 @@
       "message": "无法在浏览器中打开该链接：\n{{url}}\n\n错误：{{error}}"
     },
     "loadFailure": {
-      "title": "OpenWhispr 加载失败",
-      "message": "OpenWhispr 无法加载其界面。",
+      "title": "Roomtone 加载失败",
+      "message": "Roomtone 无法加载其界面。",
       "detail": {
         "window": "窗口：{{windowName}}",
         "error": "错误 {{errorCode}}：{{errorDescription}}",
@@ -69,17 +69,17 @@
   },
   "startup": {
     "error": {
-      "title": "OpenWhispr 启动错误",
+      "title": "Roomtone 启动错误",
       "message": "应用启动失败：\n\n{{error}}\n\n请反馈此问题。"
     },
     "globeHotkey": {
       "title": "Globe 快捷键不可用",
-      "message": "OpenWhispr 无法激活 Globe 键快捷键。",
+      "message": "Roomtone 无法激活 Globe 键快捷键。",
       "details": {
         "unknown": "启动 Globe 监听器时发生未知错误。",
         "fallback": "Globe 键快捷键将保持禁用状态；现有的键盘快捷键仍可正常使用。",
         "devHint": "运行 `npm run compile:globe` 并重新构建应用以重新生成监听器。",
-        "reinstallHint": "请尝试重新安装 OpenWhispr，如果问题仍然存在请联系技术支持。"
+        "reinstallHint": "请尝试重新安装 Roomtone，如果问题仍然存在请联系技术支持。"
       }
     }
   },
@@ -135,7 +135,6 @@
     "cancel": "取消",
     "recommended": "推荐",
     "active": "已激活",
-    "freeAccountRequired": "需要免费账户",
     "cloud": "云端",
     "local": "本地",
     "apiKey": "API Key",
@@ -190,14 +189,14 @@
       "accessibilityTitle": "辅助功能",
       "accessibilityDescription": "将完成的文字直接输入到你正在使用的应用中 — 文档、邮件、聊天。",
       "testAndGrant": "测试并授权",
-      "requiredForApp": "OpenWhispr 运行所必需的权限",
+      "requiredForApp": "Roomtone 运行所必需的权限",
       "microphoneRequired": "需要麦克风访问权限",
       "openSystemSettings": "打开系统设置",
       "systemAudioTitle": "系统音频",
       "systemAudioDescription": "让会议录音机听到通话另一方的声音 — 会议、讲座、播客。你可以稍后在“设置”中开启。",
       "optional": "可选",
       "recommended": "推荐",
-      "accessibilityTroubleshooting": "在系统设置 → 辅助功能中，将 OpenWhispr 的开关关闭再重新打开。如果无效，请将 OpenWhispr 从列表中移除后重新添加。还是不行？请发邮件至 support@openwhispr.com。"
+      "accessibilityTroubleshooting": "在系统设置 → 辅助功能中，将 Roomtone 的开关关闭再重新打开。如果无效，请将 Roomtone 从列表中移除后重新添加。"
     },
     "transcription": {
       "title": "转录设置",
@@ -231,12 +230,6 @@
         "5 × 5 等于多少?"
       ],
       "optionalNote": "可选——你可以随时在设置中添加或修改。"
-    },
-    "connectivity": {
-      "title": "无法从该网络连接到 OpenWhispr Cloud",
-      "body": "{{cause}} 你可以切换到本地引擎，或继续并稍后重试。",
-      "useLocal": "使用本地引擎",
-      "continue": "仍然继续"
     },
     "useCase": {
       "title": "你为什么来到这里？",
@@ -274,7 +267,7 @@
     "meeting": {
       "title": "会议笔记",
       "description": "捕捉并总结你的会议",
-      "autoDetect": "OpenWhispr 会自动检测你是否在开会，并提议开始记录 — 未经你确认不会录制任何内容。",
+      "autoDetect": "Roomtone 会自动检测你是否在开会，并提议开始记录 — 未经你确认不会录制任何内容。",
       "notification": {
         "title": "检测到会议",
         "body": "你似乎正在开会。要开始记录吗？",
@@ -285,7 +278,7 @@
     },
     "finish": {
       "title": "一切就绪",
-      "cloudDescription": "你正在使用 OpenWhispr Cloud — 快速、准确、零数据保留，每周免费 2,000 词。希望一切都在本地？可在“设置”中切换到本地处理。",
+      "cloudDescription": "你正在使用 Roomtone Cloud — 快速、准确、零数据保留，每周免费 2,000 词。希望一切都在本地？可在“设置”中切换到本地处理。",
       "localDescription": "你已配置本地处理或自带密钥。可随时在“设置”中调整音频处理方式。",
       "cleanupNote": "AI 文本清理使用合理的默认设置，可随时在“设置”中调整。",
       "openSettings": "打开设置",
@@ -307,9 +300,8 @@
   "streaming": {
     "errors": {
       "cloudUnreachable": {
-        "title": "无法连接到 OpenWhispr Cloud",
+        "title": "无法连接到 Roomtone Cloud",
         "generic": "网络请求失败，请检查你的连接。",
-        "dnsBlocked": "DNS 无法解析 openwhispr.com — 广告拦截器或过滤器可能阻止了它。",
         "refused": "连接被拒绝 — 可能是防火墙或 VPN。",
         "timeout": "网络超时 — VPN、强制门户或网络不稳定。",
         "tls": "TLS 握手失败 — 请检查系统时钟或企业代理。",
@@ -324,7 +316,7 @@
       "problemTitle": "更新遇到问题",
       "problemDescription": "无法完成更新，请稍后再试。",
       "installTitle": "安装更新",
-      "installDescription": "OpenWhispr 将重启以应用更新。当前进行中的工作将被保存。",
+      "installDescription": "Roomtone 将重启以应用更新。当前进行中的工作将被保存。",
       "couldNotInstallTitle": "无法安装更新",
       "couldNotInstallDescription": "出了点问题，请重试。",
       "couldNotDownloadTitle": "无法下载更新",
@@ -333,19 +325,9 @@
       "installButton": "安装更新",
       "availableButton": "有可用更新"
     },
-    "limit": {
-      "weeklyTitle": "已达到周限额",
-      "weeklyDescription": "你的额度按滚动方式重置。升级到 Pro 或使用自己的 API Key 可不受限制。"
-    },
     "accessibilityMissing": {
       "title": "需要辅助功能权限",
-      "description": "我们检测到 OpenWhispr 需要辅助功能权限才能正常工作。请在下方启用。"
-    },
-    "billing": {
-      "pastDueTitle": "我们无法处理你的付款",
-      "pastDueDescription": "别担心——你目前使用的是免费版。在设置中更新支付方式即可恢复 Pro 版。",
-      "bannerDescription": "你目前使用的是免费版——每周仍有 {{limit}} 个词的额度。更新支付方式即可恢复 Pro 版。",
-      "updatePayment": "更新支付方式"
+      "description": "我们检测到 Roomtone 需要辅助功能权限才能正常工作。请在下方启用。"
     },
     "history": {
       "couldNotLoadTitle": "无法加载历史记录",
@@ -401,11 +383,6 @@
         "recover": "恢复",
         "recovered": "已恢复"
       }
-    },
-    "cloudMigration": {
-      "title": "欢迎使用 OpenWhispr 云端",
-      "description": "我们已将转录切换到 OpenWhispr 云端，以获得更快、更准确的结果。你之前的设置已保存——随时可以在设置中切换回去。",
-      "viewSettings": "查看设置"
     },
     "aiCta": {
       "title": "用 AI 提升你的转录质量",
@@ -543,7 +520,7 @@
         "description": "录音中未检测到音频，请重试。"
       },
       "errorDescriptions": {
-        "sessionExpired": "OpenWhispr Cloud 会话不可用。请到「设置」中重新登录。",
+        "sessionExpired": "Roomtone Cloud 会话不可用。请到「设置」中重新登录。",
         "offline": "你目前离线。云端转录需要互联网连接。",
         "dailyLimitReached": "已达今日转录上限。请明天再试或升级你的套餐。",
         "providerRateLimited": "你的转录服务商限制了请求频率。请稍候再试。"
@@ -619,7 +596,7 @@
       "micErrors": {
         "accessFailed": "麦克风访问失败，请重试。",
         "noMicrophones": "未检测到麦克风。请在 {{settingsPath}} 中连接或选择麦克风。",
-        "permissionDenied": "权限被拒绝。请打开 {{privacyPath}} 并允许 OpenWhispr。",
+        "permissionDenied": "权限被拒绝。请打开 {{privacyPath}} 并允许 Roomtone。",
         "couldNotStart": "无法启动所选麦克风。请在 {{settingsPath}} 中选择输入设备，然后重新测试。",
         "noActiveInput": "未找到活跃的音频输入。请在 {{settingsPath}} 中选择麦克风。",
         "unknown": "麦克风访问失败：{{error}}。请选择其他输入设备后重试。",
@@ -648,8 +625,8 @@
         "accessibilityNeeded": "请在系统设置中授予辅助功能权限，以启用自动粘贴。",
         "windowsReady": "Windows 无需特殊权限即可自动粘贴，一切就绪！",
         "linuxReadyWithMethod": "可使用 {{method}} 进行自动粘贴，一切就绪！",
-        "waylandClipboardMode": "此 Wayland 会话不支持自动粘贴。OpenWhispr 会将文本复制到剪贴板，你可以使用 Ctrl+V 粘贴。",
-        "optionalPasteTool": "如需自动粘贴功能，请安装 {{tool}}：\n\n{{installCmd}}{{waylandNote}}\n\n即使不安装，你仍然可以使用 OpenWhispr——文本会被复制到剪贴板，你可以使用 Ctrl+V 粘贴。"
+        "waylandClipboardMode": "此 Wayland 会话不支持自动粘贴。Roomtone 会将文本复制到剪贴板，你可以使用 Ctrl+V 粘贴。",
+        "optionalPasteTool": "如需自动粘贴功能，请安装 {{tool}}：\n\n{{installCmd}}{{waylandNote}}\n\n即使不安装，你仍然可以使用 Roomtone——文本会被复制到剪贴板，你可以使用 Ctrl+V 粘贴。"
       },
       "alerts": {
         "accessibilityNeeded": "需要辅助功能权限！请在系统设置中授权。"
@@ -662,7 +639,7 @@
         "defaultPasteTool": "xdotool",
         "xdotoolXwayland": "xdotool（XWayland 应用）"
       },
-      "accessibilityTestText": "OpenWhispr 辅助功能测试",
+      "accessibilityTestText": "Roomtone 辅助功能测试",
       "warning": {
         "messages": {
           "macos": "请检查声音设置以选择输入设备",
@@ -675,68 +652,9 @@
     }
   },
   "auth": {
-    "cloudNotConfigured": "云端未配置",
-    "common": {
-      "back": "返回",
-      "continue": "继续",
-      "or": "或"
-    },
-    "emailStep": {
-      "continueWithEmail": "使用邮箱继续",
-      "continueWithoutAccount": "不登录继续",
-      "emailPlaceholder": "you@example.com"
-    },
-    "errors": {
-      "accountExistsSignIn": "此邮箱已注册账户，请直接登录。",
-      "accountNotFoundCreate": "未找到此邮箱的账户，请先注册。",
-      "authNotConfigured": "身份验证未配置",
-      "createAccountFailed": "创建账户失败",
-      "failedProviderSignIn": "使用 {{provider}} 登录失败",
-      "failedUserCheck": "检查用户账户失败",
-      "generic": "出了点问题，请重试。",
-      "invalidCredentials": "邮箱或密码无效",
-      "plusAliasUnsupported": "不支持包含“+”的邮箱别名"
-    },
     "getStarted": "开始使用",
-    "legal": {
-      "and": "和",
-      "prefix": "继续即表示你同意我们的",
-      "privacy": "隐私政策",
-      "suffix": "",
-      "terms": "服务条款"
-    },
-    "passwordForm": {
-      "createAccount": "创建账户",
-      "createAccountButton": "创建账户",
-      "createAccountLink": "创建账户",
-      "createPasswordPlaceholder": "创建密码",
-      "creatingAccount": "正在创建账户...",
-      "enterPasswordPlaceholder": "输入密码",
-      "forgotPassword": "忘记密码？",
-      "fullNamePlaceholder": "姓名",
-      "haveAccount": "已有账户？",
-      "newHere": "新用户？",
-      "passwordMinLength": "密码至少需要 8 个字符",
-      "signIn": "登录",
-      "signInLink": "登录",
-      "signingIn": "正在登录...",
-      "welcomeBack": "欢迎回来"
-    },
-    "signedIn": {
-      "ready": "就绪",
-      "welcomeBack": "欢迎回来",
-      "welcomeBackName": "欢迎回来，{{name}}"
-    },
-    "social": {
-      "completeInBrowser": "在浏览器中完成登录",
-      "continueWithApple": "使用 Apple 继续",
-      "continueWithGoogle": "使用 Google 继续",
-      "continueWithMicrosoft": "使用 Microsoft 继续",
-      "protocolUnavailable": "无法通过浏览器登录 — 请在系统的“默认应用”设置中重新注册 openwhispr:// 协议。"
-    },
     "welcomeSubtitle": "随时随地用语音输入",
-    "welcomeTitle": "欢迎使用 OpenWhispr",
-    "sessionExpired": "会话已过期，请重新登录。"
+    "welcomeTitle": "欢迎使用 Roomtone"
   },
   "cleanupPrompt": "文本整理",
   "developerSection": {
@@ -943,10 +861,10 @@
     "recheckChecking": "检查中...",
     "title": "自动粘贴",
     "usingMethodPrefix": "使用",
-    "waylandClipboardDescription": "此 Wayland 会话不支持自动粘贴。OpenWhispr 会将文本复制到剪贴板，你可以使用 Ctrl+V 手动粘贴。",
+    "waylandClipboardDescription": "此 Wayland 会话不支持自动粘贴。Roomtone 会将文本复制到剪贴板，你可以使用 Ctrl+V 手动粘贴。",
     "waylandClipboardTitle": "Wayland 上的剪贴板模式",
     "windowsReady": "Windows 原生支持自动粘贴，无需额外设置！",
-    "withoutToolPrefix": "如果不安装此工具，OpenWhispr 会将文本复制到剪贴板，你可以使用 Ctrl+V 手动粘贴。",
+    "withoutToolPrefix": "如果不安装此工具，Roomtone 会将文本复制到剪贴板，你可以使用 Ctrl+V 手动粘贴。",
     "xwaylandAppsOnly": "自动粘贴仅适用于 XWayland 应用"
   },
   "promptStudio": {
@@ -996,7 +914,6 @@
       "none": "无",
       "outputLabel": "输出",
       "processing": "处理中...",
-      "openwhisprCloud": "OpenWhispr Cloud",
       "providerLabel": "服务商",
       "run": "运行测试",
       "customEndpoint": "自定义端点"
@@ -1009,7 +926,6 @@
   },
   "settingsModal": {
     "groups": {
-      "account": "账户",
       "app": "应用",
       "aiModels": "AI 模型",
       "system": "系统"
@@ -1055,178 +971,6 @@
     "title": "设置"
   },
   "settingsPage": {
-    "account": {
-      "badges": {
-        "free": "免费版",
-        "limitReached": "已达上限",
-        "pastDue": "逾期未付",
-        "pro": "Pro",
-        "business": "Business",
-        "trial": "试用"
-      },
-      "billing": {
-        "couldNotOpenDescription": "打开账单页面时出错，请重试。",
-        "couldNotOpenTitle": "无法打开账单",
-        "manageBilling": "管理账单",
-        "opening": "正在打开...",
-        "updatePaymentMethod": "更新支付方式"
-      },
-      "checkout": {
-        "couldNotOpenDescription": "打开结账页面时出错，请重试。",
-        "couldNotOpenTitle": "无法打开结账页",
-        "opening": "正在打开...",
-        "upgradeToPro": "升级到 Pro"
-      },
-      "disabled": "已禁用",
-      "featuresDisabled": "账户功能已禁用",
-      "featuresDisabledDescription": "在 .env 文件中设置 VITE_AUTH_URL 以启用账户功能。",
-      "notConfigured": "身份验证未配置",
-      "notSignedIn": "未登录",
-      "notSignedInDescription": "创建账户以解锁高级功能。",
-      "offline": "离线",
-      "pastDue": {
-        "description": "你目前使用的是免费版。更新支付方式即可恢复 Pro 版。",
-        "title": "我们无法处理你的付款"
-      },
-      "planDescriptions": {
-        "freeUsage": "本周已使用 {{used}} / {{limit}} 个词",
-        "nextBilling": "下次扣费：{{date}}",
-        "pastDue": "本周 {{used}} / {{limit}} 免费词数——更新支付方式以恢复 Pro",
-        "trial": "剩余 {{days}} 天——无限转录",
-        "unlimited": "无限制"
-      },
-      "planLabels": {
-        "free": "免费版",
-        "pro": "Pro",
-        "business": "Business",
-        "trial": "试用"
-      },
-      "planTitle": "套餐",
-      "rollingWeeklyLimit": "滚动周限额",
-      "signOut": {
-        "failedDescription": "退出登录时出错，请重试。",
-        "failedTitle": "无法退出登录",
-        "signOut": "退出登录",
-        "signingOut": "正在退出..."
-      },
-      "signedIn": "已登录",
-      "title": "账户",
-      "toasts": {
-        "approachingLimit": {
-          "description": "本周已使用 {{used}} / {{limit}} 个免费词数。升级到 Pro 可享受无限使用。",
-          "title": "即将达到周限额"
-        }
-      },
-      "trialCta": {
-        "button": "免费创建账户",
-        "description": "无限转录、优先处理等更多功能。",
-        "title": "免费试用 Pro 版 7 天"
-      },
-      "pricing": {
-        "title": "套餐",
-        "billedYearly": "按年计费",
-        "free": {
-          "name": "Free",
-          "price": "$0",
-          "period": "永久",
-          "features": [
-            "## OpenWhispr Cloud",
-            "每周 2,000 字转录",
-            "每月 5 小时会议录制",
-            "## 永久免费",
-            "无限本地 AI 模型",
-            "使用自己的 API 密钥无限云端转录",
-            "支持 100+ 种语言",
-            "自定义词典",
-            "零数据留存",
-            "社区支持"
-          ]
-        },
-        "pro": {
-          "name": "Pro",
-          "monthlyPrice": "$8",
-          "monthlyPeriod": "/月",
-          "annualPrice": "$80",
-          "annualPeriod": "/年",
-          "annualEquivalent": "$6.67",
-          "includesPrefix": "所有 Free 功能 +",
-          "features": [
-            "无限云端转录",
-            "每月 20 小时会议录制",
-            "跨设备同步",
-            "个人 API 访问",
-            "在所有应用中集成 MCP",
-            "移动应用（iOS 即将推出）",
-            "邮件支持"
-          ],
-          "cta": "开始使用",
-          "switchToAnnual": "切换为年付"
-        },
-        "business": {
-          "name": "Business",
-          "monthlyPrice": "$20",
-          "monthlyPeriod": "/月",
-          "annualPrice": "$200",
-          "annualPeriod": "/年",
-          "annualEquivalent": "$16.67",
-          "includesPrefix": "所有 Pro 功能 +",
-          "badge": "最受欢迎",
-          "features": ["无限会议录制", "代理模式", "与您的数据对话", "优先支持"],
-          "cta": "开始使用",
-          "switchToAnnual": "切换为年付"
-        },
-        "enterprise": {
-          "name": "Enterprise",
-          "price": "自定义",
-          "subtitle": "提供高级安全保障与支持",
-          "includesPrefix": "所有 Business 功能 +",
-          "features": [
-            "托管 API 额度",
-            "跨设备云端同步",
-            "团队功能与管理",
-            "SSO 与合规",
-            "专属支持"
-          ],
-          "cta": "联系销售"
-        },
-        "currentPlan": "当前套餐",
-        "upgrade": "升级",
-        "downgrade": "降级",
-        "planSwitched": "套餐已成功更新",
-        "confirmSwitch": {
-          "title": "确认更换套餐",
-          "description": "切换至 {{plan}}（{{interval}}）",
-          "monthly": "月付",
-          "yearly": "年付",
-          "chargeToday": "今日收费",
-          "accountCredit": "账户余额",
-          "newPrice": "新价格",
-          "nextBilling": "下次计费",
-          "mo": "mo",
-          "yr": "yr",
-          "cancel": "取消",
-          "confirm": "确认"
-        }
-      },
-      "signedOutPlans": {
-        "button": "免费创建账户"
-      },
-      "user": "用户",
-      "wordsRemaining": "剩余 {{remaining}} 个词",
-      "deleteAccount": {
-        "label": "删除账户",
-        "labelDescription": "永久删除您的账户、所有云端数据和本地数据。此操作无法撤销。",
-        "button": "删除我的账户",
-        "deleting": "正在删除...",
-        "title": "删除您的账户？",
-        "description": "这将永久删除您的 OpenWhispr 账户、所有云端同步笔记和所有本地数据，包括转录、音频录制、下载的模型、日历连接和设置。此操作无法撤销。",
-        "confirmText": "删除所有内容",
-        "successTitle": "账户已删除",
-        "successDescription": "您的账户和所有数据已被删除。应用将立即重新加载。",
-        "failedTitle": "删除失败",
-        "failedDescription": "删除您的账户时出错。您的本地数据可能已被部分删除。请重试。"
-      }
-    },
     "agentConfig": {
       "agentName": "助手名称",
       "description": "为你的 AI 助手取个名字，这样你就能在听写时直接呼唤它",
@@ -1255,25 +999,18 @@
       "enableTextCleanup": "启用文本整理",
       "enableTextCleanupDescription": "AI 去除语气词，修正语法和标点",
       "modes": {
-        "openwhispr": "OpenWhispr Cloud",
         "providers": "云服务商",
         "local": "本地",
         "selfHosted": "自托管",
-        "openwhisprDesc": "准确可靠，无需设置。",
         "providersDesc": "使用你自己的 API Key。",
         "localDesc": "设备端模型，完全私密。",
         "selfHostedDesc": "你的服务器，在你的网络上。",
         "enterprise": "企业级",
         "enterpriseDesc": "使用你组织的云账号（AWS、Azure、GCP）。"
       },
-      "openwhisprCloud": "OpenWhispr Cloud",
       "openwhisprCloudDescription": "准确可靠，无需设置。",
       "title": "AI 文本增强",
       "toasts": {
-        "switchedCloud": {
-          "description": "文本增强将使用 OpenWhispr 云端服务。",
-          "title": "已切换到 OpenWhispr 云端"
-        },
         "switchedCustom": {
           "description": "请配置你的服务商和 API Key。",
           "title": "已切换到自定义设置"
@@ -1351,7 +1088,7 @@
       "appearance": {
         "auto": "自动",
         "dark": "深色",
-        "description": "控制 OpenWhispr 的外观",
+        "description": "控制 Roomtone 的外观",
         "light": "浅色",
         "theme": "主题",
         "themeDescription": "选择浅色、深色或跟随系统",
@@ -1379,8 +1116,8 @@
         "linuxPttSetupDescription": "您的用户需要访问键盘输入设备的权限。",
         "linuxPttSetupNote": "运行命令后，请注销并重新登录。",
         "hyprlandConfigWriteWarningTitle": "Hyprland 键绑定不会持久保存",
-        "hyprlandConfigWriteWarningDescription": "OpenWhispr 无法写入 {{path}}，因此键绑定不会在 Hyprland 配置重新加载后保留。请确保该文件存在且可写。",
-        "hyprlandUnbindDescription": "在 Hyprland 上，OpenWhispr 会占用所选快捷键。OpenWhispr 注册快捷键时，任何使用相同组合键的现有 Hyprland 绑定都会被解除。"
+        "hyprlandConfigWriteWarningDescription": "Roomtone 无法写入 {{path}}，因此键绑定不会在 Hyprland 配置重新加载后保留。请确保该文件存在且可写。",
+        "hyprlandUnbindDescription": "在 Hyprland 上，Roomtone 会占用所选快捷键。Roomtone 注册快捷键时，任何使用相同组合键的现有 Hyprland 绑定都会被解除。"
       },
       "meetingHotkey": {
         "title": "会议模式快捷键",
@@ -1406,7 +1143,7 @@
       },
       "notifications": {
         "title": "通知",
-        "description": "设置 OpenWhispr 可以显示哪些通知",
+        "description": "设置 Roomtone 可以显示哪些通知",
         "disableAll": "禁用所有通知",
         "disableAllDescription": "静音除错误消息外的所有内容",
         "meetingDetection": "会议检测",
@@ -1425,9 +1162,9 @@
       },
       "startup": {
         "launchAtLogin": "登录时启动",
-        "launchAtLoginDescription": "登录时自动启动 OpenWhispr",
+        "launchAtLoginDescription": "登录时自动启动 Roomtone",
         "title": "启动",
-        "description": "控制 OpenWhispr 启动时的行为",
+        "description": "控制 Roomtone 启动时的行为",
         "startMinimized": "启动时最小化",
         "startMinimizedDescription": "启动时不显示控制面板窗口"
       },
@@ -1473,7 +1210,7 @@
           "group": {
             "step1Title": "将你的用户添加到 input 组",
             "step2Title": "注销并重新登录",
-            "step2Desc": "组更改仅在新会话后生效。从桌面注销，重新登录，然后重新打开 OpenWhispr。"
+            "step2Desc": "组更改仅在新会话后生效。从桌面注销，重新登录，然后重新打开 Roomtone。"
           },
           "service": {
             "step1Title": "创建服务目录",
@@ -1497,7 +1234,7 @@
           "manualTitle": "将以下内容添加到您的配置中",
           "manualDesc": "自行配置后重新构建。",
           "flakeTitle": "通过我们的 flake 安装？",
-          "flakeDesc": "如果您通过 flake 安装 OpenWhispr，programs.openwhispr.enable 会自动为您启用 ydotool、uinput 模块以及相应的用户组权限。",
+          "flakeDesc": "如果您通过 flake 安装 Roomtone，programs.openwhispr.enable 会自动为您启用 ydotool、uinput 模块以及相应的用户组权限。",
           "rebuildNote": "运行 sudo nixos-rebuild switch，然后注销并重新登录，使组变更和 /dev/uinput 规则生效。将 <you> 替换为您的用户名。"
         }
       },
@@ -1530,7 +1267,7 @@
           },
           "installUpdate": {
             "confirmText": "安装并重启",
-            "description": "OpenWhispr 将重启以应用更新。",
+            "description": "Roomtone 将重启以应用更新。",
             "title": "安装更新"
           },
           "noUpdates": {
@@ -1561,13 +1298,13 @@
     "permissions": {
       "accessibilityDescription": "转录后自动粘贴需要此权限",
       "accessibilityTitle": "辅助功能",
-      "description": "测试和管理 OpenWhispr 正常运行所需的系统权限",
+      "description": "测试和管理 Roomtone 正常运行所需的系统权限",
       "microphoneDescription": "录制您的声音用于听写和转录",
       "microphoneTitle": "麦克风",
       "resetAccessibility": {
-        "description": "这将从辅助功能权限中移除 OpenWhispr。你需要在系统设置 > 隐私与安全 > 辅助功能中重新授权。",
+        "description": "这将从辅助功能权限中移除 Roomtone。你需要在系统设置 > 隐私与安全 > 辅助功能中重新授权。",
         "label": "重置辅助功能权限",
-        "rowDescription": "重新安装或重新构建应用后，通过在系统设置中移除并重新添加 OpenWhispr 来解决问题",
+        "rowDescription": "重新安装或重新构建应用后，通过在系统设置中移除并重新添加 Roomtone 来解决问题",
         "title": "重置辅助功能权限"
       },
       "optional": "可选",
@@ -1581,20 +1318,12 @@
       "troubleshootingTitle": "问题排查"
     },
     "privacy": {
-      "cloudBackup": "云端备份",
-      "cloudBackupDescription": "将转录记录和笔记备份到云端，实现跨设备无缝访问。",
-      "cloudNotesMigration": "正在备份笔记… {{done}} / {{total}}",
-      "cloudNotesMigrationDone": "所有笔记已备份",
       "description": "控制哪些数据会离开你的设备。默认全部关闭。",
       "title": "隐私",
       "usageAnalytics": "使用分析",
-      "usageAnalyticsDescription": "通过分享匿名性能数据帮助我们改进 OpenWhispr。我们绝不发送转录内容——仅发送计时和错误数据。",
+      "usageAnalyticsDescription": "通过分享匿名性能数据帮助我们改进 Roomtone。我们绝不发送转录内容——仅发送计时和错误数据。",
       "dataRetention": "数据保留",
       "dataRetentionDescription": "将转录和音频本地保存到历史记录中。禁用后，转录内容会被粘贴但不会被保存。",
-      "hoursAgo": "{{count}}小时前",
-      "justNow": "刚刚",
-      "lastSynced": "上次同步 {{time}}",
-      "minutesAgo": "{{count}}分钟前",
       "audioRetention": "音频保留",
       "audioRetentionDescription": "在本地存储音频录制文件以便重新转录和下载。文件会在保留期过后自动删除。",
       "audioRetentionDisabled": "已禁用",
@@ -1639,25 +1368,18 @@
     "transcription": {
       "customSetup": "自定义设置",
       "customSetupDescription": "使用你自己的服务商和 API Key。",
-      "description": "选择 OpenWhispr 转录语音的方式",
+      "description": "选择 Roomtone 转录语音的方式",
       "modes": {
-        "openwhispr": "OpenWhispr Cloud",
         "providers": "云服务商",
         "local": "本地",
         "selfHosted": "自托管",
-        "openwhisprDesc": "准确可靠，无需设置。",
         "providersDesc": "使用你自己的 API Key。",
         "localDesc": "设备端模型，完全私密。",
         "selfHostedDesc": "你的服务器，在你的网络上。"
       },
-      "openwhisprCloud": "OpenWhispr Cloud",
       "openwhisprCloudDescription": "准确可靠，无需设置。",
       "title": "语音转文字",
       "toasts": {
-        "switchedCloud": {
-          "description": "转录将使用 OpenWhispr 云端服务。",
-          "title": "已切换到 OpenWhispr 云端"
-        },
         "switchedCustom": {
           "description": "请配置你的服务商和 API Key。",
           "title": "已切换到自定义设置"
@@ -1742,91 +1464,6 @@
       "endpointUrl": "端点 URL",
       "serverUrl": "服务器 URL",
       "apiKeyOptional": "API Key（可选）"
-    },
-    "workspace": {
-      "title": "Espacio de trabajo",
-      "description": "Colabora con compañeros, comparte notas y administra la facturación en un solo lugar.",
-      "empty": {
-        "title": "Crea tu primer espacio de trabajo",
-        "description": "Los espacios de trabajo te permiten colaborar con compañeros y compartir notas.",
-        "create": "Crear espacio de trabajo"
-      },
-      "tab": {
-        "general": "General",
-        "members": "Miembros",
-        "teams": "Equipos",
-        "billing": "Facturación",
-        "developer": "Desarrollador"
-      },
-      "role": {
-        "owner": "Propietario",
-        "admin": "Administrador",
-        "member": "Miembro"
-      },
-      "general": {
-        "nameLabel": "Nombre del espacio de trabajo",
-        "slugLabel": "Slug",
-        "slugHint": "Se usa en URLs y enlaces de invitación. Solo letras minúsculas, dígitos y guiones.",
-        "saved": "Espacio de trabajo actualizado",
-        "dangerTitle": "Eliminar espacio de trabajo",
-        "dangerDescription": "Todas las notas, carpetas e integraciones compartidas se eliminarán. Esto no se puede deshacer.",
-        "delete": "Eliminar espacio de trabajo",
-        "confirmTitle": "¿Eliminar {{name}}?",
-        "confirmDescription": "Esto cancela la suscripción y elimina todos los datos del espacio de trabajo permanentemente."
-      },
-      "members": {
-        "title": "Miembros",
-        "description": "{{count}} de {{seats}} asientos utilizados.",
-        "invite": "Invitar",
-        "empty": "Aún no hay miembros.",
-        "roleUpdated": "Rol actualizado",
-        "promote": "Hacer administrador",
-        "demote": "Hacer miembro",
-        "transferOwnership": "Transferir propiedad",
-        "remove": "Quitar del espacio de trabajo"
-      },
-      "invites": {
-        "title": "Invitaciones pendientes",
-        "resend": "Reenviar",
-        "revoke": "Revocar",
-        "resent": "Invitación reenviada"
-      },
-      "teams": {
-        "title": "Equipos",
-        "description": "Agrupa miembros para compartir con alcance limitado.",
-        "new": "Nuevo equipo",
-        "empty": "Aún no hay equipos.",
-        "createFirst": "Crea tu primer equipo",
-        "createTitle": "Crear equipo",
-        "nameLabel": "Nombre del equipo",
-        "descriptionLabel": "Descripción",
-        "memberCount": "{{count}} miembros"
-      },
-      "billing": {
-        "title": "Facturación",
-        "description": "Plan, asientos y pago.",
-        "plan": "Plan",
-        "seats": "Asientos",
-        "nextInvoice": "Próxima factura",
-        "manageStripe": "Administrar en Stripe",
-        "startSubscription": "Iniciar suscripción"
-      },
-      "developer": {
-        "title": "Claves API",
-        "description": "Acceso programático limitado a este espacio de trabajo.",
-        "empty": "Aún no hay claves API. Crea una para integrarte con este espacio de trabajo.",
-        "new": "Nueva clave",
-        "create": "Crear clave",
-        "createTitle": "Crear clave API",
-        "createDescription": "Elige los permisos que necesita esta clave. Puedes revocarla en cualquier momento.",
-        "nameLabel": "Nombre de la clave",
-        "namePlaceholder": "Integración de producción",
-        "revoke": "Revocar clave",
-        "lastUsed": "Último uso {{date}}",
-        "neverUsed": "Nunca utilizada",
-        "keyCreatedTitle": "Clave API creada",
-        "keyCreatedDescription": "Copia esta clave ahora — no podrás verla de nuevo."
-      }
     }
   },
   "models": {
@@ -1927,78 +1564,6 @@
       }
     }
   },
-  "referral": {
-    "modalTitle": "推荐计划",
-    "title": "推荐赚取奖励",
-    "subtitle": "送一个月，得一个月。",
-    "tabs": {
-      "refer": "推荐",
-      "pastInvites": "历史邀请"
-    },
-    "howItWorks": {
-      "shareLink": "分享你的邀请链接",
-      "theySignUp": "对方注册即可获得",
-      "freeMonthOfPro": "一个月免费 Pro",
-      "youGet": "你将获得",
-      "freeMonth": "一个月免费",
-      "whenTheyDictate": "当对方听写满 2,000 个词时"
-    },
-    "inviteLink": {
-      "title": "你的邀请链接",
-      "copy": "复制",
-      "copied": "已复制"
-    },
-    "sendInvites": {
-      "title": "发送邀请",
-      "placeholder": "friend@example.com",
-      "send": "发送",
-      "sending": "发送中"
-    },
-    "stats": {
-      "referred": "已推荐",
-      "converted": "已转化",
-      "monthsEarned": "已获得月数"
-    },
-    "status": {
-      "converted": "已转化",
-      "opened": "已打开",
-      "failed": "失败",
-      "sent": "已发送"
-    },
-    "empty": {
-      "title": "尚未发送任何邀请",
-      "description": "分享你的链接或发送邀请以开始使用"
-    },
-    "toasts": {
-      "copiedTitle": "已复制！",
-      "copiedDescription": "推荐链接已复制到剪贴板",
-      "copyFailedTitle": "复制失败",
-      "copyFailedDescription": "无法将链接复制到剪贴板",
-      "invalidEmailTitle": "邮箱地址无效",
-      "invalidEmailDescription": "请输入有效的邮箱地址",
-      "inviteSentTitle": "邀请已发送！",
-      "inviteSentDescription": "邀请已发送至 {{email}}",
-      "sendFailedTitle": "发送失败",
-      "sendFailedDescription": "邀请发送失败，请重试。"
-    },
-    "errors": {
-      "unableToLoad": "无法加载推荐数据",
-      "unableToLoadStats": "无法加载推荐统计数据，请稍后重试。"
-    },
-    "tryAgain": "重试",
-    "card": {
-      "brand": "OpenWhispr",
-      "signalId": "Signal ID",
-      "audioSignature": "你的声纹签名",
-      "stop": "停止",
-      "playSignal": "播放信号"
-    },
-    "friends": {
-      "title": "好友",
-      "completed": "已完成",
-      "sentInvites": "已发出的邀请"
-    }
-  },
   "notes": {
     "sidebar": {
       "newNote": "新建笔记",
@@ -2069,7 +1634,6 @@
       "dropToUpload": "拖放以上传",
       "transcribe": "转录",
       "cancel": "取消",
-      "transcribingCloud": "正在通过云端转录...",
       "transcribingLocal": "正在本地转录...",
       "transcribingProvider": "正在通过 {{provider}} 转录...",
       "cancelTranscription": "取消转录",
@@ -2081,7 +1645,6 @@
       "newFolder": "新建文件夹",
       "folderName": "文件夹名称",
       "create": "创建",
-      "openwhisprCloud": "OpenWhispr Cloud",
       "custom": "自定义",
       "selectFolder": "选择文件夹",
       "transcriptionFailed": "转录失败",
@@ -2090,18 +1653,9 @@
       "noProviderTitle": "尚未设置转录服务商",
       "noProviderDescription": "添加 API Key 或下载本地模型以开始转录。",
       "noProviderAction": "打开转录设置",
-      "fileTooLarge": "此文件超过了 500 MB 的大小限制。",
-      "largeFileNote": "大文件将被分割并平行转录。",
       "chunkProgress": "正在转录第 {{completed}} 部分，共 {{total}} 部分...",
-      "paidPlanRequired": "超过 25 MB 的文件需要付费计划才能使用云端转录。大文件通过 OpenWhispr Cloud 处理，确保可靠、高质量的结果。",
       "byokTooLarge": "第三方 API 密钥仅支持 25 MB 以内的文件。",
-      "byokTooLargeDetail": "超过 25 MB 的文件由 OpenWhispr Cloud 负责分割、并行处理和重组——无需依赖第三方服务限制，即可获得可靠的结果。",
-      "byokTooLargeNeedsAccount": "创建账户并升级到付费计划，即可使用 OpenWhispr Cloud 转录更大的文件。",
-      "byokTooLargeNeedsUpgrade": "升级到付费计划，即可使用 OpenWhispr Cloud 转录更大的文件。",
-      "switchToCloudForLargeFiles": "切换到 OpenWhispr Cloud 来转录此文件。",
-      "createAccount": "创建账户",
-      "upgrade": "升级",
-      "switchToCloud": "OpenWhispr Cloud"
+      "byokTooLargeDetail": "超过 25 MB 的文件由 Roomtone Cloud 负责分割、并行处理和重组——无需依赖第三方服务限制，即可获得可靠的结果。"
     },
     "meeting": {
       "title": "会议笔记",
@@ -2189,10 +1743,6 @@
         "enabled": "已启用"
       }
     },
-    "realtimeBanner": {
-      "message": "Pro 版可使用实时转录",
-      "upgrade": "升级"
-    },
     "enhance": {
       "title": "增强错误"
     },
@@ -2272,7 +1822,7 @@
     "clearAll": "全部清除",
     "clearTitle": "清空词典？",
     "clearDescription": "这将删除自定义词典中的所有词汇，此操作无法撤销。",
-    "addPlaceholder": "用逗号分隔添加多个词——OpenWhispr、Supabase、ARR",
+    "addPlaceholder": "用逗号分隔添加多个词——Roomtone、Supabase、ARR",
     "add": "添加",
     "importWords": "导入词语",
     "importPlaceholder": "粘贴以逗号分隔的词语...",
@@ -2301,7 +1851,7 @@
       "duplicate": "已存在使用此触发词的片段",
       "emptyTitle": "同样的话，只说",
       "emptyTitleAccent": "一遍",
-      "emptyDescription": "说出触发词，OpenWhispr 会把它替换为你保存的内容：链接、开场白、签名、提示词。",
+      "emptyDescription": "说出触发词，Roomtone 会把它替换为你保存的内容：链接、开场白、签名、提示词。",
       "new": "新建片段",
       "examples": {
         "linkedinTrigger": "我的 LinkedIn",
@@ -2326,21 +1876,10 @@
     "notes": "笔记",
     "upload": "上传",
     "dictionary": "词典",
-    "referral": "获取免费一个月",
     "settings": "设置",
     "support": "支持",
-    "limitReached": "已达每周上限",
-    "limitReachedDescription": "升级到 Pro 即可无限转录。",
-    "viewPlans": "查看套餐",
-    "upgradeTitle": "升级到 Pro",
-    "upgradeDescription": "无限转录、实时转录等更多功能。",
-    "learnMore": "了解更多",
     "integrations": "集成",
-    "defaultUser": "用户",
-    "notSignedIn": "未登录",
     "chat": "聊天",
-    "inviteTeammate": "Invitar compañero",
-    "createWorkspace": "Crear espacio de trabajo",
     "companion": "伴侣视图"
   },
   "chat": {
@@ -2387,12 +1926,10 @@
   },
   "support": {
     "documentation": "文档",
-    "joinDiscord": "加入 Discord",
-    "contactSupport": "联系支持",
     "submitBug": "提交 Bug"
   },
   "postMigration": {
-    "title": "欢迎回到 OpenWhispr",
+    "title": "欢迎回到 Roomtone",
     "description": "您的笔记和设置已从此前的版本中保留下来。不过 macOS 会将其视为一款全新的应用，因此需要您重新授予一些权限。",
     "done": "完成",
     "remindLater": "稍后提醒我"
@@ -2434,7 +1971,7 @@
       "undo": "撤消",
       "accessibilityMissing": {
         "title": "需要辅助功能权限",
-        "description": "OpenWhispr 需要辅助功能权限来检测快捷键和粘贴文本。请在控制面板中启用。"
+        "description": "Roomtone 需要辅助功能权限来检测快捷键和粘贴文本。请在控制面板中启用。"
       }
     },
     "mic": {
@@ -2457,8 +1994,6 @@
     "enabled": "启用语音助手",
     "enabledDescription": "向助手口述指令。说出“{{agentName}}”即可激活，可在下方配置。",
     "modes": {
-      "openwhispr": "OpenWhispr Cloud",
-      "openwhisprDesc": "使用 OpenWhispr 托管的助手，无需 API Key。",
       "providers": "使用自己的 API Key",
       "providersDesc": "用你自己的 API Key 连接 OpenAI、Anthropic、Gemini 或 Groq。",
       "local": "本地",
@@ -2483,18 +2018,15 @@
       "systemPromptDescription": "助手的自定义指令",
       "systemPromptPlaceholder": "输入自定义系统提示词...",
       "modes": {
-        "openwhispr": "OpenWhispr Cloud",
         "providers": "云服务商",
         "local": "本地",
         "selfHosted": "自托管",
-        "openwhisprDesc": "准确可靠，无需设置。",
         "providersDesc": "使用自己的 API 密钥。",
         "localDesc": "设备端模型，完全私密。",
         "selfHostedDesc": "你自己网络上的服务器。",
         "enterprise": "企业级",
         "enterpriseDesc": "使用你组织的云账号（AWS、Azure、GCP）。"
       },
-      "openwhisprCloud": "OpenWhispr Cloud",
       "openwhisprCloudDescription": "准确可靠，无需设置。",
       "customSetup": "自定义配置 (BYOK)",
       "customSetupDescription": "使用自己的 API 密钥并选择偏好的模型"
@@ -2563,7 +2095,7 @@
       "disconnectConfirm": "断开 {{email}}？",
       "disconnectDescription": "将不再从此日历记录会议笔记。",
       "systemAudioRequired": "需要系统音频权限",
-      "systemAudioDescription": "要转录会议，OpenWhispr 需要系统音频权限来录制其他参与者的音频。我们绝不会录制您的屏幕。您将被引导至系统设置以启用此权限。",
+      "systemAudioDescription": "要转录会议，Roomtone 需要系统音频权限来录制其他参与者的音频。我们绝不会录制您的屏幕。您将被引导至系统设置以启用此权限。",
       "openSettings": "打开系统设置"
     },
     "sections": {
@@ -2571,45 +2103,6 @@
       "api": "API",
       "mcp": "MCP",
       "cli": "CLI"
-    },
-    "api": {
-      "title": "API 密钥",
-      "description": "管理用于程序访问的 API 密钥",
-      "proRequired": "升级到付费计划以访问 API",
-      "manage": "管理密钥",
-      "viewPlans": "查看套餐",
-      "dialogTitle": "API 密钥"
-    },
-    "mcp": {
-      "title": "将笔记带到你的 AI 工具中",
-      "description": "在 Claude、ChatGPT 和 Cursor 中与你的笔记一起聊天、搜索和工作。",
-      "step1": "在你的 AI 工具中，使用公开 URL 添加 OpenWhispr MCP",
-      "step2": "在上方创建具有所需权限的 API 密钥。",
-      "step3": "将密钥粘贴为 Authorization 标头以连接。",
-      "learnMore": "了解更多",
-      "viewPlans": "查看套餐",
-      "copyUrl": "复制 MCP URL",
-      "proRequired": "升级到付费计划，以将 OpenWhispr 连接到 Claude、ChatGPT 和 Cursor。",
-      "copied": "已复制"
-    },
-    "cli": {
-      "title": "命令行访问",
-      "description": "让你的智能助手通过终端访问你的笔记。",
-      "installLabel": "安装",
-      "learnMore": "查看文档",
-      "copyDocsLink": "复制文档链接",
-      "docsLinkCopied": "已复制文档链接",
-      "viewPlans": "查看套餐",
-      "local": {
-        "label": "本地",
-        "freeBadge": "免费",
-        "description": "直接读取你的本地笔记。无需登录或 API 密钥 — 在 OpenWhispr 运行时即可使用。"
-      },
-      "cloud": {
-        "label": "云端",
-        "description": "使用 API 密钥在多台设备之间同步。",
-        "proRequired": "升级到付费计划以在云端模式下使用 CLI。"
-      }
     },
     "plan": {
       "title": "您的方案",
@@ -2623,8 +2116,8 @@
       "upgrade": "升级"
     },
     "notABot": {
-      "title": "OpenWhispr 是会议录制工具，不是机器人",
-      "description": "OpenWhispr 直接从您的系统捕获音频 — 它不会以参与者身份加入您的会议。只需连接日历，正常记录笔记即可。"
+      "title": "Roomtone 是会议录制工具，不是机器人",
+      "description": "Roomtone 直接从您的系统捕获音频 — 它不会以参与者身份加入您的会议。只需连接日历，正常记录笔记即可。"
     }
   },
   "calendar": {
@@ -2660,11 +2153,8 @@
     "untitledEvent": "无标题事件",
     "systemAudioRequired": "需要系统音频权限来录制其他参与者的音频。",
     "openSettings": "打开系统设置",
-    "signInRequired": "登录以使用会议录制",
-    "signInDescription": "创建账户或登录以录制和转录会议。",
     "connectCalendar": "连接您的日历",
     "connectCalendarDescription": "关联 Google 日历以查看即将到来的会议并自动记录笔记。",
-    "notABot": "OpenWhispr 通过系统音频录制 — 它不会以机器人身份加入您的会议。",
     "connectCalendarButton": "连接日历"
   },
   "notesView": {
@@ -2689,37 +2179,7 @@
     "deleteNote": "删除笔记",
     "deleteConfirmTitle": "删除笔记？",
     "deleteConfirmDescription": "此笔记将被永久删除，无法恢复。",
-    "deleteConfirm": "删除",
-    "share": {
-      "button": "分享",
-      "dialog": {
-        "title": "分享笔记",
-        "searchPlaceholder": "通过电子邮件添加成员",
-        "emailLabel": "收件人邮箱",
-        "shareButton": "分享",
-        "copyLink": "复制链接",
-        "copied": "已复制",
-        "owner": "所有者",
-        "pending": "待处理",
-        "accepted": "已获得访问权限",
-        "resend": "重新发送邀请",
-        "revoke": "移除",
-        "invitationActions": "邀请操作",
-        "permissionRequired": "只有笔记的所有者可以更改分享设置。",
-        "visibility": {
-          "label": "可见性",
-          "link": "拥有链接的任何人",
-          "domain": "{{domain}} 内拥有链接的所有人",
-          "invited": "仅受邀者"
-        },
-        "error": {
-          "invalidEmail": "请输入有效的电子邮件地址",
-          "alreadyInvited": "{{email}} 已经被邀请",
-          "inviteFailed": "无法发送邀请。请重试。",
-          "linkUnavailable": "生成或更换链接后即可复制"
-        }
-      }
-    }
+    "deleteConfirm": "删除"
   },
   "commandSearch": {
     "title": "搜索",
@@ -2739,62 +2199,14 @@
     }
   },
   "updateNotification": {
-    "title": "OpenWhispr 有可用更新",
+    "title": "Roomtone 有可用更新",
     "body": "版本 {{version}} 已可下载",
     "cta": "立即更新"
   },
   "permissionsGate": {
     "title": "需要权限",
-    "description": "OpenWhispr 需要一些权限才能在此电脑上正常运行。",
+    "description": "Roomtone 需要一些权限才能在此电脑上正常运行。",
     "continue": "继续"
-  },
-  "apiKeysSection": {
-    "title": "API 密钥",
-    "description": "创建密钥以编程方式访问 OpenWhispr API。",
-    "docsLink": "API 文档",
-    "empty": "暂无 API 密钥",
-    "createButton": "创建 API 密钥",
-    "create": {
-      "title": "创建 API 密钥",
-      "nameLabel": "密钥名称",
-      "namePlaceholder": "例如：我的集成",
-      "scopesLabel": "权限",
-      "expiryLabel": "有效期",
-      "expiryOptions": {
-        "never": "永不过期",
-        "30days": "30 天",
-        "60days": "60 天",
-        "90days": "90 天",
-        "1year": "1 年"
-      },
-      "submit": "创建",
-      "cancel": "取消"
-    },
-    "created": {
-      "title": "API 密钥已创建",
-      "warning": "请立即复制此密钥，它将不会再次显示。",
-      "copied": "已复制！",
-      "copyButton": "复制到剪贴板",
-      "done": "完成"
-    },
-    "scopes": {
-      "notesRead": "读取笔记",
-      "notesWrite": "创建和编辑笔记",
-      "transcriptionsRead": "读取转录"
-    },
-    "revoke": {
-      "button": "撤销",
-      "confirm": "撤销此密钥？使用它的集成将停止工作。",
-      "success": "API 密钥已撤销"
-    },
-    "neverUsed": "从未使用",
-    "lastUsed": "上次使用 {{time}}",
-    "maxKeysReached": "最多允许 {{max}} 个密钥",
-    "errors": {
-      "loadFailed": "无法加载 API 密钥",
-      "createFailed": "无法创建 API 密钥",
-      "revokeFailed": "无法撤销 API 密钥"
-    }
   },
   "embeddedChat": {
     "askPlaceholder": "随便问点什么...",
@@ -2820,54 +2232,6 @@
     "speaker": {
       "you": "你",
       "others": "其他人"
-    }
-  },
-  "workspaces": {
-    "switcher": {
-      "personal": "Personal",
-      "workspaces": "Espacios de trabajo",
-      "empty": "Aún no hay espacios de trabajo",
-      "create": "Crear espacio de trabajo…"
-    },
-    "create": {
-      "title": "Crear espacio de trabajo",
-      "description": "Los espacios de trabajo te permiten colaborar, compartir notas y administrar la facturación.",
-      "nameLabel": "Nombre del espacio de trabajo",
-      "namePlaceholder": "Acme Corp",
-      "submit": "Crear espacio de trabajo",
-      "submitting": "Creando…",
-      "errorTitle": "No se pudo crear el espacio de trabajo"
-    },
-    "created": {
-      "title": "Espacio de trabajo creado",
-      "description": "Ahora eres el propietario de {{name}}."
-    },
-    "invite": {
-      "title": "Invitar a {{workspace}}",
-      "description": "Agrega compañeros por correo. Recibirán un enlace para unirse.",
-      "emailLabel": "Correo electrónico",
-      "roleLabel": "Rol",
-      "teamsLabel": "Agregar a equipos",
-      "submit": "Enviar invitación",
-      "submitting": "Enviando…",
-      "sentTitle": "Invitación enviada",
-      "sentDescription": "Enviamos una invitación a {{email}}.",
-      "errorTitle": "No se pudo enviar la invitación",
-      "role": {
-        "admin": "Administrador",
-        "member": "Miembro"
-      }
-    },
-    "accept": {
-      "title": "Unirse al espacio de trabajo",
-      "description": "{{inviter}} te invitó a unirte a {{workspace}} como {{role}}.",
-      "loading": "Cargando invitación…",
-      "accept": "Aceptar invitación",
-      "accepting": "Aceptando…",
-      "signInToAccept": "Inicia sesión para aceptar",
-      "successTitle": "Te uniste",
-      "successDescription": "Bienvenido a {{name}}.",
-      "errorTitle": "No se pudo aceptar la invitación"
     }
   },
   "companion": {
