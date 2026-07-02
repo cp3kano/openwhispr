@@ -189,9 +189,72 @@ function attachTemplateToSession(db, sessionId, templateId) {
   return db.prepare("SELECT * FROM sessions WHERE id = ?").get(sessionId);
 }
 
+// Read side of the promotion path: everything the picker UI needs in one row
+// per template. goal_count rides along so a later UI can show template depth
+// without a second query.
+function listTemplates(db) {
+  return db
+    .prepare(
+      `SELECT t.id, t.name, t.version, t.status, t.reuse_count,
+              (SELECT COUNT(*) FROM template_goals g WHERE g.template_id = t.id) AS goal_count
+       FROM templates t
+       ORDER BY t.name COLLATE NOCASE, t.version DESC`
+    )
+    .all();
+}
+
+// The live session for a note, or null (null = plain Quick Note, nothing
+// attached yet). A note can accrue several sessions over time; the newest one
+// is the one the UI speaks for. template_name is joined in so the renderer
+// never needs a second round-trip to label the attachment.
+function getSessionForNote(db, noteId) {
+  if (noteId == null) return null;
+  const row = db
+    .prepare(
+      `SELECT s.*, t.name AS template_name
+       FROM sessions s LEFT JOIN templates t ON t.id = s.template_id
+       WHERE s.note_id = ?
+       ORDER BY s.started_at DESC, s.rowid DESC
+       LIMIT 1`
+    )
+    .get(noteId);
+  return row || null;
+}
+
+// One-call promotion: attach a template to a note, creating the session if
+// the note never had one. Retroactive and additive -- the note row itself is
+// untouched, so capture stays ungated no matter what happens here.
+function attachTemplateToNote(db, noteId, templateId) {
+  if (noteId == null) throw new Error("noteId is required");
+  const run = db.transaction(() => {
+    const existing = db
+      .prepare(
+        "SELECT id FROM sessions WHERE note_id = ? ORDER BY started_at DESC, rowid DESC LIMIT 1"
+      )
+      .get(noteId);
+    if (existing) {
+      attachTemplateToSession(db, existing.id, templateId);
+      return existing.id;
+    }
+    // createSession with templateId pins the version and ticks reuse_count itself.
+    return createSession(db, { noteId, templateId });
+  });
+  const sessionId = run();
+  return db.prepare("SELECT * FROM sessions WHERE id = ?").get(sessionId);
+}
+
+function listLoopOutputsForSession(db, sessionId) {
+  return db
+    .prepare("SELECT * FROM loop_outputs WHERE session_id = ? ORDER BY created_at, rowid")
+    .all(sessionId);
+}
+
 // Invariant: no unexplained checkmarks — status='covered' with null evidence
 // is rejected by the schema CHECK; the constraint error propagates.
-function recordGoalEvent(db, { sessionId, goalId, status, evidence = null, scoredBy, atMs = null }) {
+function recordGoalEvent(
+  db,
+  { sessionId, goalId, status, evidence = null, scoredBy, atMs = null }
+) {
   const eventId = randomUUID();
   db.prepare(
     `INSERT INTO goal_events (id, session_id, goal_id, status, evidence, scored_by, at_ms)
@@ -259,6 +322,10 @@ module.exports = {
   createTemplate,
   createSession,
   attachTemplateToSession,
+  listTemplates,
+  getSessionForNote,
+  attachTemplateToNote,
+  listLoopOutputsForSession,
   recordGoalEvent,
   createLoopOutput,
   approveLoopOutput,

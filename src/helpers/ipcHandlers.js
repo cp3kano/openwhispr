@@ -31,6 +31,7 @@ const {
 } = require("./speakerAssignmentPolicy");
 const { downsample24kTo16k, pcm16ToWav } = require("../utils/audioUtils");
 const postMigrationDetector = require("./postMigrationDetector");
+const loopStore = require("./loopStore");
 const {
   DEFAULT_EXPECTED_SPEAKER_COUNT,
   MAX_SPEAKER_COUNT,
@@ -1097,6 +1098,79 @@ class IPCHandlers {
 
     ipcMain.handle("db-update-note-cloud-id", async (event, id, cloudId) => {
       return this.databaseManager.updateNoteCloudId(id, cloudId);
+    });
+
+    // Roomtone loop store — the promotion path (Quick Note -> templated session).
+    // Additive and namespaced (loopstore:*); talks to the raw better-sqlite3
+    // handle the same way the vector/index handlers do (databaseManager.db).
+    // Attach never runs synthesis — that is increment 3; these only move rows.
+    ipcMain.handle("loopstore:list-templates", async () => {
+      try {
+        return { success: true, templates: loopStore.listTemplates(this.databaseManager.db) };
+      } catch (error) {
+        debugLogger.error("loopstore:list-templates failed", { error: error.message });
+        return { success: false, error: error.message };
+      }
+    });
+
+    ipcMain.handle("loopstore:get-session-for-note", async (_event, noteId) => {
+      try {
+        return {
+          success: true,
+          session: loopStore.getSessionForNote(this.databaseManager.db, noteId),
+        };
+      } catch (error) {
+        debugLogger.error("loopstore:get-session-for-note failed", { error: error.message });
+        return { success: false, error: error.message };
+      }
+    });
+
+    ipcMain.handle("loopstore:create-session-for-note", async (_event, noteId) => {
+      try {
+        loopStore.createSession(this.databaseManager.db, { noteId });
+        return {
+          success: true,
+          session: loopStore.getSessionForNote(this.databaseManager.db, noteId),
+        };
+      } catch (error) {
+        debugLogger.error("loopstore:create-session-for-note failed", { error: error.message });
+        return { success: false, error: error.message };
+      }
+    });
+
+    ipcMain.handle("loopstore:attach-template", async (_event, noteId, templateId) => {
+      try {
+        loopStore.attachTemplateToNote(this.databaseManager.db, noteId, templateId);
+        return {
+          success: true,
+          session: loopStore.getSessionForNote(this.databaseManager.db, noteId),
+        };
+      } catch (error) {
+        debugLogger.error("loopstore:attach-template failed", { error: error.message });
+        return { success: false, error: error.message };
+      }
+    });
+
+    ipcMain.handle("loopstore:list-outputs", async (_event, sessionId) => {
+      try {
+        return {
+          success: true,
+          outputs: loopStore.listLoopOutputsForSession(this.databaseManager.db, sessionId),
+        };
+      } catch (error) {
+        debugLogger.error("loopstore:list-outputs failed", { error: error.message });
+        return { success: false, error: error.message };
+      }
+    });
+
+    ipcMain.handle("loopstore:approve-output", async (_event, outputId) => {
+      try {
+        const output = loopStore.approveLoopOutput(this.databaseManager.db, outputId);
+        return { success: true, output };
+      } catch (error) {
+        debugLogger.error("loopstore:approve-output failed", { error: error.message });
+        return { success: false, error: error.message };
+      }
     });
 
     ipcMain.handle("db-get-folders", async () => {

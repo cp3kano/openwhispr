@@ -99,6 +99,17 @@ contextBridge.exposeInMainWorld("electronAPI", {
   },
   updateNoteCloudId: (id, cloudId) => ipcRenderer.invoke("db-update-note-cloud-id", id, cloudId),
 
+  // Roomtone loop store — Quick Note -> template promotion
+  loopStoreListTemplates: () => ipcRenderer.invoke("loopstore:list-templates"),
+  loopStoreGetSessionForNote: (noteId) =>
+    ipcRenderer.invoke("loopstore:get-session-for-note", noteId),
+  loopStoreCreateSessionForNote: (noteId) =>
+    ipcRenderer.invoke("loopstore:create-session-for-note", noteId),
+  loopStoreAttachTemplate: (noteId, templateId) =>
+    ipcRenderer.invoke("loopstore:attach-template", noteId, templateId),
+  loopStoreListOutputs: (sessionId) => ipcRenderer.invoke("loopstore:list-outputs", sessionId),
+  loopStoreApproveOutput: (outputId) => ipcRenderer.invoke("loopstore:approve-output", outputId),
+
   // Folder functions
   getFolders: () => ipcRenderer.invoke("db-get-folders"),
   createFolder: (name) => ipcRenderer.invoke("db-create-folder", name),

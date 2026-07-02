@@ -2441,6 +2441,12 @@
         "othersInCall_one": "{{count}} other in call",
         "othersInCall_other": "{{count}} others in call"
       }
+    },
+    "template": {
+      "attach": "Attach template",
+      "attached": "Attached template",
+      "empty": "No templates yet",
+      "error": "Couldn't attach template"
     }
   },
   "dictionary": {
