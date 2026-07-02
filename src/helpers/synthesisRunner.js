@@ -55,11 +55,11 @@ function loadSynthesisContext(db, sessionId) {
 // ---------------------------------------------------------------------------
 // Prompt
 
-function buildSynthesisPrompt({ template, goals, note, transcript }) {
+function buildSynthesisPrompt({ template, goals, note, transcript, voiceProfile }) {
   const outputFormat = JSON.parse(template.output_format);
   const definitionOfDone = JSON.parse(template.definition_of_done);
 
-  const system = [
+  const systemSections = [
     "You are the post-meeting synthesis engine inside a consultant's meeting companion.",
     "You read one meeting transcript and produce structured outputs a human will review before anything ships. Nothing you produce is sent anywhere without explicit approval, so be honest rather than flattering.",
     "",
@@ -70,7 +70,20 @@ function buildSynthesisPrompt({ template, goals, note, transcript }) {
     "4. Anchor phrases are emotionally loaded verbatim client quotes. Paraphrase does not count.",
     "5. The email draft is warm, plain, and short. First person. No hype words, no corporate filler. It reflects what the client said, commits only to what was actually agreed, and reads like a person wrote it.",
     "6. Respond with ONE JSON object and nothing else. No markdown fences, no commentary.",
-  ].join("\n");
+  ];
+
+  // The voice is the user's, not the model's. When a profile is present it
+  // governs every word a human will read — the email draft above all, and the
+  // recap prose. Goal scoring and structure stay untouched by it.
+  if (voiceProfile && String(voiceProfile).trim()) {
+    systemSections.push(
+      "",
+      "VOICE PROFILE — the user's own voice. Apply it to everything a human reads: the email draft (subject and body) and all recap prose. It overrides rule 5 wherever they disagree. Do not apply it to goal scoring, evidence, or JSON structure.",
+      String(voiceProfile).trim()
+    );
+  }
+
+  const system = systemSections.join("\n");
 
   const responseShape = {
     momentum_read: "one of: built | leaked | mixed — the honest line",
@@ -386,12 +399,12 @@ function applySynthesisResult(db, { session, template, goals, parsed, ttlDays, n
 // ---------------------------------------------------------------------------
 // Orchestrator
 
-async function runSynthesis(db, { sessionId, generate, ttlDays, nowMs }) {
+async function runSynthesis(db, { sessionId, generate, ttlDays, nowMs, voiceProfile }) {
   if (typeof generate !== "function") {
     throw new Error("runSynthesis requires a generate({ system, prompt }) function");
   }
   const ctx = loadSynthesisContext(db, sessionId);
-  const { system, prompt } = buildSynthesisPrompt(ctx);
+  const { system, prompt } = buildSynthesisPrompt({ ...ctx, voiceProfile });
   const text = await generate({ system, prompt });
   const parsed = parseSynthesisResponse(text, ctx.goals, ctx.transcript);
   const applied = applySynthesisResult(db, {

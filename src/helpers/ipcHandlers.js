@@ -1205,9 +1205,24 @@ class IPCHandlers {
           };
         }
         const generate = synthesisRunner.createClaudeGenerate({ apiKey });
+
+        // Voice profile (increment 7): a plain markdown file in userData.
+        // Optional — synthesis runs fine without it, it just sounds generic.
+        let voiceProfile = null;
+        try {
+          const { app } = require("electron");
+          const profilePath = path.join(app.getPath("userData"), "voice-profile.md");
+          if (fs.existsSync(profilePath)) {
+            voiceProfile = fs.readFileSync(profilePath, "utf8").slice(0, 24000);
+          }
+        } catch (profileErr) {
+          debugLogger.debug("voice profile read failed", { error: profileErr.message });
+        }
+
         const result = await synthesisRunner.runSynthesis(this.databaseManager.db, {
           sessionId: session.id,
           generate,
+          voiceProfile,
         });
         return { success: true, ...result };
       } catch (error) {

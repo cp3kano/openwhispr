@@ -291,3 +291,39 @@ test("prompt carries goals, shape, and transcript; nod-gate survives approval fl
   assert.equal(approved.status, "approved");
   assert.throws(() => approveLoopOutput(db, outputs[0].id), /must be 'candidate'/);
 });
+
+test("voice profile: injected into system prompt when present, absent when not", async () => {
+  const db = openDb();
+  const { sessionId, goals } = setupSession(db);
+  const ctx = loadSynthesisContext(db, sessionId);
+
+  const bare = buildSynthesisPrompt(ctx);
+  assert.ok(!bare.system.includes("VOICE PROFILE"), "no profile section without a profile");
+
+  const withVoice = buildSynthesisPrompt({
+    ...ctx,
+    voiceProfile: "Never say synergy. Sign off plainly.",
+  });
+  assert.match(withVoice.system, /VOICE PROFILE/);
+  assert.match(withVoice.system, /Never say synergy/);
+  assert.ok(
+    withVoice.system.indexOf("VOICE PROFILE") > withVoice.system.indexOf("Hard rules"),
+    "profile rides after the hard rules, scoped to human-read text"
+  );
+
+  // Whitespace-only profiles are treated as absent.
+  const blank = buildSynthesisPrompt({ ...ctx, voiceProfile: "   \n  " });
+  assert.ok(!blank.system.includes("VOICE PROFILE"));
+
+  // And runSynthesis threads it through to the generate call.
+  let capturedSystem = null;
+  await runSynthesis(db, {
+    sessionId,
+    voiceProfile: "Kill list: leverage.",
+    generate: async ({ system }) => {
+      capturedSystem = system;
+      return goodResponse(goals);
+    },
+  });
+  assert.match(capturedSystem, /Kill list: leverage/);
+});
