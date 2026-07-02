@@ -84,6 +84,7 @@ export default function NoteTemplateAttach({ noteId }: NoteTemplateAttachProps) 
       const res = await window.electronAPI.loopStoreRunSynthesis(noteId);
       if (res?.success) {
         setSynthesisResult({ staged: res.outputs?.length ?? 0 });
+        window.dispatchEvent(new CustomEvent("roomtone:outputs-changed", { detail: { noteId } }));
       } else {
         setSynthesisResult({ error: res?.error || t("notes.template.synthesisError") });
       }

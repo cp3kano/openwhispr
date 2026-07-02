@@ -2300,6 +2300,23 @@
       "synthesizing": "Sintetizando…",
       "synthesized": "{{count}} candidatos preparados",
       "synthesisError": "Error en la síntesis"
+    },
+    "candidates": {
+      "title": "Candidatos",
+      "approve": "Aprobar",
+      "approved": "Aprobado",
+      "dismiss": "Descartar",
+      "copy": "Copiar",
+      "requiredMet": "Criterios cumplidos",
+      "requiredNotMet": "Criterios no cumplidos",
+      "kinds": {
+        "recap": "Resumen",
+        "hud_score": "Cobertura",
+        "capture_candidate": "Captura",
+        "crm_move_proposal": "Acción CRM",
+        "email_draft": "Borrador de correo",
+        "insight": "Hallazgo"
+      }
     }
   },
   "dictionary": {

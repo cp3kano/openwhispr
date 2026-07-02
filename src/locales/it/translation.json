@@ -2252,6 +2252,23 @@
       "synthesizing": "Sintesi in corso…",
       "synthesized": "{{count}} candidati pronti",
       "synthesisError": "Sintesi non riuscita"
+    },
+    "candidates": {
+      "title": "Candidati",
+      "approve": "Approva",
+      "approved": "Approvato",
+      "dismiss": "Scarta",
+      "copy": "Copia",
+      "requiredMet": "Criteri soddisfatti",
+      "requiredNotMet": "Criteri non soddisfatti",
+      "kinds": {
+        "recap": "Riepilogo",
+        "hud_score": "Copertura",
+        "capture_candidate": "Cattura",
+        "crm_move_proposal": "Azione CRM",
+        "email_draft": "Bozza email",
+        "insight": "Insight"
+      }
     }
   },
   "dictionary": {

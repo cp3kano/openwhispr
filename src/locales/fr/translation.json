@@ -2363,6 +2363,23 @@
       "synthesizing": "Synthèse en cours…",
       "synthesized": "{{count}} candidats préparés",
       "synthesisError": "Échec de la synthèse"
+    },
+    "candidates": {
+      "title": "Candidats",
+      "approve": "Approuver",
+      "approved": "Approuvé",
+      "dismiss": "Écarter",
+      "copy": "Copier",
+      "requiredMet": "Critères remplis",
+      "requiredNotMet": "Critères non remplis",
+      "kinds": {
+        "recap": "Récapitulatif",
+        "hud_score": "Couverture",
+        "capture_candidate": "Capture",
+        "crm_move_proposal": "Action CRM",
+        "email_draft": "Brouillon d'e-mail",
+        "insight": "Constat"
+      }
     }
   },
   "dictionary": {

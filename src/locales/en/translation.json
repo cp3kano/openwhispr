@@ -2451,6 +2451,23 @@
       "synthesizing": "Synthesizing…",
       "synthesized": "{{count}} candidates staged",
       "synthesisError": "Synthesis failed"
+    },
+    "candidates": {
+      "title": "Candidates",
+      "approve": "Approve",
+      "approved": "Approved",
+      "dismiss": "Dismiss",
+      "copy": "Copy",
+      "requiredMet": "Definition of done met",
+      "requiredNotMet": "Definition of done not met",
+      "kinds": {
+        "recap": "Recap",
+        "hud_score": "Coverage",
+        "capture_candidate": "Capture",
+        "crm_move_proposal": "CRM move",
+        "email_draft": "Email draft",
+        "insight": "Insight"
+      }
     }
   },
   "dictionary": {

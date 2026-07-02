@@ -1173,6 +1173,16 @@ class IPCHandlers {
       }
     });
 
+    ipcMain.handle("loopstore:fade-output", async (_event, outputId) => {
+      try {
+        const output = loopStore.fadeLoopOutput(this.databaseManager.db, outputId);
+        return { success: true, output };
+      } catch (error) {
+        debugLogger.error("loopstore:fade-output failed", { error: error.message });
+        return { success: false, error: error.message };
+      }
+    });
+
     // Increment 3: post-meeting synthesis. Claude (BYO key) reads the note's
     // transcript through the attached template and stages recap, goal scores,
     // capture candidates, CRM move, and email draft — every one of them a

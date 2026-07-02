@@ -2247,6 +2247,23 @@
       "synthesizing": "合成中…",
       "synthesized": "已產生 {{count}} 個候選",
       "synthesisError": "合成失敗"
+    },
+    "candidates": {
+      "title": "候選項",
+      "approve": "核准",
+      "approved": "已核准",
+      "dismiss": "忽略",
+      "copy": "複製",
+      "requiredMet": "已符合完成標準",
+      "requiredNotMet": "未符合完成標準",
+      "kinds": {
+        "recap": "會議紀要",
+        "hud_score": "覆蓋度",
+        "capture_candidate": "擷取項",
+        "crm_move_proposal": "CRM 更新",
+        "email_draft": "郵件草稿",
+        "insight": "洞察"
+      }
     }
   },
   "dictionary": {
