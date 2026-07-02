@@ -272,6 +272,7 @@ const DiarizationManager = require("./src/helpers/diarization");
 const TrayManager = require("./src/helpers/tray");
 const IPCHandlers = require("./src/helpers/ipcHandlers");
 const CliBridge = require("./src/helpers/cliBridge");
+const { RoomtoneMcpServer } = require("./src/helpers/roomtoneMcp");
 const UpdateManager = require("./src/updater");
 const GlobeKeyManager = require("./src/helpers/globeKeyManager");
 const DevServerManager = require("./src/helpers/devServerManager");
@@ -316,6 +317,7 @@ let meetingAecManager = null;
 let qdrantManager = null;
 let ipcHandlers = null;
 let cliBridge = null;
+let roomtoneMcpServer = null;
 let globeKeyAlertShown = false;
 let authBridgeServer = null;
 
@@ -771,6 +773,14 @@ async function startApp() {
   cliBridge.start().catch((err) => {
     debugLogger.error("CLI bridge failed to start", { error: err.message });
     cliBridge = null;
+  });
+
+  // Roomtone local MCP server — read the corpus, write only candidates.
+  // Same chassis as the CLI bridge: loopback, bearer token, discovery file.
+  roomtoneMcpServer = new RoomtoneMcpServer(() => ipcHandlers?.databaseManager?.db ?? null);
+  roomtoneMcpServer.start().catch((err) => {
+    debugLogger.error("Roomtone MCP server failed to start", { error: err.message });
+    roomtoneMcpServer = null;
   });
 
   await migrateCookieToBearerToken();
@@ -1568,6 +1578,10 @@ function performSyncTeardown() {
   if (cliBridge) {
     cliBridge.stop().catch(() => {});
     cliBridge = null;
+  }
+  if (roomtoneMcpServer) {
+    roomtoneMcpServer.stop().catch(() => {});
+    roomtoneMcpServer = null;
   }
   if (windowManager && isLiveWindow(windowManager.agentWindow)) {
     windowManager.agentWindow.destroy();
