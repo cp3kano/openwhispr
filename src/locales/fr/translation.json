@@ -1999,7 +1999,8 @@
     "notSignedIn": "Non connecté",
     "chat": "Chat",
     "inviteTeammate": "Inviter un coéquipier",
-    "createWorkspace": "Créer un espace de travail"
+    "createWorkspace": "Créer un espace de travail",
+    "companion": "Compagnon"
   },
   "chat": {
     "newChat": "Nouveau chat",
@@ -2873,5 +2874,18 @@
       "successDescription": "Bienvenue dans {{name}}.",
       "errorTitle": "Impossible d'accepter l'invitation"
     }
+  },
+  "companion": {
+    "title": "Compagnon quotidien",
+    "counts": "{{pending}} en attente · {{approved}} approuvés aujourd'hui",
+    "nodQueue": "En attente de votre accord",
+    "queueEmpty": "Rien en attente. La file est vide.",
+    "openThreads": "Fils ouverts",
+    "threadsEmpty": "Aucun fil ouvert pour le moment.",
+    "recentSessions": "Sessions récentes",
+    "sessionsEmpty": "Pas encore de sessions.",
+    "untitled": "Note sans titre",
+    "loading": "Chargement…",
+    "error": "Impossible de charger la vue"
   }
 }

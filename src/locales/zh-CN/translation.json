@@ -2340,7 +2340,8 @@
     "notSignedIn": "未登录",
     "chat": "聊天",
     "inviteTeammate": "Invitar compañero",
-    "createWorkspace": "Crear espacio de trabajo"
+    "createWorkspace": "Crear espacio de trabajo",
+    "companion": "伴侣视图"
   },
   "chat": {
     "newChat": "新对话",
@@ -2868,5 +2869,18 @@
       "successDescription": "Bienvenido a {{name}}.",
       "errorTitle": "No se pudo aceptar la invitación"
     }
+  },
+  "companion": {
+    "title": "每日伴侣",
+    "counts": "{{pending}} 待定 · 今日已批准 {{approved}}",
+    "nodQueue": "等待您的批准",
+    "queueEmpty": "没有待处理项。队列已清空。",
+    "openThreads": "未决线索",
+    "threadsEmpty": "当前没有未决线索。",
+    "recentSessions": "最近会话",
+    "sessionsEmpty": "还没有会话。",
+    "untitled": "无标题笔记",
+    "loading": "加载中…",
+    "error": "无法加载伴侣视图"
   }
 }

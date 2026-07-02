@@ -494,6 +494,37 @@ export interface LoopSession {
   ended_at: string | null;
 }
 
+export interface CompanionCandidate {
+  id: string;
+  session_id: string;
+  kind: string;
+  content: string;
+  destination: string | null;
+  ttl_at: string | null;
+  created_at: string;
+  note_id: number | null;
+  note_title: string | null;
+}
+
+export interface CompanionSession {
+  id: string;
+  note_id: number | null;
+  engagement: string | null;
+  momentum_read: string | null;
+  started_at: string;
+  template_name: string | null;
+  template_version: number | null;
+  note_title: string | null;
+  pending_candidates: number;
+}
+
+export interface CompanionSummary {
+  pending: CompanionCandidate[];
+  open_threads: CompanionCandidate[];
+  sessions: CompanionSession[];
+  counts: { pending: number; open_threads: number; approved_today: number };
+}
+
 export interface LoopOutput {
   id: string;
   session_id: string;
@@ -689,6 +720,11 @@ declare global {
       loopStoreFadeOutput: (
         outputId: string
       ) => Promise<{ success: boolean; output?: LoopOutput; error?: string }>;
+      loopStoreCompanionSummary: () => Promise<{
+        success: boolean;
+        summary?: CompanionSummary;
+        error?: string;
+      }>;
       loopStoreRunSynthesis: (noteId: number) => Promise<{
         success: boolean;
         outputs?: Array<{ kind: string; id: string }>;

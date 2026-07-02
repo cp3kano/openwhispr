@@ -2345,7 +2345,8 @@
     "notSignedIn": "Nicht angemeldet",
     "chat": "Chat",
     "inviteTeammate": "Teammitglied einladen",
-    "createWorkspace": "Workspace erstellen"
+    "createWorkspace": "Workspace erstellen",
+    "companion": "Begleiter"
   },
   "chat": {
     "newChat": "Neuer Chat",
@@ -2873,5 +2874,18 @@
       "successDescription": "Willkommen bei {{name}}.",
       "errorTitle": "Einladung konnte nicht angenommen werden"
     }
+  },
+  "companion": {
+    "title": "Täglicher Begleiter",
+    "counts": "{{pending}} ausstehend · {{approved}} heute freigegeben",
+    "nodQueue": "Wartet auf Ihre Freigabe",
+    "queueEmpty": "Nichts wartet. Die Warteschlange ist leer.",
+    "openThreads": "Offene Fäden",
+    "threadsEmpty": "Derzeit keine offenen Fäden.",
+    "recentSessions": "Letzte Sitzungen",
+    "sessionsEmpty": "Noch keine Sitzungen.",
+    "untitled": "Unbenannte Notiz",
+    "loading": "Wird geladen…",
+    "error": "Begleiteransicht konnte nicht geladen werden"
   }
 }

@@ -2039,7 +2039,8 @@
     "notSignedIn": "Not signed in",
     "chat": "Chat",
     "inviteTeammate": "Invite teammate",
-    "createWorkspace": "Create workspace"
+    "createWorkspace": "Create workspace",
+    "companion": "Companion"
   },
   "workspaces": {
     "switcher": {
@@ -2873,5 +2874,18 @@
       "you": "You",
       "others": "Others"
     }
+  },
+  "companion": {
+    "title": "Daily companion",
+    "counts": "{{pending}} pending · {{approved}} approved today",
+    "nodQueue": "Waiting for your nod",
+    "queueEmpty": "Nothing waiting. The queue is clear.",
+    "openThreads": "Open threads",
+    "threadsEmpty": "No open threads right now.",
+    "recentSessions": "Recent sessions",
+    "sessionsEmpty": "No sessions yet.",
+    "untitled": "Untitled note",
+    "loading": "Loading…",
+    "error": "Couldn't load the companion view"
   }
 }

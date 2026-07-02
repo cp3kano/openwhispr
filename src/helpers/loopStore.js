@@ -249,6 +249,70 @@ function listLoopOutputsForSession(db, sessionId) {
     .all(sessionId);
 }
 
+// Sessions with the context a reader needs: template, note title, pending
+// count. Shared by the MCP surface and the daily companion.
+function listSessionsWithContext(db, limit = 20) {
+  const cap = Math.min(Math.max(Number(limit) || 20, 1), 100);
+  return db
+    .prepare(
+      `SELECT s.id, s.note_id, s.engagement, s.momentum_read, s.started_at,
+              t.name AS template_name, t.version AS template_version,
+              n.title AS note_title,
+              (SELECT COUNT(*) FROM loop_outputs o
+                WHERE o.session_id = s.id AND o.status = 'candidate') AS pending_candidates
+       FROM sessions s
+       LEFT JOIN templates t ON t.id = s.template_id
+       LEFT JOIN notes n ON n.id = s.note_id
+       ORDER BY s.started_at DESC, s.rowid DESC LIMIT ?`
+    )
+    .all(cap);
+}
+
+// The nod queue across every session, newest first.
+function listPendingCandidates(db, limit = 50) {
+  const cap = Math.min(Math.max(Number(limit) || 50, 1), 200);
+  return db
+    .prepare(
+      `SELECT o.id, o.session_id, o.kind, o.content, o.destination, o.ttl_at, o.created_at,
+              s.note_id, n.title AS note_title
+       FROM loop_outputs o
+       JOIN sessions s ON s.id = o.session_id
+       LEFT JOIN notes n ON n.id = s.note_id
+       WHERE o.status = 'candidate'
+       ORDER BY o.created_at DESC LIMIT ?`
+    )
+    .all(cap);
+}
+
+// Everything the daily companion shows, one call: the nod queue, recent
+// sessions, and open threads (pending capture candidates typed open_thread).
+// Read-only by construction — nothing here mutates a row.
+function getCompanionSummary(db) {
+  const pending = listPendingCandidates(db, 200);
+  const openThreads = pending.filter((o) => {
+    if (o.kind !== "capture_candidate") return false;
+    try {
+      return JSON.parse(o.content)?.type === "open_thread";
+    } catch {
+      return false;
+    }
+  });
+  return {
+    pending,
+    open_threads: openThreads,
+    sessions: listSessionsWithContext(db, 15),
+    counts: {
+      pending: pending.length,
+      open_threads: openThreads.length,
+      approved_today: db
+        .prepare(
+          "SELECT COUNT(*) AS n FROM loop_outputs WHERE status = 'approved' AND date(decided_at) = date('now')"
+        )
+        .get().n,
+    },
+  };
+}
+
 // Invariant: no unexplained checkmarks — status='covered' with null evidence
 // is rejected by the schema CHECK; the constraint error propagates.
 function recordGoalEvent(
@@ -344,6 +408,9 @@ module.exports = {
   getSessionForNote,
   attachTemplateToNote,
   listLoopOutputsForSession,
+  listSessionsWithContext,
+  listPendingCandidates,
+  getCompanionSummary,
   recordGoalEvent,
   createLoopOutput,
   approveLoopOutput,
