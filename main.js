@@ -87,12 +87,15 @@ const APP_CHANNEL = resolveAppChannel();
 process.env.OPENWHISPR_CHANNEL = APP_CHANNEL;
 
 function configureChannelUserDataPath() {
-  if (APP_CHANNEL === "production") {
-    return;
-  }
-
-  const isolatedPath = path.join(app.getPath("appData"), `OpenWhispr-${APP_CHANNEL}`);
-  app.setPath("userData", isolatedPath);
+  // Roomtone rename (increment 9): the data directory is PINNED to the
+  // legacy OpenWhispr names on every channel. Electron derives userData from
+  // the app name, so renaming the app would silently orphan the database,
+  // the .env keys, and the voice profile. Pinning here makes the rename
+  // cosmetic. If we ever want Roomtone-named dirs, that's an explicit
+  // migration (copy + verify + switch), not a side effect.
+  const legacyDirName =
+    APP_CHANNEL === "production" ? "OpenWhispr" : `OpenWhispr-${APP_CHANNEL}`;
+  app.setPath("userData", path.join(app.getPath("appData"), legacyDirName));
 }
 
 configureChannelUserDataPath();
@@ -243,7 +246,7 @@ const isLiveWindow = (window) => window && !window.isDestroyed();
 
 // Ensure macOS menus use the proper casing for the app name
 if (process.platform === "darwin" && app.getName() !== "OpenWhispr") {
-  app.setName("OpenWhispr");
+  app.setName("Roomtone");
 }
 
 // Add global error handling for uncaught exceptions
