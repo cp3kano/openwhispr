@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { LayoutTemplate, Loader2 } from "lucide-react";
+import { LayoutTemplate, Loader2, Sparkles } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -25,6 +25,10 @@ export default function NoteTemplateAttach({ noteId }: NoteTemplateAttachProps) 
   const [templatesLoaded, setTemplatesLoaded] = useState(false);
   const [attaching, setAttaching] = useState(false);
   const [failed, setFailed] = useState(false);
+  const [synthesizing, setSynthesizing] = useState(false);
+  const [synthesisResult, setSynthesisResult] = useState<
+    { staged: number } | { error: string } | null
+  >(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -70,18 +74,64 @@ export default function NoteTemplateAttach({ noteId }: NoteTemplateAttachProps) 
     [noteId]
   );
 
+  // Increment 3: the synthesis trigger. One click sends the transcript through
+  // the attached template; everything lands as candidates in the loop store.
+  // Re-running is allowed — old candidates fade on TTL, the queue stays honest.
+  const handleSynthesize = useCallback(async () => {
+    setSynthesizing(true);
+    setSynthesisResult(null);
+    try {
+      const res = await window.electronAPI.loopStoreRunSynthesis(noteId);
+      if (res?.success) {
+        setSynthesisResult({ staged: res.outputs?.length ?? 0 });
+      } else {
+        setSynthesisResult({ error: res?.error || t("notes.template.synthesisError") });
+      }
+    } catch {
+      setSynthesisResult({ error: t("notes.template.synthesisError") });
+    }
+    setSynthesizing(false);
+  }, [noteId, t]);
+
   // Attached: show the template name as a quiet metadata chip, same register
-  // as the date and linked-event chips.
+  // as the date and linked-event chips, plus the synthesize action.
   if (session?.template_id) {
     return (
-      <span
-        className="inline-flex items-center gap-1.5 text-[11px] text-foreground/50 dark:text-foreground/35"
-        title={t("notes.template.attached")}
-      >
-        <LayoutTemplate size={11} className="shrink-0" />
-        <span className="truncate max-w-40">
-          {session.template_name || t("notes.template.attached")}
+      <span className="inline-flex items-center gap-2">
+        <span
+          className="inline-flex items-center gap-1.5 text-[11px] text-foreground/50 dark:text-foreground/35"
+          title={t("notes.template.attached")}
+        >
+          <LayoutTemplate size={11} className="shrink-0" />
+          <span className="truncate max-w-40">
+            {session.template_name || t("notes.template.attached")}
+          </span>
         </span>
+        <button
+          onClick={handleSynthesize}
+          disabled={synthesizing}
+          title={t("notes.template.synthesize")}
+          className="inline-flex items-center gap-1.5 text-[11px] px-1.5 py-0.5 rounded-md border border-border/70 dark:border-white/25 text-foreground/50 dark:text-foreground/35 hover:text-foreground/60 hover:border-border/60 hover:bg-foreground/3 dark:hover:text-foreground/40 dark:hover:border-white/10 dark:hover:bg-white/3 transition-all duration-150 cursor-pointer outline-none disabled:opacity-60 disabled:cursor-default"
+        >
+          {synthesizing ? (
+            <Loader2 size={11} className="animate-spin shrink-0" />
+          ) : (
+            <Sparkles size={11} className="shrink-0" />
+          )}
+          {synthesizing
+            ? t("notes.template.synthesizing")
+            : synthesisResult && "staged" in synthesisResult
+              ? t("notes.template.synthesized", { count: synthesisResult.staged })
+              : t("notes.template.synthesize")}
+        </button>
+        {synthesisResult && "error" in synthesisResult && (
+          <span
+            className="text-[11px] text-red-500/80 truncate max-w-56"
+            title={synthesisResult.error}
+          >
+            {synthesisResult.error}
+          </span>
+        )}
       </span>
     );
   }

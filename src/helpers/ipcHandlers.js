@@ -1173,6 +1173,39 @@ class IPCHandlers {
       }
     });
 
+    // Increment 3: post-meeting synthesis. Claude (BYO key) reads the note's
+    // transcript through the attached template and stages recap, goal scores,
+    // capture candidates, CRM move, and email draft — every one of them a
+    // status='candidate' loop output. Nothing commits without the nod.
+    ipcMain.handle("loopstore:run-synthesis", async (_event, noteId) => {
+      try {
+        const synthesisRunner = require("./synthesisRunner");
+        const session = loopStore.getSessionForNote(this.databaseManager.db, noteId);
+        if (!session) {
+          return { success: false, error: "No session exists for this note yet" };
+        }
+        if (!session.template_id) {
+          return { success: false, error: "Attach a template before running synthesis" };
+        }
+        const apiKey = this.environmentManager.getAnthropicKey();
+        if (!apiKey) {
+          return {
+            success: false,
+            error: "Anthropic API key not set — add it in Settings before running synthesis",
+          };
+        }
+        const generate = synthesisRunner.createClaudeGenerate({ apiKey });
+        const result = await synthesisRunner.runSynthesis(this.databaseManager.db, {
+          sessionId: session.id,
+          generate,
+        });
+        return { success: true, ...result };
+      } catch (error) {
+        debugLogger.error("loopstore:run-synthesis failed", { error: error.message });
+        return { success: false, error: error.message };
+      }
+    });
+
     ipcMain.handle("db-get-folders", async () => {
       return this.databaseManager.getFolders();
     });

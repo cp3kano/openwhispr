@@ -2446,7 +2446,11 @@
       "attach": "Attach template",
       "attached": "Attached template",
       "empty": "No templates yet",
-      "error": "Couldn't attach template"
+      "error": "Couldn't attach template",
+      "synthesize": "Synthesize",
+      "synthesizing": "Synthesizing…",
+      "synthesized": "{{count}} candidates staged",
+      "synthesisError": "Synthesis failed"
     }
   },
   "dictionary": {

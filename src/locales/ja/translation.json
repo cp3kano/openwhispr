@@ -2175,7 +2175,11 @@
       "attach": "テンプレートを適用",
       "attached": "適用中のテンプレート",
       "empty": "テンプレートはまだありません",
-      "error": "テンプレートを適用できませんでした"
+      "error": "テンプレートを適用できませんでした",
+      "synthesize": "合成",
+      "synthesizing": "合成中…",
+      "synthesized": "{{count}}件の候補を作成",
+      "synthesisError": "合成に失敗しました"
     }
   },
   "dictionary": {

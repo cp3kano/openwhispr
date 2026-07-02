@@ -2295,7 +2295,11 @@
       "attach": "Adjuntar plantilla",
       "attached": "Plantilla adjunta",
       "empty": "Aún no hay plantillas",
-      "error": "No se pudo adjuntar la plantilla"
+      "error": "No se pudo adjuntar la plantilla",
+      "synthesize": "Sintetizar",
+      "synthesizing": "Sintetizando…",
+      "synthesized": "{{count}} candidatos preparados",
+      "synthesisError": "Error en la síntesis"
     }
   },
   "dictionary": {

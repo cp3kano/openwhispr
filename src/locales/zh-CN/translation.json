@@ -2242,7 +2242,11 @@
       "attach": "附加模板",
       "attached": "已附加的模板",
       "empty": "暂无模板",
-      "error": "无法附加模板"
+      "error": "无法附加模板",
+      "synthesize": "合成",
+      "synthesizing": "合成中…",
+      "synthesized": "已生成 {{count}} 个候选",
+      "synthesisError": "合成失败"
     }
   },
   "dictionary": {

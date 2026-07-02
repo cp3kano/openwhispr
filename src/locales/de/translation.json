@@ -2247,7 +2247,11 @@
       "attach": "Vorlage anhängen",
       "attached": "Angehängte Vorlage",
       "empty": "Noch keine Vorlagen",
-      "error": "Vorlage konnte nicht angehängt werden"
+      "error": "Vorlage konnte nicht angehängt werden",
+      "synthesize": "Synthetisieren",
+      "synthesizing": "Synthese läuft…",
+      "synthesized": "{{count}} Kandidaten bereitgestellt",
+      "synthesisError": "Synthese fehlgeschlagen"
     }
   },
   "dictionary": {

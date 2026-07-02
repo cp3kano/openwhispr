@@ -2247,7 +2247,11 @@
       "attach": "Collega modello",
       "attached": "Modello collegato",
       "empty": "Ancora nessun modello",
-      "error": "Impossibile collegare il modello"
+      "error": "Impossibile collegare il modello",
+      "synthesize": "Sintetizza",
+      "synthesizing": "Sintesi in corso…",
+      "synthesized": "{{count}} candidati pronti",
+      "synthesisError": "Sintesi non riuscita"
     }
   },
   "dictionary": {

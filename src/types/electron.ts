@@ -686,6 +686,14 @@ declare global {
       loopStoreApproveOutput: (
         outputId: string
       ) => Promise<{ success: boolean; output?: LoopOutput; error?: string }>;
+      loopStoreRunSynthesis: (noteId: number) => Promise<{
+        success: boolean;
+        outputs?: Array<{ kind: string; id: string }>;
+        momentum?: string | null;
+        goalEventCount?: number;
+        warnings?: string[];
+        error?: string;
+      }>;
 
       // Folder operations
       getFolders: () => Promise<FolderItem[]>;
