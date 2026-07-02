@@ -15,6 +15,8 @@ const {
   getSessionForNote,
   attachTemplateToNote,
   listLoopOutputsForSession,
+  listSessionsWithContext,
+  getCompanionSummary,
   recordGoalEvent,
   createLoopOutput,
   approveLoopOutput,
@@ -307,4 +309,45 @@ test("fade lifecycle: candidate -> faded; approved cannot fade; faded cannot app
   assert.throws(() => fadeLoopOutput(db, kept), /must be 'candidate'/);
 
   assert.throws(() => fadeLoopOutput(db, "nonexistent-id"), /not found/);
+});
+
+test("companion summary: pending, open threads, sessions, counts — read-only", () => {
+  const db = openTempDb();
+  db.exec(`CREATE TABLE IF NOT EXISTS notes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL DEFAULT 'Untitled Note',
+    content TEXT NOT NULL DEFAULT '', transcript TEXT, deleted_at TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP)`);
+  seedDefaultTemplates(db, TEMPLATES_DIR);
+  const template = db.prepare("SELECT id FROM templates LIMIT 1").get();
+  const noteId = Number(
+    db.prepare("INSERT INTO notes (title) VALUES ('Josh call')").run().lastInsertRowid
+  );
+  const sessionId = createSession(db, { noteId, templateId: template.id });
+  db.prepare("UPDATE sessions SET momentum_read = 'built' WHERE id = ?").run(sessionId);
+
+  createLoopOutput(db, {
+    sessionId,
+    kind: "capture_candidate",
+    content: { type: "open_thread", content: "estimating flow never described" },
+  });
+  createLoopOutput(db, {
+    sessionId,
+    kind: "capture_candidate",
+    content: { type: "anchor_phrase", content: "kitchen table" },
+  });
+  const approvedId = createLoopOutput(db, { sessionId, kind: "insight", content: "done deal" });
+  approveLoopOutput(db, approvedId);
+
+  const summary = getCompanionSummary(db);
+  assert.equal(summary.counts.pending, 2, "approved outputs are not pending");
+  assert.equal(summary.counts.open_threads, 1);
+  assert.equal(summary.counts.approved_today, 1);
+  assert.match(summary.open_threads[0].content, /estimating flow/);
+  assert.equal(summary.pending[0].note_title, "Josh call");
+
+  const sessions = listSessionsWithContext(db, 10);
+  assert.equal(sessions.length, 1);
+  assert.equal(sessions[0].momentum_read, "built");
+  assert.equal(sessions[0].pending_candidates, 2);
+  assert.equal(sessions[0].note_title, "Josh call");
 });

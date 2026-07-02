@@ -2349,7 +2349,8 @@
     "notSignedIn": "Не авторизован",
     "chat": "Чат",
     "inviteTeammate": "Teammitglied einladen",
-    "createWorkspace": "Workspace erstellen"
+    "createWorkspace": "Workspace erstellen",
+    "companion": "Компаньон"
   },
   "chat": {
     "newChat": "Новый чат",
@@ -2877,5 +2878,18 @@
       "successDescription": "Willkommen bei {{name}}.",
       "errorTitle": "Einladung konnte nicht angenommen werden"
     }
+  },
+  "companion": {
+    "title": "Ежедневный компаньон",
+    "counts": "Ожидает: {{pending}} · Одобрено сегодня: {{approved}}",
+    "nodQueue": "Ждут вашего одобрения",
+    "queueEmpty": "Ничего не ожидает. Очередь пуста.",
+    "openThreads": "Открытые вопросы",
+    "threadsEmpty": "Открытых вопросов нет.",
+    "recentSessions": "Недавние сессии",
+    "sessionsEmpty": "Сессий пока нет.",
+    "untitled": "Без названия",
+    "loading": "Загрузка…",
+    "error": "Не удалось загрузить представление"
   }
 }

@@ -2345,7 +2345,8 @@
     "notSignedIn": "未サインイン",
     "chat": "チャット",
     "inviteTeammate": "Invitar compañero",
-    "createWorkspace": "Crear espacio de trabajo"
+    "createWorkspace": "Crear espacio de trabajo",
+    "companion": "コンパニオン"
   },
   "chat": {
     "newChat": "新しいチャット",
@@ -2873,5 +2874,18 @@
       "successDescription": "Bienvenido a {{name}}.",
       "errorTitle": "No se pudo aceptar la invitación"
     }
+  },
+  "companion": {
+    "title": "デイリーコンパニオン",
+    "counts": "保留 {{pending}} 件 · 本日承認 {{approved}} 件",
+    "nodQueue": "承認待ち",
+    "queueEmpty": "待機中のものはありません。",
+    "openThreads": "未解決のスレッド",
+    "threadsEmpty": "現在未解決のスレッドはありません。",
+    "recentSessions": "最近のセッション",
+    "sessionsEmpty": "セッションはまだありません。",
+    "untitled": "無題のノート",
+    "loading": "読み込み中…",
+    "error": "コンパニオンビューを読み込めませんでした"
   }
 }

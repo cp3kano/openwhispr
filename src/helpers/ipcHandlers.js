@@ -1173,6 +1173,20 @@ class IPCHandlers {
       }
     });
 
+    // Increment 8: the daily companion — read-only aggregate over the loop
+    // store. One IPC, one query bundle, no mutations.
+    ipcMain.handle("loopstore:companion-summary", async () => {
+      try {
+        return {
+          success: true,
+          summary: loopStore.getCompanionSummary(this.databaseManager.db),
+        };
+      } catch (error) {
+        debugLogger.error("loopstore:companion-summary failed", { error: error.message });
+        return { success: false, error: error.message };
+      }
+    });
+
     ipcMain.handle("loopstore:fade-output", async (_event, outputId) => {
       try {
         const output = loopStore.fadeLoopOutput(this.databaseManager.db, outputId);

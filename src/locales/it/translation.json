@@ -2345,7 +2345,8 @@
     "notSignedIn": "Non hai effettuato l'accesso",
     "chat": "Chat",
     "inviteTeammate": "Inviter un coéquipier",
-    "createWorkspace": "Créer un espace de travail"
+    "createWorkspace": "Créer un espace de travail",
+    "companion": "Compagno"
   },
   "chat": {
     "newChat": "Nuova chat",
@@ -2873,5 +2874,18 @@
       "successDescription": "Bienvenue dans {{name}}.",
       "errorTitle": "Impossible d'accepter l'invitation"
     }
+  },
+  "companion": {
+    "title": "Compagno quotidiano",
+    "counts": "{{pending}} in attesa · {{approved}} approvati oggi",
+    "nodQueue": "In attesa del tuo assenso",
+    "queueEmpty": "Niente in attesa. La coda è vuota.",
+    "openThreads": "Fili aperti",
+    "threadsEmpty": "Nessun filo aperto al momento.",
+    "recentSessions": "Sessioni recenti",
+    "sessionsEmpty": "Ancora nessuna sessione.",
+    "untitled": "Nota senza titolo",
+    "loading": "Caricamento…",
+    "error": "Impossibile caricare la vista"
   }
 }

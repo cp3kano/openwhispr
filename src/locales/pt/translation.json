@@ -2345,7 +2345,8 @@
     "notSignedIn": "Não conectado",
     "chat": "Chat",
     "inviteTeammate": "Invitar compañero",
-    "createWorkspace": "Crear espacio de trabajo"
+    "createWorkspace": "Crear espacio de trabajo",
+    "companion": "Companheiro"
   },
   "chat": {
     "newChat": "Novo chat",
@@ -2873,5 +2874,18 @@
       "successDescription": "Bienvenido a {{name}}.",
       "errorTitle": "No se pudo aceptar la invitación"
     }
+  },
+  "companion": {
+    "title": "Companheiro diário",
+    "counts": "{{pending}} pendentes · {{approved}} aprovados hoje",
+    "nodQueue": "Aguardando sua aprovação",
+    "queueEmpty": "Nada pendente. A fila está limpa.",
+    "openThreads": "Tópicos abertos",
+    "threadsEmpty": "Sem tópicos abertos no momento.",
+    "recentSessions": "Sessões recentes",
+    "sessionsEmpty": "Ainda sem sessões.",
+    "untitled": "Nota sem título",
+    "loading": "Carregando…",
+    "error": "Não foi possível carregar a visão"
   }
 }

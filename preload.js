@@ -111,6 +111,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
   loopStoreApproveOutput: (outputId) => ipcRenderer.invoke("loopstore:approve-output", outputId),
   loopStoreRunSynthesis: (noteId) => ipcRenderer.invoke("loopstore:run-synthesis", noteId),
   loopStoreFadeOutput: (outputId) => ipcRenderer.invoke("loopstore:fade-output", outputId),
+  loopStoreCompanionSummary: () => ipcRenderer.invoke("loopstore:companion-summary"),
 
   // Folder functions
   getFolders: () => ipcRenderer.invoke("db-get-folders"),
