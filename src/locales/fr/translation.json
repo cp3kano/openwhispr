@@ -2353,6 +2353,12 @@
         "othersInCall_one": "{{count}} autre dans l'appel",
         "othersInCall_other": "{{count}} autres dans l'appel"
       }
+    },
+    "template": {
+      "attach": "Associer un modèle",
+      "attached": "Modèle associé",
+      "empty": "Aucun modèle pour l'instant",
+      "error": "Impossible d'associer le modèle"
     }
   },
   "dictionary": {

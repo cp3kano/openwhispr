@@ -472,6 +472,46 @@ export interface ReferralItem {
   first_payment_at: string | null;
 }
 
+// Roomtone loop store (src/helpers/loopStore.js)
+export interface LoopTemplateSummary {
+  id: string;
+  name: string;
+  version: number;
+  status: "draft" | "validated" | "productized";
+  reuse_count: number;
+  goal_count: number;
+}
+
+export interface LoopSession {
+  id: string;
+  note_id: number | null;
+  template_id: string | null;
+  template_version: number | null;
+  template_name?: string | null;
+  engagement: string | null;
+  momentum_read: "built" | "leaked" | "mixed" | null;
+  started_at: string;
+  ended_at: string | null;
+}
+
+export interface LoopOutput {
+  id: string;
+  session_id: string;
+  kind:
+    | "recap"
+    | "hud_score"
+    | "capture_candidate"
+    | "crm_move_proposal"
+    | "email_draft"
+    | "insight";
+  content: string;
+  status: "candidate" | "approved" | "committed" | "faded";
+  destination: string | null;
+  ttl_at: string | null;
+  decided_at: string | null;
+  created_at: string;
+}
+
 declare global {
   interface Window {
     electronAPI: {
@@ -623,6 +663,29 @@ declare global {
         callback: (data: { done: number; total: number }) => void
       ) => () => void;
       updateNoteCloudId: (id: number, cloudId: string) => Promise<NoteItem>;
+
+      // Roomtone loop store (Quick Note -> template promotion)
+      loopStoreListTemplates: () => Promise<{
+        success: boolean;
+        templates?: LoopTemplateSummary[];
+        error?: string;
+      }>;
+      loopStoreGetSessionForNote: (
+        noteId: number
+      ) => Promise<{ success: boolean; session?: LoopSession | null; error?: string }>;
+      loopStoreCreateSessionForNote: (
+        noteId: number
+      ) => Promise<{ success: boolean; session?: LoopSession | null; error?: string }>;
+      loopStoreAttachTemplate: (
+        noteId: number,
+        templateId: string
+      ) => Promise<{ success: boolean; session?: LoopSession | null; error?: string }>;
+      loopStoreListOutputs: (
+        sessionId: string
+      ) => Promise<{ success: boolean; outputs?: LoopOutput[]; error?: string }>;
+      loopStoreApproveOutput: (
+        outputId: string
+      ) => Promise<{ success: boolean; output?: LoopOutput; error?: string }>;
 
       // Folder operations
       getFolders: () => Promise<FolderItem[]>;

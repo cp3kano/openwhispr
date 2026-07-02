@@ -45,6 +45,7 @@ import {
   serializeTranscriptSegments,
 } from "../../utils/transcriptSpeakerState";
 import NoteParticipants from "./NoteParticipants";
+import NoteTemplateAttach from "./NoteTemplateAttach";
 import type { CalendarAttendee } from "../../types/calendar";
 
 function formatNoteDate(dateStr: string): string {
@@ -714,6 +715,7 @@ export default function NoteEditor({
                 </DropdownMenuContent>
               </DropdownMenu>
             )}
+            <NoteTemplateAttach noteId={note.id} />
             {isSaving && (
               <span className="inline-flex items-center gap-1 text-[11px] text-foreground/30 dark:text-foreground/15 tabular-nums">
                 <Loader2 size={8} className="animate-spin" />

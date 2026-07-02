@@ -2237,6 +2237,12 @@
         "othersInCall_one": "通話中還有 {{count}} 人",
         "othersInCall_other": "通話中還有 {{count}} 人"
       }
+    },
+    "template": {
+      "attach": "附加範本",
+      "attached": "已附加的範本",
+      "empty": "尚無範本",
+      "error": "無法附加範本"
     }
   },
   "dictionary": {

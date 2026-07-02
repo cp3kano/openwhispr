@@ -2170,6 +2170,12 @@
       "addContact": "連絡先を追加",
       "save": "保存",
       "cancel": "キャンセル"
+    },
+    "template": {
+      "attach": "テンプレートを適用",
+      "attached": "適用中のテンプレート",
+      "empty": "テンプレートはまだありません",
+      "error": "テンプレートを適用できませんでした"
     }
   },
   "dictionary": {

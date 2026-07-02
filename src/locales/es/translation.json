@@ -2290,6 +2290,12 @@
         "othersInCall_one": "{{count}} otra persona en la llamada",
         "othersInCall_other": "{{count}} otras personas en la llamada"
       }
+    },
+    "template": {
+      "attach": "Adjuntar plantilla",
+      "attached": "Plantilla adjunta",
+      "empty": "Aún no hay plantillas",
+      "error": "No se pudo adjuntar la plantilla"
     }
   },
   "dictionary": {

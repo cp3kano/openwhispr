@@ -2242,6 +2242,12 @@
         "othersInCall_one": "{{count}} altra persona in chiamata",
         "othersInCall_other": "{{count}} altre persone in chiamata"
       }
+    },
+    "template": {
+      "attach": "Collega modello",
+      "attached": "Modello collegato",
+      "empty": "Ancora nessun modello",
+      "error": "Impossibile collegare il modello"
     }
   },
   "dictionary": {
