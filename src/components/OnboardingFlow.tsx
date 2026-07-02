@@ -30,11 +30,8 @@ import { useSystemAudioPermission } from "../hooks/useSystemAudioPermission";
 import { useSettings } from "../hooks/useSettings";
 import { useSettingsStore } from "../stores/settingsStore";
 import LanguageSelector from "./ui/LanguageSelector";
-import AuthenticationStep from "./AuthenticationStep";
-import EmailVerificationStep from "./EmailVerificationStep";
 import { setAgentName as saveAgentName } from "../utils/agentName";
 import { formatHotkeyLabel, getDefaultHotkey, isGlobeLikeHotkey } from "../utils/hotkeys";
-import { useAuth } from "../hooks/useAuth";
 import { HotkeyInput } from "./ui/HotkeyInput";
 import { useHotkeyRegistration } from "../hooks/useHotkeyRegistration";
 import { useHotkeyModeInfo } from "../hooks/useHotkeyModeInfo";
@@ -49,7 +46,6 @@ import UseCaseStep from "./onboarding/UseCaseStep";
 import MeetingSetupStep from "./onboarding/MeetingSetupStep";
 import FinishStep from "./onboarding/FinishStep";
 import { USE_CASE_IDS } from "./onboarding/useCases";
-import { cloudPost } from "../services/cloudApi";
 
 // Highest possible step index across flow variants (skip-auth with meeting step).
 const MAX_STEP_INDEX = 7;
@@ -63,7 +59,8 @@ interface OnboardingFlowProps {
 
 export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
   const { t } = useTranslation();
-  const { isSignedIn } = useAuth();
+  // Hosted accounts are gone; onboarding always runs the local-first flow.
+  const isSignedIn = false;
 
   const [currentStep, setCurrentStep, removeCurrentStep] = useLocalStorage(
     "onboardingCurrentStep",
@@ -124,7 +121,6 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
   const [hotkey, setHotkey] = useState(dictationKey || getDefaultHotkey());
   const [agentName, setAgentName] = useState("OpenWhispr");
   const [skipAuth, setSkipAuth] = useState(false);
-  const [pendingVerificationEmail, setPendingVerificationEmail] = useState<string | null>(null);
   const [isModelDownloaded, setIsModelDownloaded] = useState(false);
   const { isUsingNativeShortcut, isUsingHyprland, hyprlandConfigStatus, supportsPushToTalk } =
     useHotkeyModeInfo("onboarding");
@@ -399,16 +395,6 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
       setAccessibilitySkipped(true);
     }
 
-    // Fire-and-forget intent sync — must never block onboarding.
-    if (currentStepId === "usecase" && isSignedIn && !skipAuth) {
-      cloudPost("/api/onboarding-intent", {
-        useCases: onboardingUseCases,
-        note: onboardingUseCaseNote || undefined,
-      }).catch((error) => {
-        logger.warn("Failed to sync onboarding intent", { error }, "onboarding");
-      });
-    }
-
     const newStep = currentStep + 1;
     setCurrentStep(newStep);
 
@@ -425,8 +411,6 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
     activationStepIndex,
     isSignedIn,
     skipAuth,
-    onboardingUseCases,
-    onboardingUseCaseNote,
     permissionsHook.accessibilityPermissionGranted,
     setAccessibilitySkipped,
   ]);
@@ -497,31 +481,24 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
   const renderStep = () => {
     switch (currentStepId) {
       case "welcome":
-        if (pendingVerificationEmail) {
-          return (
-            <EmailVerificationStep
-              email={pendingVerificationEmail}
-              onVerified={() => {
-                setPendingVerificationEmail(null);
+        return (
+          <div className="space-y-6 text-center">
+            <div>
+              <h2 className="text-2xl font-semibold text-foreground mb-2">
+                {t("auth.welcomeTitle")}
+              </h2>
+              <p className="text-sm text-muted-foreground">{t("auth.welcomeSubtitle")}</p>
+            </div>
+            <Button
+              onClick={() => {
+                setSkipAuth(true);
                 nextStep();
               }}
-              onBack={() => setPendingVerificationEmail(null)}
-            />
-          );
-        }
-        return (
-          <AuthenticationStep
-            onContinueWithoutAccount={() => {
-              setSkipAuth(true);
-              nextStep();
-            }}
-            onAuthComplete={() => {
-              nextStep();
-            }}
-            onNeedsVerification={(email) => {
-              setPendingVerificationEmail(email);
-            }}
-          />
+              className="h-9 px-6 rounded-full text-sm"
+            >
+              {t("auth.getStarted")}
+            </Button>
+          </div>
         );
 
       case "usecase":

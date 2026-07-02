@@ -4,7 +4,6 @@ const fs = require("fs");
 const os = require("os");
 const crypto = require("crypto");
 const debugLogger = require("./debugLogger");
-const tokenStore = require("./tokenStore");
 const { classifyAndLog } = require("./networkErrors");
 const GnomeShortcutManager = require("./gnomeShortcut");
 const HyprlandShortcutManager = require("./hyprlandShortcut");
@@ -118,7 +117,6 @@ const AUDIO_MIME_TYPES = {
   aac: "audio/aac",
 };
 
-const CLOUD_INLINE_LIMIT = 4 * 1024 * 1024;
 const CLOUD_CHUNK_CONCURRENCY = 5;
 const CLOUD_CHUNK_SEGMENT_SECONDS = 240;
 
@@ -168,146 +166,6 @@ async function postMultipart(url, body, boundary, headers = {}) {
   }
 }
 
-function interpretTranscribeResponse(data) {
-  if (data.statusCode === 401) {
-    throw Object.assign(new Error("Session expired"), { code: "AUTH_EXPIRED" });
-  }
-  if (data.statusCode === 503) {
-    throw Object.assign(new Error("Request timed out"), { code: "SERVER_ERROR" });
-  }
-  if (data.statusCode === 429) {
-    throw Object.assign(new Error("Daily word limit reached"), {
-      code: "LIMIT_REACHED",
-      ...data.data,
-    });
-  }
-  if (data.statusCode === 422 && data.data?.code === "NO_SPEECH_DETECTED") {
-    throw Object.assign(new Error(data.data.error || "No speech detected in audio"), {
-      code: "NO_SPEECH_DETECTED",
-    });
-  }
-  if (data.statusCode !== 200) {
-    throw new Error(data.data?.error || `API error: ${data.statusCode}`);
-  }
-  return data.data;
-}
-
-async function chunkedCloudTranscribe({
-  buffer = null,
-  filePath = null,
-  apiUrl,
-  authHeader,
-  multipartFields = {},
-  onProgress,
-  concurrencyLimit = CLOUD_CHUNK_CONCURRENCY,
-  segmentDuration = CLOUD_CHUNK_SEGMENT_SECONDS,
-}) {
-  const { splitAudioFile } = require("./ffmpegUtils");
-
-  const jobId = `${Date.now()}-${crypto.randomBytes(4).toString("hex")}`;
-  const chunkDir = path.join(os.tmpdir(), `ow-chunks-${jobId}`);
-  let tmpInputPath = null;
-
-  let inputPath = filePath;
-  if (!inputPath && buffer) {
-    tmpInputPath = path.join(os.tmpdir(), `ow-audio-${jobId}.webm`);
-    fs.writeFileSync(tmpInputPath, buffer);
-    inputPath = tmpInputPath;
-  }
-
-  fs.mkdirSync(chunkDir, { recursive: true });
-
-  try {
-    onProgress?.({ stage: "splitting", chunksTotal: 0, chunksCompleted: 0 });
-
-    const chunkPaths = await splitAudioFile(inputPath, chunkDir, { segmentDuration });
-    const totalChunks = chunkPaths.length;
-
-    onProgress?.({ stage: "transcribing", chunksTotal: totalChunks, chunksCompleted: 0 });
-
-    const results = new Array(totalChunks).fill(null);
-    const failureCodes = new Set();
-    let completedCount = 0;
-
-    const transcribeChunk = async (index) => {
-      const chunkBuffer = fs.readFileSync(chunkPaths[index]);
-      const chunkName = path.basename(chunkPaths[index]);
-      const { body, boundary } = buildMultipartBody(
-        chunkBuffer,
-        chunkName,
-        "audio/mpeg",
-        multipartFields
-      );
-      const url = new URL(`${apiUrl}/api/transcribe`);
-      const data = await postMultipart(url, body, boundary, authHeader);
-
-      results[index] = interpretTranscribeResponse(data);
-      completedCount++;
-      onProgress?.({
-        stage: "transcribing",
-        chunksTotal: totalChunks,
-        chunksCompleted: completedCount,
-      });
-    };
-
-    const executing = new Set();
-    for (let index = 0; index < totalChunks; index++) {
-      const p = transcribeChunk(index).then(
-        () => executing.delete(p),
-        (err) => {
-          executing.delete(p);
-          if (err.code === "AUTH_EXPIRED" || err.code === "LIMIT_REACHED") throw err;
-          if (err.code) failureCodes.add(err.code);
-          debugLogger.warn(`Chunk ${index} failed`, { error: err.message, code: err.code });
-        }
-      );
-      executing.add(p);
-      if (executing.size >= concurrencyLimit) {
-        await Promise.race(executing);
-      }
-    }
-    await Promise.all(executing);
-
-    const succeeded = results.filter((r) => r !== null);
-    if (succeeded.length === 0) {
-      if (failureCodes.size === 1 && failureCodes.has("NO_SPEECH_DETECTED")) {
-        throw Object.assign(new Error("No speech detected in audio"), {
-          code: "NO_SPEECH_DETECTED",
-        });
-      }
-      throw new Error("All chunks failed to transcribe");
-    }
-
-    const text = results
-      .filter((r) => r !== null)
-      .map((r) => r.text)
-      .join(" ")
-      .replace(/\s+/g, " ")
-      .trim();
-
-    const failed = totalChunks - succeeded.length;
-    return {
-      text,
-      responses: succeeded,
-      lastResponse: succeeded[succeeded.length - 1],
-      ...(failed > 0 ? { warning: `${failed} of ${totalChunks} chunks failed` } : {}),
-    };
-  } finally {
-    if (tmpInputPath) {
-      try {
-        fs.unlinkSync(tmpInputPath);
-      } catch {
-        // ignore
-      }
-    }
-    try {
-      fs.rmSync(chunkDir, { recursive: true, force: true });
-    } catch (cleanupErr) {
-      debugLogger.warn("Failed to cleanup chunk dir", { error: cleanupErr.message });
-    }
-  }
-}
-
 class IPCHandlers {
   constructor(managers) {
     this.environmentManager = managers.environmentManager;
@@ -328,8 +186,6 @@ class IPCHandlers {
     this.audioTapManager = managers.audioTapManager;
     this.linuxPortalAudioManager = managers.linuxPortalAudioManager;
     this.meetingAecManager = managers.meetingAecManager;
-    this.oauthProtocolRegistered = managers.oauthProtocolRegistered === true;
-    this.oauthProtocol = managers.oauthProtocol || "openwhispr";
     this.sessionId = crypto.randomUUID();
     this.assemblyAiStreaming = null;
     this.deepgramStreaming = null;
@@ -939,20 +795,8 @@ class IPCHandlers {
       return this.databaseManager.getDictionaryEntryByClientId(clientDictId);
     });
 
-    ipcMain.handle("db-upsert-dictionary-from-cloud", async (_event, cloudEntry) => {
-      return this.databaseManager.upsertDictionaryFromCloud(cloudEntry);
-    });
-
-    ipcMain.handle("db-mark-dictionary-synced", async (_event, id, cloudId) => {
-      return this.databaseManager.markDictionaryEntrySynced(id, cloudId);
-    });
-
     ipcMain.handle("db-hard-delete-dictionary", async (_event, id) => {
       return this.databaseManager.hardDeleteDictionaryEntry(id);
-    });
-
-    ipcMain.handle("db-clear-dictionary-cloud-id", async (_event, id) => {
-      return this.databaseManager.clearDictionaryCloudId(id);
     });
 
     ipcMain.handle("db-broadcast-dictionary-updated", async () => {
@@ -1094,10 +938,6 @@ class IPCHandlers {
         this.broadcastToWindows("semantic-reindex-progress", { done: completed, total });
       });
       return { success: true, indexed: done };
-    });
-
-    ipcMain.handle("db-update-note-cloud-id", async (event, id, cloudId) => {
-      return this.databaseManager.updateNoteCloudId(id, cloudId);
     });
 
     // Roomtone loop store — the promotion path (Quick Note -> templated session).
@@ -1415,10 +1255,6 @@ class IPCHandlers {
       return this.databaseManager.unarchiveAgentConversation(id);
     });
 
-    ipcMain.handle("db-update-agent-conversation-cloud-id", async (event, id, cloudId) => {
-      return this.databaseManager.updateAgentConversationCloudId(id, cloudId);
-    });
-
     ipcMain.handle("db-semantic-search-conversations", async (event, query, limit) => {
       if (this.vectorIndex?.isReady?.()) {
         try {
@@ -1450,12 +1286,6 @@ class IPCHandlers {
     ipcMain.handle("db-get-note-by-client-id", (_, clientNoteId) =>
       this.databaseManager.getNoteByClientId(clientNoteId)
     );
-    ipcMain.handle("db-upsert-note-from-cloud", (_, cloudNote, localFolderId) =>
-      this.databaseManager.upsertNoteFromCloud(cloudNote, localFolderId)
-    );
-    ipcMain.handle("db-mark-note-synced", (_, id, cloudId) =>
-      this.databaseManager.markNoteSynced(id, cloudId)
-    );
     ipcMain.handle("db-mark-note-sync-error", (_, id) =>
       this.databaseManager.markNoteSyncError(id)
     );
@@ -1473,12 +1303,6 @@ class IPCHandlers {
     ipcMain.handle("db-get-pending-folders", () => this.databaseManager.getPendingFolders());
     ipcMain.handle("db-get-folder-by-client-id", (_, clientFolderId) =>
       this.databaseManager.getFolderByClientId(clientFolderId)
-    );
-    ipcMain.handle("db-upsert-folder-from-cloud", (_, cloudFolder) =>
-      this.databaseManager.upsertFolderFromCloud(cloudFolder)
-    );
-    ipcMain.handle("db-mark-folder-synced", (_, id, cloudId) =>
-      this.databaseManager.markFolderSynced(id, cloudId)
     );
     ipcMain.handle("db-get-folder-id-map", () => this.databaseManager.getFolderIdMap());
     ipcMain.handle("db-get-pending-folder-deletes", () =>
@@ -1511,12 +1335,6 @@ class IPCHandlers {
     ipcMain.handle("db-get-conversation-by-client-id", (_, clientId) =>
       this.databaseManager.getConversationByClientId(clientId)
     );
-    ipcMain.handle("db-upsert-conversation-from-cloud", (_, cloudConv, messages) =>
-      this.databaseManager.upsertConversationFromCloud(cloudConv, messages)
-    );
-    ipcMain.handle("db-mark-conversation-synced", (_, id, cloudId) =>
-      this.databaseManager.markConversationSynced(id, cloudId)
-    );
     ipcMain.handle("db-hard-delete-conversation", (_, id) => {
       const result = this.databaseManager.hardDeleteConversation(id);
       if (result?.success) {
@@ -1531,12 +1349,6 @@ class IPCHandlers {
     );
     ipcMain.handle("db-get-transcription-by-client-id", (_, clientId) =>
       this.databaseManager.getTranscriptionByClientId(clientId)
-    );
-    ipcMain.handle("db-upsert-transcription-from-cloud", (_, cloudTranscription) =>
-      this.databaseManager.upsertTranscriptionFromCloud(cloudTranscription)
-    );
-    ipcMain.handle("db-mark-transcription-synced", (_, id, cloudId) =>
-      this.databaseManager.markTranscriptionSynced(id, cloudId)
     );
     ipcMain.handle("db-get-pending-transcription-deletes", () =>
       this.databaseManager.getPendingTranscriptionDeletes()
@@ -3624,33 +3436,6 @@ class IPCHandlers {
       });
     });
 
-    ipcMain.handle("auth-clear-session", async (event) => {
-      try {
-        tokenStore.clear();
-        const win = BrowserWindow.fromWebContents(event.sender);
-        if (win) {
-          await win.webContents.session.clearStorageData({ storages: ["cookies"] });
-        }
-        return { success: true };
-      } catch (error) {
-        debugLogger.error("Failed to clear auth session:", error);
-        return { success: false, error: error.message };
-      }
-    });
-
-    ipcMain.handle("auth-get-token", () => tokenStore.get());
-    ipcMain.handle("auth-set-token", (_event, token) => {
-      if (typeof token === "string" && token) {
-        tokenStore.set(token);
-      } else {
-        // Surface silent rotation-to-empty so we can spot regressions where the
-        // renderer thinks it's persisting a token but the value never lands.
-        debugLogger.debug("auth-set-token ignored: empty or non-string token", {
-          type: typeof token,
-        });
-      }
-    });
-
     // In production, VITE_* env vars aren't available in the main process because
     // Vite only inlines them into the renderer bundle at build time. Load the
     // runtime-env.json that the Vite build writes to src/dist/ as a fallback.
@@ -3669,200 +3454,9 @@ class IPCHandlers {
       runtimeEnv.VITE_OPENWHISPR_API_URL ||
       "";
 
-    const getAuthUrl = () =>
-      process.env.AUTH_URL ||
-      process.env.VITE_AUTH_URL ||
-      runtimeEnv.VITE_AUTH_URL ||
-      "https://auth.openwhispr.com";
-
-    const getSessionCookiesFromWindow = async (win) => {
-      const scopedUrls = [getAuthUrl(), getApiUrl()].filter(Boolean);
-      const cookiesByName = new Map();
-
-      for (const url of scopedUrls) {
-        try {
-          const scopedCookies = await win.webContents.session.cookies.get({ url });
-          for (const cookie of scopedCookies) {
-            if (!cookiesByName.has(cookie.name)) {
-              cookiesByName.set(cookie.name, cookie.value);
-            }
-          }
-        } catch (error) {
-          debugLogger.warn("Failed to read scoped auth cookies", {
-            url,
-            error: error.message,
-          });
-        }
-      }
-
-      // Fallback for older sessions where cookies are not URL-scoped as expected.
-      if (cookiesByName.size === 0) {
-        const allCookies = await win.webContents.session.cookies.get({});
-        for (const cookie of allCookies) {
-          if (!cookiesByName.has(cookie.name)) {
-            cookiesByName.set(cookie.name, cookie.value);
-          }
-        }
-      }
-
-      const cookieHeader = [...cookiesByName.entries()]
-        .map(([name, value]) => `${name}=${value}`)
-        .join("; ");
-
-      debugLogger.debug(
-        "Resolved auth cookies for cloud request",
-        {
-          cookieCount: cookiesByName.size,
-          scopedUrls,
-        },
-        "auth"
-      );
-
-      return cookieHeader;
-    };
-
-    const getSessionCookies = async (event) => {
-      const win = BrowserWindow.fromWebContents(event.sender);
-      if (!win) return "";
-      return getSessionCookiesFromWindow(win);
-    };
-
-    // Bearer auth is preferred. Cookie fallback covers the brief window before
-    // main.js's startup migration bridge runs (or if it failed for this user).
-    const getAuthHeaderFromWindow = async (win) => {
-      const token = tokenStore.get();
-      if (token) return { Authorization: `Bearer ${token}` };
-      const cookieHeader = win ? await getSessionCookiesFromWindow(win) : "";
-      return cookieHeader ? { Cookie: cookieHeader } : {};
-    };
-
-    const getAuthHeader = async (event) => {
-      const win = BrowserWindow.fromWebContents(event.sender);
-      return getAuthHeaderFromWindow(win);
-    };
-
     // Honors system proxy via Electron's net stack. useSessionCookies:false so
     // Electron doesn't auto-attach jar cookies on top of our explicit headers.
     const proxyFetch = (url, init = {}) => net.fetch(url, { ...init, useSessionCookies: false });
-
-    ipcMain.handle("cloud-transcribe", async (event, audioBuffer, opts = {}) => {
-      try {
-        const apiUrl = getApiUrl();
-        if (!apiUrl) throw new Error("OpenWhispr API URL not configured");
-
-        const authHeader = await getAuthHeader(event);
-        if (!Object.keys(authHeader).length) throw new Error("Not authenticated");
-
-        const audioData = Buffer.from(audioBuffer);
-        // Reused for the local SQLite row so SyncService upserts the existing
-        // cloud row (filling in text) instead of creating a duplicate.
-        const clientTranscriptionId = crypto.randomUUID();
-        const multipartFields = {
-          language: opts.language,
-          prompt: opts.prompt,
-          sendLogs: opts.sendLogs,
-          clientType: "desktop",
-          appVersion: app.getVersion(),
-          clientVersion: app.getVersion(),
-          sessionId: this.sessionId,
-          clientTranscriptionId,
-        };
-
-        debugLogger.debug("Cloud transcribe request", { audioSize: audioData.length }, "cloud-api");
-
-        if (audioData.length > CLOUD_INLINE_LIMIT) {
-          const { text, responses, lastResponse } = await chunkedCloudTranscribe({
-            buffer: audioData,
-            apiUrl,
-            authHeader,
-            multipartFields,
-          });
-          const sum = (field) => responses.reduce((s, r) => s + (r?.[field] || 0), 0);
-          return {
-            success: true,
-            text,
-            clientTranscriptionId,
-            wordsUsed: lastResponse?.wordsUsed,
-            wordsRemaining: lastResponse?.wordsRemaining,
-            plan: lastResponse?.plan,
-            limitReached: lastResponse?.limitReached || false,
-            sttProvider: lastResponse?.sttProvider,
-            sttModel: lastResponse?.sttModel,
-            sttProcessingMs: sum("sttProcessingMs"),
-            sttWordCount: sum("sttWordCount"),
-            sttLanguage: lastResponse?.sttLanguage,
-            audioDurationMs: sum("audioDurationMs"),
-          };
-        }
-
-        const { body, boundary } = buildMultipartBody(
-          audioData,
-          "audio.webm",
-          "audio/webm",
-          multipartFields
-        );
-        const url = new URL(`${apiUrl}/api/transcribe`);
-        const data = await postMultipart(url, body, boundary, authHeader);
-
-        debugLogger.debug(
-          "Cloud transcribe response",
-          { statusCode: data.statusCode },
-          "cloud-api"
-        );
-
-        const result = interpretTranscribeResponse(data);
-        return {
-          success: true,
-          text: result.text,
-          clientTranscriptionId,
-          wordsUsed: result.wordsUsed,
-          wordsRemaining: result.wordsRemaining,
-          plan: result.plan,
-          limitReached: result.limitReached || false,
-          sttProvider: result.sttProvider,
-          sttModel: result.sttModel,
-          sttProcessingMs: result.sttProcessingMs,
-          sttWordCount: result.sttWordCount,
-          sttLanguage: result.sttLanguage,
-          audioDurationMs: result.audioDurationMs,
-        };
-      } catch (error) {
-        debugLogger.error("Cloud transcription error", { error: error.message }, "cloud-api");
-        if (error.code) {
-          return { success: false, error: error.message, code: error.code, ...error };
-        }
-        return { success: false, error: error.message };
-      }
-    });
-
-    ipcMain.handle("cloud-health-check", async () => {
-      const apiUrl = getApiUrl();
-      if (!apiUrl) {
-        return {
-          ok: false,
-          code: "NO_API_URL",
-          messageKey: "streaming.errors.cloudUnreachable.generic",
-        };
-      }
-      const url = `${apiUrl}/api/health`;
-      try {
-        const res = await proxyFetch(url, {
-          method: "GET",
-          signal: AbortSignal.timeout(3000),
-        });
-        return { ok: res.ok, status: res.status };
-      } catch (err) {
-        const classified = classifyAndLog(err, url);
-        if (classified.isNetworkError) {
-          return { ok: false, code: classified.code, messageKey: classified.messageKey };
-        }
-        return {
-          ok: false,
-          code: "UNKNOWN",
-          messageKey: "streaming.errors.cloudUnreachable.generic",
-        };
-      }
-    });
 
     ipcMain.handle("retry-transcription", async (event, id, settings) => {
       const buffer = this.audioStorageManager.getAudioBuffer(id);
@@ -3887,46 +3481,6 @@ class IPCHandlers {
               language,
               ...vadOptions,
             });
-          }
-        } else if (settings?.cloudTranscriptionMode === "openwhispr") {
-          const win = BrowserWindow.fromWebContents(event.sender);
-          if (win) {
-            const authHeader = await getAuthHeaderFromWindow(win);
-            if (Object.keys(authHeader).length) {
-              const apiUrl = getApiUrl();
-              if (apiUrl) {
-                const multipartFields = {
-                  language,
-                  clientType: "desktop",
-                  appVersion: app.getVersion(),
-                  sessionId: this.sessionId,
-                };
-                if (buffer.length > CLOUD_INLINE_LIMIT) {
-                  const { text } = await chunkedCloudTranscribe({
-                    buffer,
-                    apiUrl,
-                    authHeader,
-                    multipartFields,
-                  });
-                  result = { text, source: "openwhispr", model: "cloud" };
-                } else {
-                  const { body, boundary } = buildMultipartBody(
-                    buffer,
-                    "audio.webm",
-                    "audio/webm",
-                    multipartFields
-                  );
-                  const url = new URL(`${apiUrl}/api/transcribe`);
-                  const data = await postMultipart(url, body, boundary, authHeader);
-                  const responseData = interpretTranscribeResponse(data);
-                  result = {
-                    text: responseData.text,
-                    source: "openwhispr",
-                    model: "cloud",
-                  };
-                }
-              }
-            }
           }
         } else {
           const provider = settings?.cloudTranscriptionProvider || "openai";
@@ -4423,40 +3977,12 @@ class IPCHandlers {
       };
     };
 
-    const fetchRealtimeToken = async (event, options, { streams } = {}) => {
-      const postServerToken = async (path, body = {}) => {
-        const apiUrl = getApiUrl();
-        if (!apiUrl) {
-          const err = new Error("OpenWhispr API URL not configured");
-          err.code = "NO_API";
-          throw err;
-        }
-        const authHeader = await getAuthHeader(event);
-        if (!Object.keys(authHeader).length) throw new Error("Not authenticated");
-        const url = `${apiUrl}${path}`;
-        let response;
-        try {
-          response = await proxyFetch(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json", ...authHeader },
-            body: JSON.stringify(body),
-          });
-        } catch (err) {
-          const classified = classifyAndLog(err, url);
-          if (classified.isNetworkError) {
-            throw Object.assign(new Error(err.message || "Network request failed"), {
-              code: "NETWORK_ERROR",
-              networkCode: classified.code,
-              messageKey: classified.messageKey,
-            });
-          }
-          throw err;
-        }
-        if (!response.ok) {
-          const err = await response.json().catch(() => ({}));
-          throw new Error(err.error || `Token request failed: ${response.status}`);
-        }
-        return response.json();
+    const fetchRealtimeToken = async (_event, options, { streams } = {}) => {
+      // Hosted token relay is gone — streaming works with your own keys only.
+      const noHostedRelay = () => {
+        const err = new Error("Server-relayed streaming was removed. Add your own API key.");
+        err.code = "NO_API";
+        throw err;
       };
 
       const dual = (factory) => (streams === 2 ? Promise.all([factory(), factory()]) : factory());
@@ -4481,11 +4007,7 @@ class IPCHandlers {
             return data.token;
           });
         }
-        return dual(async () => {
-          const data = await postServerToken("/api/streaming-token");
-          if (!data.token) throw new Error("No AssemblyAI token received");
-          return data.token;
-        });
+        return noHostedRelay();
       }
 
       if (options.provider === "deepgram-realtime") {
@@ -4496,11 +4018,7 @@ class IPCHandlers {
           }
           return streams === 2 ? [apiKey, apiKey] : apiKey;
         }
-        return dual(async () => {
-          const data = await postServerToken("/api/deepgram-streaming-token");
-          if (!data.token) throw new Error("No Deepgram token received");
-          return data.token;
-        });
+        return noHostedRelay();
       }
 
       if (options.provider === "corti-realtime") {
@@ -4515,19 +4033,7 @@ class IPCHandlers {
         return streams === 2 ? [apiKey, apiKey] : apiKey;
       }
 
-      const data = await postServerToken("/api/openai-realtime-token", {
-        model: options.model,
-        language: options.language,
-        streams: streams || 1,
-      });
-      if (streams === 2) {
-        if (!data.clientSecrets || data.clientSecrets.length < 2) {
-          throw new Error("Expected two client secrets for dual-stream");
-        }
-        return data.clientSecrets;
-      }
-      if (!data.clientSecret) throw new Error("No client secret received");
-      return data.clientSecret;
+      return noHostedRelay();
     };
 
     const getMeetingSystemAudioCapabilityMode = () => {
@@ -5970,170 +5476,6 @@ class IPCHandlers {
       }
     });
 
-    ipcMain.handle("cloud-reason", async (event, text, opts = {}) => {
-      try {
-        const apiUrl = getApiUrl();
-        if (!apiUrl) throw new Error("OpenWhispr API URL not configured");
-
-        const authHeader = await getAuthHeader(event);
-        if (!Object.keys(authHeader).length) throw new Error("Not authenticated");
-
-        debugLogger.debug(
-          "Cloud reason request",
-          {
-            model: opts.model || "(default)",
-            agentName: opts.agentName || "(none)",
-            textLength: text?.length || 0,
-          },
-          "cloud-api"
-        );
-
-        const response = await proxyFetch(`${apiUrl}/api/reason`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            ...authHeader,
-          },
-          body: JSON.stringify({
-            text,
-            model: opts.model,
-            agentName: opts.agentName,
-            customDictionary: opts.customDictionary,
-            customPrompt: opts.customPrompt,
-            systemPrompt: opts.systemPrompt,
-            language: opts.language,
-            locale: opts.locale,
-            sessionId: this.sessionId,
-            clientType: "desktop",
-            appVersion: app.getVersion(),
-            clientVersion: app.getVersion(),
-            sttProvider: opts.sttProvider,
-            sttModel: opts.sttModel,
-            sttProcessingMs: opts.sttProcessingMs,
-            sttWordCount: opts.sttWordCount,
-            sttLanguage: opts.sttLanguage,
-            audioDurationMs: opts.audioDurationMs,
-            audioSizeBytes: opts.audioSizeBytes,
-            audioFormat: opts.audioFormat,
-            clientTotalMs: opts.clientTotalMs,
-          }),
-        });
-
-        if (!response.ok) {
-          if (response.status === 401) {
-            return { success: false, error: "Session expired", code: "AUTH_EXPIRED" };
-          }
-          if (response.status === 503) {
-            return { success: false, error: "Request timed out", code: "SERVER_ERROR" };
-          }
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.error || `API error: ${response.status}`);
-        }
-
-        const data = await response.json();
-        debugLogger.debug(
-          "Cloud reason response",
-          {
-            model: data.model,
-            provider: data.provider,
-            resultLength: data.text?.length || 0,
-            promptMode: data.promptMode,
-            matchType: data.matchType,
-          },
-          "cloud-api"
-        );
-        return {
-          success: true,
-          text: data.text,
-          model: data.model,
-          provider: data.provider,
-          promptMode: data.promptMode,
-          matchType: data.matchType,
-        };
-      } catch (error) {
-        debugLogger.error("Cloud reasoning error:", error);
-        return { success: false, error: error.message };
-      }
-    });
-
-    ipcMain.on("cloud-agent-stream-start", async (event, messages, opts = {}) => {
-      try {
-        const apiUrl = getApiUrl();
-        if (!apiUrl) throw new Error("OpenWhispr API URL not configured");
-
-        const authHeader = await getAuthHeader(event);
-        if (!Object.keys(authHeader).length) throw new Error("Not authenticated");
-
-        const response = await proxyFetch(`${apiUrl}/api/agent/stream`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            ...authHeader,
-          },
-          body: JSON.stringify({
-            messages,
-            systemPrompt: opts.systemPrompt,
-            tools: opts.tools,
-            sessionId: this.sessionId,
-            clientType: "desktop",
-            appVersion: app.getVersion(),
-          }),
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          event.sender.send("cloud-agent-stream-error", {
-            error: errorData.error || `API error: ${response.status}`,
-            code:
-              response.status === 401
-                ? "AUTH_EXPIRED"
-                : response.status === 503
-                  ? "SERVER_ERROR"
-                  : undefined,
-          });
-          return;
-        }
-
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder();
-        let buffer = "";
-
-        try {
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-
-            buffer += decoder.decode(value, { stream: true });
-            const lines = buffer.split("\n");
-            buffer = lines.pop() || "";
-
-            for (const line of lines) {
-              if (!line.trim()) continue;
-              try {
-                event.sender.send("cloud-agent-stream-chunk", JSON.parse(line));
-              } catch {
-                // skip malformed NDJSON line
-              }
-            }
-          }
-          if (buffer.trim()) {
-            try {
-              event.sender.send("cloud-agent-stream-chunk", JSON.parse(buffer));
-            } catch {
-              // skip malformed remainder
-            }
-          }
-        } finally {
-          reader.releaseLock();
-        }
-
-        event.sender.send("cloud-agent-stream-end");
-      } catch (error) {
-        debugLogger.error("Cloud agent stream error:", error);
-        event.sender.send("cloud-agent-stream-error", { error: error.message });
-      }
-    });
-
     ipcMain.handle("agent-open-note", async (_event, noteId) => {
       try {
         const note = this.databaseManager.getNote(noteId);
@@ -6145,415 +5487,6 @@ class IPCHandlers {
         return { success: true };
       } catch (error) {
         debugLogger.error("Failed to open note from agent:", error);
-        return { success: false, error: error.message };
-      }
-    });
-
-    ipcMain.handle("agent-web-search", async (event, query, numResults = 5) => {
-      try {
-        const apiUrl = getApiUrl();
-        if (!apiUrl) throw new Error("OpenWhispr API URL not configured");
-
-        const authHeader = await getAuthHeader(event);
-        if (!Object.keys(authHeader).length) throw new Error("Not authenticated");
-
-        debugLogger.debug("Agent web search request", { query, numResults }, "cloud-api");
-
-        const response = await proxyFetch(`${apiUrl}/api/agent/web-search`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            ...authHeader,
-          },
-          body: JSON.stringify({ query, numResults }),
-        });
-
-        if (!response.ok) {
-          if (response.status === 401) {
-            return { success: false, error: "Session expired", code: "AUTH_EXPIRED" };
-          }
-          if (response.status === 503) {
-            return { success: false, error: "Request timed out", code: "SERVER_ERROR" };
-          }
-          const errorData = await response.json().catch(() => ({}));
-          return {
-            success: false,
-            error: errorData.error || `API error: ${response.status}`,
-          };
-        }
-
-        const data = await response.json();
-        return { success: true, ...data };
-      } catch (error) {
-        debugLogger.error("Agent web search error:", error);
-        return { success: false, error: error.message };
-      }
-    });
-
-    ipcMain.handle(
-      "cloud-streaming-usage",
-      async (event, text, audioDurationSeconds, opts = {}) => {
-        try {
-          const apiUrl = getApiUrl();
-          if (!apiUrl) throw new Error("OpenWhispr API URL not configured");
-
-          const authHeader = await getAuthHeader(event);
-          if (!Object.keys(authHeader).length) throw new Error("Not authenticated");
-
-          const response = await proxyFetch(`${apiUrl}/api/streaming-usage`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              ...authHeader,
-            },
-            body: JSON.stringify({
-              text,
-              audioDurationSeconds,
-              sessionId: this.sessionId,
-              clientType: "desktop",
-              appVersion: app.getVersion(),
-              clientVersion: app.getVersion(),
-              sttProvider: opts.sttProvider,
-              sttModel: opts.sttModel,
-              sttProcessingMs: opts.sttProcessingMs,
-              sttLanguage: opts.sttLanguage,
-              audioSizeBytes: opts.audioSizeBytes,
-              audioFormat: opts.audioFormat,
-              clientTotalMs: opts.clientTotalMs,
-              sendLogs: opts.sendLogs,
-            }),
-          });
-
-          if (response.status === 401) {
-            return { success: false, error: "Session expired", code: "AUTH_EXPIRED" };
-          }
-          if (response.status === 503) {
-            return { success: false, error: "Request timed out", code: "SERVER_ERROR" };
-          }
-          if (!response.ok) {
-            throw new Error(`API error: ${response.status}`);
-          }
-
-          const data = await response.json();
-          return { success: true, ...data };
-        } catch (error) {
-          debugLogger.error("Cloud streaming usage error", { error: error.message }, "cloud-api");
-          return { success: false, error: error.message };
-        }
-      }
-    );
-
-    ipcMain.handle("cloud-usage", async (event) => {
-      try {
-        const apiUrl = getApiUrl();
-        if (!apiUrl) throw new Error("OpenWhispr API URL not configured");
-
-        const authHeader = await getAuthHeader(event);
-        if (!Object.keys(authHeader).length) throw new Error("Not authenticated");
-
-        const response = await proxyFetch(`${apiUrl}/api/usage`, {
-          headers: authHeader,
-        });
-
-        if (!response.ok) {
-          if (response.status === 401) {
-            return { success: false, error: "Session expired", code: "AUTH_EXPIRED" };
-          }
-          if (response.status === 503) {
-            return { success: false, error: "Request timed out", code: "SERVER_ERROR" };
-          }
-          throw new Error(`API error: ${response.status}`);
-        }
-
-        const data = await response.json();
-        return { success: true, ...data };
-      } catch (error) {
-        debugLogger.error("Cloud usage fetch error:", error);
-        return { success: false, error: error.message };
-      }
-    });
-
-    const fetchStripeUrl = async (event, endpoint, errorPrefix, body) => {
-      try {
-        const apiUrl = getApiUrl();
-        if (!apiUrl) throw new Error("OpenWhispr API URL not configured");
-
-        const authHeader = await getAuthHeader(event);
-        if (!Object.keys(authHeader).length) throw new Error("Not authenticated");
-
-        const headers = { ...authHeader };
-        const fetchOpts = { method: "POST", headers };
-        if (body) {
-          headers["Content-Type"] = "application/json";
-          fetchOpts.body = JSON.stringify(body);
-        }
-
-        const response = await proxyFetch(`${apiUrl}${endpoint}`, fetchOpts);
-
-        if (!response.ok) {
-          if (response.status === 401) {
-            return { success: false, error: "Session expired", code: "AUTH_EXPIRED" };
-          }
-          if (response.status === 503) {
-            return { success: false, error: "Request timed out", code: "SERVER_ERROR" };
-          }
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.error || `API error: ${response.status}`);
-        }
-
-        const data = await response.json();
-        return { success: true, url: data.url };
-      } catch (error) {
-        debugLogger.error(`${errorPrefix}: ${error.message}`);
-        return { success: false, error: error.message };
-      }
-    };
-
-    ipcMain.handle("cloud-checkout", (event, opts) =>
-      fetchStripeUrl(event, "/api/stripe/checkout", "Cloud checkout error", opts || undefined)
-    );
-
-    ipcMain.handle("cloud-billing-portal", (event) =>
-      fetchStripeUrl(event, "/api/stripe/portal", "Cloud billing portal error")
-    );
-
-    ipcMain.handle("cloud-switch-plan", async (event, opts) => {
-      try {
-        const apiUrl = getApiUrl();
-        if (!apiUrl) throw new Error("OpenWhispr API URL not configured");
-
-        const authHeader = await getAuthHeader(event);
-        if (!Object.keys(authHeader).length) throw new Error("Not authenticated");
-
-        const response = await proxyFetch(`${apiUrl}/api/stripe/switch-plan`, {
-          method: "POST",
-          headers: { ...authHeader, "Content-Type": "application/json" },
-          body: JSON.stringify(opts),
-        });
-
-        if (response.status === 401) {
-          return { success: false, error: "Session expired", code: "AUTH_EXPIRED" };
-        }
-        if (response.status === 503) {
-          return { success: false, error: "Request timed out", code: "SERVER_ERROR" };
-        }
-
-        const data = await response.json();
-        if (!response.ok) {
-          return { success: false, error: data.error || "Failed to switch plan" };
-        }
-        return data;
-      } catch (error) {
-        debugLogger.error(`Cloud switch plan error: ${error.message}`);
-        return { success: false, error: error.message };
-      }
-    });
-
-    ipcMain.handle("cloud-preview-switch", async (event, opts) => {
-      try {
-        const apiUrl = getApiUrl();
-        if (!apiUrl) throw new Error("OpenWhispr API URL not configured");
-
-        const authHeader = await getAuthHeader(event);
-        if (!Object.keys(authHeader).length) throw new Error("Not authenticated");
-
-        const response = await proxyFetch(`${apiUrl}/api/stripe/preview-switch`, {
-          method: "POST",
-          headers: { ...authHeader, "Content-Type": "application/json" },
-          body: JSON.stringify(opts),
-        });
-
-        if (response.status === 401) {
-          return { success: false, error: "Session expired", code: "AUTH_EXPIRED" };
-        }
-        if (response.status === 503) {
-          return { success: false, error: "Request timed out", code: "SERVER_ERROR" };
-        }
-
-        const data = await response.json();
-        if (!response.ok) {
-          return { success: false, error: data.error || "Failed to preview plan change" };
-        }
-        return { success: true, ...data };
-      } catch (error) {
-        debugLogger.error(`Cloud preview switch error: ${error.message}`);
-        return { success: false, error: error.message };
-      }
-    });
-
-    ipcMain.handle("cloud-api-request", async (event, opts) => {
-      try {
-        const apiUrl = getApiUrl();
-        if (!apiUrl) throw new Error("OpenWhispr API URL not configured");
-
-        const authHeader = await getAuthHeader(event);
-        if (!Object.keys(authHeader).length) throw new Error("Not authenticated");
-
-        const method = (opts.method || "GET").toUpperCase();
-        const sendWith = (header) => {
-          const headers = { ...header };
-          const fetchOpts = { method, headers };
-          if (opts.body !== undefined) {
-            headers["Content-Type"] = "application/json";
-            fetchOpts.body = JSON.stringify(opts.body);
-          }
-          return proxyFetch(`${apiUrl}${opts.path}`, fetchOpts);
-        };
-
-        let response = await sendWith(authHeader);
-
-        // A stale bearer is rejected even when the window still holds a valid session
-        // cookie; retry with the cookie alone (a tagging-along bearer overrides it).
-        if (response.status === 401 && authHeader.Authorization) {
-          const cookieHeader = await getSessionCookies(event);
-          if (cookieHeader) response = await sendWith({ Cookie: cookieHeader });
-        }
-
-        if (response.status === 401) {
-          return {
-            success: false,
-            error: "Session expired",
-            code: "AUTH_EXPIRED",
-            status: 401,
-          };
-        }
-        if (response.status === 503) {
-          return {
-            success: false,
-            error: "Service temporarily unavailable",
-            code: "SERVER_ERROR",
-            status: 503,
-          };
-        }
-
-        const data = await response.json().catch(() => null);
-
-        if (!response.ok) {
-          const message = data?.error?.message || data?.error || `API error: ${response.status}`;
-          return { success: false, error: message, status: response.status };
-        }
-
-        return { success: true, data };
-      } catch (error) {
-        debugLogger.error(
-          `Cloud API request error (${opts?.path}): ${error?.message || error} ${error?.code || ""}`.trim(),
-          error?.stack
-        );
-        return { success: false, error: error.message };
-      }
-    });
-
-    ipcMain.handle("get-stt-config", async (event) => {
-      try {
-        const apiUrl = getApiUrl();
-        if (!apiUrl) throw new Error("OpenWhispr API URL not configured");
-
-        const authHeader = await getAuthHeader(event);
-        if (!Object.keys(authHeader).length) throw new Error("Not authenticated");
-
-        const response = await proxyFetch(`${apiUrl}/api/stt-config`, {
-          headers: authHeader,
-        });
-
-        if (!response.ok) {
-          if (response.status === 401) {
-            return { success: false, error: "Session expired", code: "AUTH_EXPIRED" };
-          }
-          if (response.status === 503) {
-            return { success: false, error: "Request timed out", code: "SERVER_ERROR" };
-          }
-          throw new Error(`API error: ${response.status}`);
-        }
-
-        const data = await response.json();
-        return { success: true, ...data };
-      } catch (error) {
-        debugLogger.error("STT config fetch error:", error);
-        return null;
-      }
-    });
-
-    ipcMain.handle("get-note-recording-config", async (event) => {
-      try {
-        const apiUrl = getApiUrl();
-        if (!apiUrl) throw new Error("OpenWhispr API URL not configured");
-
-        const authHeader = await getAuthHeader(event);
-        if (!Object.keys(authHeader).length) throw new Error("Not authenticated");
-
-        const response = await proxyFetch(`${apiUrl}/api/note-recording-config`, {
-          headers: authHeader,
-        });
-
-        if (!response.ok) {
-          if (response.status === 401) {
-            return { success: false, error: "Session expired", code: "AUTH_EXPIRED" };
-          }
-          throw new Error(`API error: ${response.status}`);
-        }
-
-        const data = await response.json();
-        return { success: true, ...data };
-      } catch (error) {
-        debugLogger.error("Note recording config fetch error:", error);
-        return null;
-      }
-    });
-
-    ipcMain.handle("transcribe-audio-file-cloud", async (event, filePath) => {
-      try {
-        const apiUrl = getApiUrl();
-        if (!apiUrl) throw new Error("OpenWhispr API URL not configured");
-
-        const authHeader = await getAuthHeader(event);
-        if (!Object.keys(authHeader).length) throw new Error("Not authenticated");
-
-        const multipartFields = {
-          source: "file_upload",
-          clientType: "desktop",
-          appVersion: app.getVersion(),
-          clientVersion: app.getVersion(),
-          sessionId: this.sessionId,
-        };
-
-        const fileSize = fs.statSync(filePath).size;
-
-        if (fileSize > CLOUD_INLINE_LIMIT) {
-          debugLogger.debug("Large file detected, using client-side chunking", {
-            fileSize,
-            filePath: path.basename(filePath),
-          });
-          const { text, warning } = await chunkedCloudTranscribe({
-            filePath,
-            apiUrl,
-            authHeader,
-            multipartFields,
-            onProgress: (payload) => event.sender.send("upload-transcription-progress", payload),
-          });
-          return { success: true, text, ...(warning ? { warning } : {}) };
-        }
-
-        const audioBuffer = fs.readFileSync(filePath);
-        const ext = path.extname(filePath).toLowerCase().replace(".", "");
-        const contentType = AUDIO_MIME_TYPES[ext] || "audio/mpeg";
-        const fileName = path.basename(filePath);
-
-        const { body, boundary } = buildMultipartBody(
-          audioBuffer,
-          fileName,
-          contentType,
-          multipartFields
-        );
-        const url = new URL(`${apiUrl}/api/transcribe`);
-        const data = await postMultipart(url, body, boundary, authHeader);
-        const result = interpretTranscribeResponse(data);
-
-        return { success: true, text: result.text };
-      } catch (error) {
-        debugLogger.error("Cloud audio file transcription error", { error: error.message });
-        if (error.code) {
-          return { success: false, error: error.message, code: error.code, ...error };
-        }
         return { success: false, error: error.message };
       }
     });
@@ -6651,116 +5584,6 @@ class IPCHandlers {
         }
       }
     );
-
-    ipcMain.handle("get-referral-stats", async (event) => {
-      try {
-        const apiUrl = getApiUrl();
-        if (!apiUrl) {
-          throw new Error("OpenWhispr API URL not configured");
-        }
-
-        const authHeader = await getAuthHeader(event);
-        if (!Object.keys(authHeader).length) {
-          throw new Error("Not authenticated");
-        }
-
-        const response = await proxyFetch(`${apiUrl}/api/referrals/stats`, {
-          headers: {
-            ...authHeader,
-          },
-        });
-
-        if (!response.ok) {
-          if (response.status === 401) {
-            throw new Error("Unauthorized - please sign in");
-          }
-          if (response.status === 503) {
-            throw new Error("Service temporarily unavailable");
-          }
-          throw new Error(`Failed to fetch referral stats: ${response.status}`);
-        }
-
-        const data = await response.json();
-        return data;
-      } catch (error) {
-        debugLogger.error("Error fetching referral stats:", error);
-        throw error;
-      }
-    });
-
-    ipcMain.handle("send-referral-invite", async (event, email) => {
-      try {
-        const apiUrl = getApiUrl();
-        if (!apiUrl) {
-          throw new Error("OpenWhispr API URL not configured");
-        }
-
-        const authHeader = await getAuthHeader(event);
-        if (!Object.keys(authHeader).length) {
-          throw new Error("Not authenticated");
-        }
-
-        const response = await proxyFetch(`${apiUrl}/api/referrals/invite`, {
-          method: "POST",
-          headers: {
-            ...authHeader,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email }),
-        });
-
-        if (!response.ok) {
-          let errorMessage = `Failed to send invite: ${response.status}`;
-          try {
-            const errorData = await response.json();
-            if (errorData.error) errorMessage = errorData.error;
-          } catch (_) {}
-          throw new Error(errorMessage);
-        }
-
-        const data = await response.json();
-        return data;
-      } catch (error) {
-        debugLogger.error("Error sending referral invite:", error);
-        throw error;
-      }
-    });
-
-    ipcMain.handle("get-referral-invites", async (event) => {
-      try {
-        const apiUrl = getApiUrl();
-        if (!apiUrl) {
-          throw new Error("OpenWhispr API URL not configured");
-        }
-
-        const authHeader = await getAuthHeader(event);
-        if (!Object.keys(authHeader).length) {
-          throw new Error("Not authenticated");
-        }
-
-        const response = await proxyFetch(`${apiUrl}/api/referrals/invites`, {
-          headers: {
-            ...authHeader,
-          },
-        });
-
-        if (!response.ok) {
-          if (response.status === 401) {
-            throw new Error("Unauthorized - please sign in");
-          }
-          if (response.status === 503) {
-            throw new Error("Service temporarily unavailable");
-          }
-          throw new Error(`Failed to fetch referral invites: ${response.status}`);
-        }
-
-        const data = await response.json();
-        return data;
-      } catch (error) {
-        debugLogger.error("Error fetching referral invites:", error);
-        throw error;
-      }
-    });
 
     ipcMain.handle("open-whisper-models-folder", async () => {
       try {
@@ -6897,10 +5720,6 @@ class IPCHandlers {
       justMigrated: postMigrationDetector.isReturningFromOldBundle(),
     }));
 
-    ipcMain.handle("get-oauth-protocol-registered", () => this.oauthProtocolRegistered);
-
-    ipcMain.handle("get-oauth-protocol", () => this.oauthProtocol);
-
     ipcMain.handle("mark-bundle-migrated", () => {
       postMigrationDetector.markBundleMigrated();
     });
@@ -6917,42 +5736,10 @@ class IPCHandlers {
       return this.updateManager.getUpdateInfo();
     });
 
-    const fetchStreamingToken = async (event) => {
-      const apiUrl = getApiUrl();
-      if (!apiUrl) {
-        throw new Error("OpenWhispr API URL not configured");
-      }
-
-      const authHeader = await getAuthHeader(event);
-      if (!Object.keys(authHeader).length) {
-        throw new Error("Not authenticated");
-      }
-
-      const tokenResponse = await proxyFetch(`${apiUrl}/api/streaming-token`, {
-        method: "POST",
-        headers: {
-          ...authHeader,
-        },
-      });
-
-      if (!tokenResponse.ok) {
-        if (tokenResponse.status === 401) {
-          const err = new Error("Session expired");
-          err.code = "AUTH_EXPIRED";
-          throw err;
-        }
-        const errorData = await tokenResponse.json().catch(() => ({}));
-        throw new Error(
-          errorData.error || `Failed to get streaming token: ${tokenResponse.status}`
-        );
-      }
-
-      const { token } = await tokenResponse.json();
-      if (!token) {
-        throw new Error("No token received from API");
-      }
-
-      return token;
+    const fetchStreamingToken = async () => {
+      const err = new Error("Server-relayed streaming was removed. Add your own API key.");
+      err.code = "NO_API";
+      throw err;
     };
 
     ipcMain.handle("assemblyai-streaming-warmup", async (event, options = {}) => {
@@ -6974,7 +5761,7 @@ class IPCHandlers {
         let token = this.assemblyAiStreaming.getCachedToken();
         if (!token) {
           debugLogger.debug("Fetching new streaming token for warmup", {}, "streaming");
-          token = await fetchStreamingToken(event);
+          token = await fetchStreamingToken();
         }
 
         await this.assemblyAiStreaming.warmup({ ...options, token });
@@ -7031,7 +5818,7 @@ class IPCHandlers {
         let token = this.assemblyAiStreaming.getCachedToken();
         if (!token) {
           debugLogger.debug("Fetching streaming token from API", {}, "streaming");
-          token = await fetchStreamingToken(event);
+          token = await fetchStreamingToken();
           this.assemblyAiStreaming.cacheToken(token);
         } else {
           debugLogger.debug("Using cached streaming token", {}, "streaming");
@@ -7119,71 +5906,16 @@ class IPCHandlers {
 
     let deepgramTokenWindowId = null;
 
-    const fetchDeepgramStreamingTokenFromWindow = async (windowId) => {
-      const apiUrl = getApiUrl();
-      if (!apiUrl) throw new Error("OpenWhispr API URL not configured");
-
-      const win = BrowserWindow.fromId(windowId);
-      if (!win || win.isDestroyed()) throw new Error("Window not available for token refresh");
-
-      const authHeader = await getAuthHeaderFromWindow(win);
-      if (!Object.keys(authHeader).length) throw new Error("Not authenticated");
-
-      const tokenResponse = await proxyFetch(`${apiUrl}/api/deepgram-streaming-token`, {
-        method: "POST",
-        headers: authHeader,
-      });
-
-      if (!tokenResponse.ok) {
-        if (tokenResponse.status === 401) {
-          const err = new Error("Session expired");
-          err.code = "AUTH_EXPIRED";
-          throw err;
-        }
-        throw new Error(`Failed to get Deepgram streaming token: ${tokenResponse.status}`);
-      }
-
-      const { token } = await tokenResponse.json();
-      if (!token) throw new Error("No token received from API");
-      return token;
+    const fetchDeepgramStreamingTokenFromWindow = async () => {
+      const err = new Error("Server-relayed streaming was removed. Add your own API key.");
+      err.code = "NO_API";
+      throw err;
     };
 
-    const fetchDeepgramStreamingToken = async (event) => {
-      const apiUrl = getApiUrl();
-      if (!apiUrl) {
-        throw new Error("OpenWhispr API URL not configured");
-      }
-
-      const authHeader = await getAuthHeader(event);
-      if (!Object.keys(authHeader).length) {
-        throw new Error("Not authenticated");
-      }
-
-      const tokenResponse = await proxyFetch(`${apiUrl}/api/deepgram-streaming-token`, {
-        method: "POST",
-        headers: {
-          ...authHeader,
-        },
-      });
-
-      if (!tokenResponse.ok) {
-        if (tokenResponse.status === 401) {
-          const err = new Error("Session expired");
-          err.code = "AUTH_EXPIRED";
-          throw err;
-        }
-        const errorData = await tokenResponse.json().catch(() => ({}));
-        throw new Error(
-          errorData.error || `Failed to get Deepgram streaming token: ${tokenResponse.status}`
-        );
-      }
-
-      const { token } = await tokenResponse.json();
-      if (!token) {
-        throw new Error("No token received from API");
-      }
-
-      return token;
+    const fetchDeepgramStreamingToken = async () => {
+      const err = new Error("Server-relayed streaming was removed. Add your own API key.");
+      err.code = "NO_API";
+      throw err;
     };
 
     ipcMain.handle("deepgram-streaming-warmup", async (event, options = {}) => {
@@ -7204,7 +5936,7 @@ class IPCHandlers {
 
         this.deepgramStreaming.setTokenRefreshFn(async () => {
           if (!deepgramTokenWindowId) throw new Error("No window reference");
-          return fetchDeepgramStreamingTokenFromWindow(deepgramTokenWindowId);
+          return fetchDeepgramStreamingTokenFromWindow();
         });
 
         if (this.deepgramStreaming.hasWarmConnection()) {
@@ -7215,7 +5947,7 @@ class IPCHandlers {
         let token = this.deepgramStreaming.getCachedToken();
         if (!token) {
           debugLogger.debug("Fetching new Deepgram streaming token for warmup", {}, "streaming");
-          token = await fetchDeepgramStreamingToken(event);
+          token = await fetchDeepgramStreamingToken();
         }
 
         await this.deepgramStreaming.warmup({ ...options, token });
@@ -7262,7 +5994,7 @@ class IPCHandlers {
 
         this.deepgramStreaming.setTokenRefreshFn(async () => {
           if (!deepgramTokenWindowId) throw new Error("No window reference");
-          return fetchDeepgramStreamingTokenFromWindow(deepgramTokenWindowId);
+          return fetchDeepgramStreamingTokenFromWindow();
         });
 
         if (this.deepgramStreaming.isConnected) {
@@ -7276,7 +6008,7 @@ class IPCHandlers {
         let token = this.deepgramStreaming.getCachedToken();
         if (!token) {
           debugLogger.debug("Fetching Deepgram streaming token from API", {}, "streaming");
-          token = await fetchDeepgramStreamingToken(event);
+          token = await fetchDeepgramStreamingToken();
           this.deepgramStreaming.cacheToken(token);
         } else {
           debugLogger.debug("Using cached Deepgram streaming token", {}, "streaming");

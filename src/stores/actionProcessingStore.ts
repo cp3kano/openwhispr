@@ -85,7 +85,6 @@ CONTENT RULES:
 Instructions: `;
 
 export interface RunActionOptions {
-  isCloudMode: boolean;
   modelId: string;
   isMeetingNote?: boolean;
 }
@@ -110,7 +109,7 @@ export function runBackgroundAction(
   if (processingFlags.get(noteId)) return;
 
   const modelId = options.modelId;
-  if (!modelId && !options.isCloudMode) {
+  if (!modelId) {
     pushErrorEvent({ noteId, message: labels.noModel });
     return;
   }
@@ -123,7 +122,6 @@ export function runBackgroundAction(
     try {
       const basePrompt = options.isMeetingNote ? MEETING_SYSTEM_PROMPT : BASE_SYSTEM_PROMPT;
       const settings = getSettings();
-      const provider = options.isCloudMode ? "openwhispr" : undefined;
       const systemPrompt = appendDictionarySuffix(
         basePrompt + action.prompt,
         options.isMeetingNote ? settings.customDictionary : undefined,
@@ -133,14 +131,13 @@ export function runBackgroundAction(
         systemPrompt,
         temperature: 0.3,
         disableThinking: settings.noteFormattingDisableThinking,
-        provider,
       });
 
       if (cancelledFlags.get(noteId)) return;
 
       let title: string | undefined;
       if (getSettings().autoGenerateNoteTitle) {
-        const generated = await generateNoteTitle(enhanced, modelId, provider);
+        const generated = await generateNoteTitle(enhanced, modelId);
         if (generated) title = generated;
       }
 
