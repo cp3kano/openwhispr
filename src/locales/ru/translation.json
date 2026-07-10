@@ -4,7 +4,7 @@
       "sectionTitle": "Язык",
       "sectionDescription": "Настройте язык интерфейса и транскрипции независимо друг от друга",
       "uiLabel": "Язык интерфейса",
-      "uiDescription": "Выберите язык интерфейса OpenWhispr",
+      "uiDescription": "Выберите язык интерфейса Roomtone",
       "transcriptionLabel": "Язык транскрипции",
       "transcriptionDescription": "Выберите язык, на котором вы говорите, для более точной транскрипции"
     },
@@ -33,12 +33,12 @@
       "hide": "Скрыть панель диктовки"
     },
     "openControlPanel": "Открыть панель управления",
-    "quit": "Закрыть OpenWhispr",
-    "tooltip": "OpenWhispr — голосовая диктовка"
+    "quit": "Закрыть Roomtone",
+    "tooltip": "Roomtone — голосовая диктовка"
   },
   "menu": {
-    "appLabel": "OpenWhispr",
-    "quit": "Закрыть OpenWhispr",
+    "appLabel": "Roomtone",
+    "quit": "Закрыть Roomtone",
     "speech": "Речь",
     "settings": "Настройки…",
     "help": "Справка",
@@ -57,8 +57,8 @@
       "message": "Не удалось открыть ссылку в браузере:\n{{url}}\n\nОшибка: {{error}}"
     },
     "loadFailure": {
-      "title": "OpenWhispr не удалось загрузить",
-      "message": "OpenWhispr не смог загрузить интерфейс.",
+      "title": "Roomtone не удалось загрузить",
+      "message": "Roomtone не смог загрузить интерфейс.",
       "detail": {
         "window": "Окно: {{windowName}}",
         "error": "Ошибка {{errorCode}}: {{errorDescription}}",
@@ -69,17 +69,17 @@
   },
   "startup": {
     "error": {
-      "title": "Ошибка запуска OpenWhispr",
+      "title": "Ошибка запуска Roomtone",
       "message": "Не удалось запустить приложение:\n\n{{error}}\n\nПожалуйста, сообщите об этой проблеме."
     },
     "globeHotkey": {
       "title": "Клавиша Globe недоступна",
-      "message": "OpenWhispr не смог активировать горячую клавишу Globe.",
+      "message": "Roomtone не смог активировать горячую клавишу Globe.",
       "details": {
         "unknown": "Неизвестная ошибка при запуске слушателя клавиши Globe.",
         "fallback": "Сочетание с клавишей Globe будет отключено; остальные горячие клавиши продолжат работать.",
         "devHint": "Выполните `npm run compile:globe` и пересоберите приложение для генерации бинарного файла слушателя.",
-        "reinstallHint": "Попробуйте переустановить OpenWhispr или обратитесь в поддержку, если проблема сохраняется."
+        "reinstallHint": "Попробуйте переустановить Roomtone или обратитесь в поддержку, если проблема сохраняется."
       }
     }
   },
@@ -135,7 +135,6 @@
     "cancel": "Отмена",
     "recommended": "Рекомендуется",
     "active": "Активно",
-    "freeAccountRequired": "Требуется бесплатный аккаунт",
     "cloud": "Облако",
     "local": "Локально",
     "apiKey": "API-ключ",
@@ -190,14 +189,14 @@
       "accessibilityTitle": "Универсальный доступ",
       "accessibilityDescription": "Вводит готовый текст прямо в приложение, где вы находитесь, — документы, почта, чат.",
       "testAndGrant": "Проверить и предоставить",
-      "requiredForApp": "Необходимо для работы OpenWhispr",
+      "requiredForApp": "Необходимо для работы Roomtone",
       "microphoneRequired": "Требуется доступ к микрофону",
       "openSystemSettings": "Открыть Системные настройки",
       "systemAudioTitle": "Системное аудио",
       "systemAudioDescription": "Позволяет рекордеру встреч слышать собеседников в ваших звонках — встречи, лекции, подкасты. Можно включить позже в Настройках.",
       "optional": "Необязательно",
       "recommended": "Рекомендуется",
-      "accessibilityTroubleshooting": "В Системных настройках → Универсальный доступ выключите переключатель OpenWhispr и снова включите его. Если это не помогло, удалите OpenWhispr из списка и добавьте заново. Всё ещё не работает? Напишите на support@openwhispr.com."
+      "accessibilityTroubleshooting": "В Системных настройках → Универсальный доступ выключите переключатель Roomtone и снова включите его. Если это не помогло, удалите Roomtone из списка и добавьте заново. Всё ещё не работает?"
     },
     "transcription": {
       "title": "Настройка транскрипции",
@@ -231,12 +230,6 @@
         "Сколько будет 5 × 5?"
       ],
       "optionalNote": "Необязательно — вы можете настроить или изменить её в любое время в настройках."
-    },
-    "connectivity": {
-      "title": "Не удаётся подключиться к OpenWhispr Cloud из этой сети",
-      "body": "{{cause}} Вы можете переключиться на локальный движок или продолжить и повторить попытку позже.",
-      "useLocal": "Использовать локальный движок",
-      "continue": "Продолжить всё равно"
     },
     "useCase": {
       "title": "Что вас сюда привело?",
@@ -274,7 +267,7 @@
     "meeting": {
       "title": "Заметки встреч",
       "description": "Записывайте и резюмируйте встречи",
-      "autoDetect": "OpenWhispr автоматически определяет, когда вы на встрече, и предлагает начать заметки — без вас ничего не записывается.",
+      "autoDetect": "Roomtone автоматически определяет, когда вы на встрече, и предлагает начать заметки — без вас ничего не записывается.",
       "notification": {
         "title": "Обнаружена встреча",
         "body": "Похоже, вы на встрече. Хотите вести заметки?",
@@ -285,7 +278,7 @@
     },
     "finish": {
       "title": "Всё готово",
-      "cloudDescription": "Вы используете OpenWhispr Cloud: быстро, точно, без хранения данных и 2 000 слов бесплатно каждую неделю. Хотите, чтобы всё оставалось на устройстве? Переключитесь на локальную обработку в Настройках.",
+      "cloudDescription": "Вы используете Roomtone Cloud: быстро, точно, без хранения данных и 2 000 слов бесплатно каждую неделю. Хотите, чтобы всё оставалось на устройстве? Переключитесь на локальную обработку в Настройках.",
       "localDescription": "У вас настроена локальная обработка или собственный ключ. Изменить обработку аудио можно в любой момент в Настройках.",
       "cleanupNote": "ИИ-очистка текста работает с разумными настройками по умолчанию. Их можно изменить в Настройках.",
       "openSettings": "Открыть Настройки",
@@ -307,9 +300,8 @@
   "streaming": {
     "errors": {
       "cloudUnreachable": {
-        "title": "Не удаётся подключиться к OpenWhispr Cloud",
+        "title": "Не удаётся подключиться к Roomtone Cloud",
         "generic": "Сетевой запрос не выполнен. Проверьте подключение.",
-        "dnsBlocked": "DNS не разрешает openwhispr.com — возможно, его блокирует блокировщик рекламы или фильтр.",
         "refused": "Соединение отклонено — вероятно, межсетевой экран или VPN.",
         "timeout": "Тайм-аут сети — VPN, captive-портал или нестабильное соединение.",
         "tls": "Сбой TLS-рукопожатия — проверьте системные часы или корпоративный прокси.",
@@ -324,7 +316,7 @@
       "problemTitle": "Проблема с обновлением",
       "problemDescription": "Не удалось завершить обновление. Попробуйте позже.",
       "installTitle": "Установить обновление",
-      "installDescription": "OpenWhispr перезапустится для применения обновления. Текущая работа будет сохранена.",
+      "installDescription": "Roomtone перезапустится для применения обновления. Текущая работа будет сохранена.",
       "couldNotInstallTitle": "Не удалось установить обновление",
       "couldNotInstallDescription": "Что-то пошло не так. Попробуйте ещё раз.",
       "couldNotDownloadTitle": "Не удалось скачать обновление",
@@ -333,19 +325,9 @@
       "installButton": "Установить обновление",
       "availableButton": "Доступно обновление"
     },
-    "limit": {
-      "weeklyTitle": "Недельный лимит достигнут",
-      "weeklyDescription": "Ваш лимит обновляется на скользящей основе. Перейдите на Pro или используйте свой API-ключ для безлимитного использования."
-    },
     "accessibilityMissing": {
       "title": "Необходимы разрешения универсального доступа",
-      "description": "Мы обнаружили, что OpenWhispr нуждается в разрешениях универсального доступа для корректной работы. Включите их ниже."
-    },
-    "billing": {
-      "pastDueTitle": "Не удалось обработать платёж",
-      "pastDueDescription": "Не волнуйтесь — сейчас вы на бесплатном плане. Обновите способ оплаты в настройках, чтобы вернуться к Pro.",
-      "bannerDescription": "Сейчас вы на бесплатном плане — у вас есть {{limit}} слов в неделю. Обновите способ оплаты, чтобы вернуться к Pro.",
-      "updatePayment": "Обновить платёж"
+      "description": "Мы обнаружили, что Roomtone нуждается в разрешениях универсального доступа для корректной работы. Включите их ниже."
     },
     "history": {
       "couldNotLoadTitle": "Не удалось загрузить историю",
@@ -401,11 +383,6 @@
         "recover": "Восстановить",
         "recovered": "Восстановлено"
       }
-    },
-    "cloudMigration": {
-      "title": "Добро пожаловать в OpenWhispr Cloud",
-      "description": "Мы переключили транскрипцию на OpenWhispr Cloud для более быстрых и точных результатов. Ваши предыдущие настройки сохранены — вы можете вернуться к ним в любой момент в настройках.",
-      "viewSettings": "Открыть настройки"
     },
     "aiCta": {
       "title": "Улучшите транскрипции с помощью ИИ",
@@ -543,7 +520,7 @@
         "description": "В записи не обнаружен звук. Попробуйте ещё раз."
       },
       "errorDescriptions": {
-        "sessionExpired": "Сессия OpenWhispr Cloud недоступна. Войдите снова из Настроек.",
+        "sessionExpired": "Сессия Roomtone Cloud недоступна. Войдите снова из Настроек.",
         "offline": "Вы офлайн. Облачная транскрипция требует подключения к интернету.",
         "dailyLimitReached": "Достигнут дневной лимит транскрипций. Попробуйте завтра или обновите тариф.",
         "providerRateLimited": "Ваш провайдер транскрипции ограничил запрос. Подождите немного и попробуйте снова."
@@ -619,7 +596,7 @@
       "micErrors": {
         "accessFailed": "Не удалось получить доступ к микрофону. Попробуйте ещё раз.",
         "noMicrophones": "Микрофоны не обнаружены. Подключите микрофон или выберите его в {{settingsPath}}.",
-        "permissionDenied": "Разрешение отклонено. Откройте {{privacyPath}} и разрешите доступ для OpenWhispr.",
+        "permissionDenied": "Разрешение отклонено. Откройте {{privacyPath}} и разрешите доступ для Roomtone.",
         "couldNotStart": "Не удалось запустить выбранный микрофон. Выберите устройство ввода в {{settingsPath}} и повторите тест.",
         "noActiveInput": "Активное устройство ввода звука не найдено. Выберите микрофон в {{settingsPath}}.",
         "unknown": "Ошибка доступа к микрофону: {{error}}. Выберите другое устройство ввода и попробуйте снова.",
@@ -648,8 +625,8 @@
         "accessibilityNeeded": "Предоставьте разрешения универсального доступа в системных настройках для автоматической вставки текста.",
         "windowsReady": "Windows не требует специальных разрешений для автоматической вставки. Всё готово!",
         "linuxReadyWithMethod": "Автоматическая вставка доступна через {{method}}. Всё готово!",
-        "waylandClipboardMode": "Автоматическая вставка недоступна в этой сессии Wayland. OpenWhispr скопирует текст в буфер обмена, и вы сможете вставить его с помощью Ctrl+V.",
-        "optionalPasteTool": "Для автоматической вставки установите {{tool}}:\n\n{{installCmd}}{{waylandNote}}\n\nБез этого инструмента OpenWhispr будет копировать текст в буфер обмена, и вы сможете вставить его с помощью Ctrl+V."
+        "waylandClipboardMode": "Автоматическая вставка недоступна в этой сессии Wayland. Roomtone скопирует текст в буфер обмена, и вы сможете вставить его с помощью Ctrl+V.",
+        "optionalPasteTool": "Для автоматической вставки установите {{tool}}:\n\n{{installCmd}}{{waylandNote}}\n\nБез этого инструмента Roomtone будет копировать текст в буфер обмена, и вы сможете вставить его с помощью Ctrl+V."
       },
       "alerts": {
         "accessibilityNeeded": "Требуются разрешения универсального доступа! Предоставьте их в системных настройках."
@@ -662,7 +639,7 @@
         "defaultPasteTool": "xdotool",
         "xdotoolXwayland": "xdotool (приложения XWayland)"
       },
-      "accessibilityTestText": "Тест универсального доступа OpenWhispr",
+      "accessibilityTestText": "Тест универсального доступа Roomtone",
       "warning": {
         "messages": {
           "macos": "Проверьте настройки звука, чтобы выбрать устройство ввода",
@@ -675,68 +652,9 @@
     }
   },
   "auth": {
-    "cloudNotConfigured": "Облако не настроено",
-    "common": {
-      "back": "Назад",
-      "continue": "Продолжить",
-      "or": "или"
-    },
-    "emailStep": {
-      "continueWithEmail": "Продолжить с электронной почтой",
-      "continueWithoutAccount": "Продолжить без аккаунта",
-      "emailPlaceholder": "you@example.com"
-    },
-    "errors": {
-      "accountExistsSignIn": "Аккаунт с этой электронной почтой уже существует. Войдите в систему.",
-      "accountNotFoundCreate": "Аккаунт с этой электронной почтой не найден. Создайте аккаунт.",
-      "authNotConfigured": "Аутентификация не настроена",
-      "createAccountFailed": "Не удалось создать аккаунт",
-      "failedProviderSignIn": "Не удалось войти через {{provider}}",
-      "failedUserCheck": "Не удалось проверить аккаунт пользователя",
-      "generic": "Что-то пошло не так. Попробуйте ещё раз.",
-      "invalidCredentials": "Неверный адрес электронной почты или пароль",
-      "plusAliasUnsupported": "Алиасы электронной почты с символом «+» не поддерживаются"
-    },
     "getStarted": "Начать",
-    "legal": {
-      "and": "и",
-      "prefix": "Продолжая, вы соглашаетесь с нашими",
-      "privacy": "Политикой конфиденциальности",
-      "suffix": "",
-      "terms": "Условиями использования"
-    },
-    "passwordForm": {
-      "createAccount": "Создать аккаунт",
-      "createAccountButton": "Создать аккаунт",
-      "createAccountLink": "Создать аккаунт",
-      "createPasswordPlaceholder": "Придумайте пароль",
-      "creatingAccount": "Создание аккаунта...",
-      "enterPasswordPlaceholder": "Введите пароль",
-      "forgotPassword": "Забыли пароль?",
-      "fullNamePlaceholder": "Полное имя",
-      "haveAccount": "Уже есть аккаунт?",
-      "newHere": "Впервые здесь?",
-      "passwordMinLength": "Пароль должен содержать не менее 8 символов",
-      "signIn": "Войти",
-      "signInLink": "Войти",
-      "signingIn": "Вход...",
-      "welcomeBack": "С возвращением"
-    },
-    "signedIn": {
-      "ready": "Готово",
-      "welcomeBack": "С возвращением",
-      "welcomeBackName": "С возвращением, {{name}}"
-    },
-    "social": {
-      "completeInBrowser": "Завершите вход в браузере",
-      "continueWithApple": "Продолжить с Apple",
-      "continueWithGoogle": "Продолжить с Google",
-      "continueWithMicrosoft": "Продолжить с Microsoft",
-      "protocolUnavailable": "Вход через браузер недоступен — повторно зарегистрируйте протокол openwhispr:// в системных настройках приложений по умолчанию."
-    },
     "welcomeSubtitle": "Диктуйте где угодно голосом",
-    "welcomeTitle": "Добро пожаловать в OpenWhispr",
-    "sessionExpired": "Сессия истекла. Пожалуйста, войдите снова."
+    "welcomeTitle": "Добро пожаловать в Roomtone"
   },
   "cleanupPrompt": "Очистка",
   "developerSection": {
@@ -943,10 +861,10 @@
     "recheckChecking": "Проверка...",
     "title": "Автоматическая вставка",
     "usingMethodPrefix": "Используется",
-    "waylandClipboardDescription": "Автоматическая вставка недоступна в этой сессии Wayland. OpenWhispr скопирует текст в буфер обмена, и вы сможете вставить его вручную с помощью Ctrl+V.",
+    "waylandClipboardDescription": "Автоматическая вставка недоступна в этой сессии Wayland. Roomtone скопирует текст в буфер обмена, и вы сможете вставить его вручную с помощью Ctrl+V.",
     "waylandClipboardTitle": "Режим буфера обмена в Wayland",
     "windowsReady": "Windows поддерживает автоматическую вставку из коробки. Настройка не требуется!",
-    "withoutToolPrefix": "Без этого инструмента OpenWhispr скопирует текст в буфер обмена. Вы сможете вставить его вручную с помощью Ctrl+V.",
+    "withoutToolPrefix": "Без этого инструмента Roomtone скопирует текст в буфер обмена. Вы сможете вставить его вручную с помощью Ctrl+V.",
     "xwaylandAppsOnly": "автоматическая вставка работает только для приложений XWayland"
   },
   "promptStudio": {
@@ -996,7 +914,6 @@
       "none": "Нет",
       "outputLabel": "Результат",
       "processing": "Обработка...",
-      "openwhisprCloud": "OpenWhispr Cloud",
       "providerLabel": "Провайдер",
       "run": "Запустить тест",
       "customEndpoint": "Пользовательская конечная точка"
@@ -1009,7 +926,6 @@
   },
   "settingsModal": {
     "groups": {
-      "account": "Аккаунт",
       "app": "Приложение",
       "aiModels": "Модели ИИ",
       "system": "Система"
@@ -1055,183 +971,6 @@
     "title": "Настройки"
   },
   "settingsPage": {
-    "account": {
-      "badges": {
-        "free": "Бесплатный",
-        "limitReached": "Лимит достигнут",
-        "pastDue": "Просрочен",
-        "pro": "Pro",
-        "business": "Business",
-        "trial": "Пробный"
-      },
-      "billing": {
-        "couldNotOpenDescription": "Не удалось открыть страницу оплаты. Попробуйте ещё раз.",
-        "couldNotOpenTitle": "Не удалось открыть оплату",
-        "manageBilling": "Управление оплатой",
-        "opening": "Открытие...",
-        "updatePaymentMethod": "Обновить способ оплаты"
-      },
-      "checkout": {
-        "couldNotOpenDescription": "Не удалось открыть страницу оформления. Попробуйте ещё раз.",
-        "couldNotOpenTitle": "Не удалось открыть оформление",
-        "opening": "Открытие...",
-        "upgradeToPro": "Перейти на Pro"
-      },
-      "disabled": "Отключено",
-      "featuresDisabled": "Функции аккаунта отключены",
-      "featuresDisabledDescription": "Установите VITE_AUTH_URL в файле .env для включения функций аккаунта.",
-      "notConfigured": "Аутентификация не настроена",
-      "notSignedIn": "Вы не вошли в систему",
-      "notSignedInDescription": "Создайте аккаунт, чтобы разблокировать премиум-функции.",
-      "offline": "Нет сети",
-      "pastDue": {
-        "description": "Сейчас вы на бесплатном плане. Обновите способ оплаты, чтобы вернуться к Pro.",
-        "title": "Не удалось обработать платёж"
-      },
-      "planDescriptions": {
-        "freeUsage": "{{used}} / {{limit}} слов на этой неделе",
-        "nextBilling": "Следующее списание: {{date}}",
-        "pastDue": "{{used}} / {{limit}} бесплатных слов на этой неделе — обновите платёж для восстановления Pro",
-        "trial": "Осталось {{days}} дней — безлимитные транскрипции",
-        "unlimited": "Без ограничений"
-      },
-      "planLabels": {
-        "free": "Бесплатный",
-        "pro": "Pro",
-        "business": "Business",
-        "trial": "Пробный"
-      },
-      "planTitle": "Тариф",
-      "rollingWeeklyLimit": "Скользящий недельный лимит",
-      "signOut": {
-        "failedDescription": "Произошла ошибка при выходе. Попробуйте ещё раз.",
-        "failedTitle": "Не удалось выйти",
-        "signOut": "Выйти",
-        "signingOut": "Выход..."
-      },
-      "signedIn": "Вы вошли",
-      "title": "Аккаунт",
-      "toasts": {
-        "approachingLimit": {
-          "description": "Вы использовали {{used}} из {{limit}} бесплатных слов на этой неделе. Перейдите на Pro для безлимитного использования.",
-          "title": "Приближение к недельному лимиту"
-        }
-      },
-      "trialCta": {
-        "button": "Создать бесплатный аккаунт",
-        "description": "Безлимитные транскрипции, приоритетная обработка и многое другое.",
-        "title": "Попробуйте Pro бесплатно на 7 дней"
-      },
-      "pricing": {
-        "title": "Тарифы",
-        "billedYearly": "Годовая оплата",
-        "free": {
-          "name": "Free",
-          "price": "$0",
-          "period": "навсегда",
-          "features": [
-            "## OpenWhispr Cloud",
-            "2 000 слов/неделю транскрипции",
-            "5 часов записи встреч/месяц",
-            "## Всегда бесплатно",
-            "Безлимитные локальные модели ИИ",
-            "Безлимитная облачная транскрипция с вашими ключами API",
-            "Поддержка более 100 языков",
-            "Пользовательский словарь",
-            "Нулевое хранение данных",
-            "Поддержка сообщества"
-          ]
-        },
-        "pro": {
-          "name": "Pro",
-          "monthlyPrice": "$8",
-          "monthlyPeriod": "/мес.",
-          "annualPrice": "$80",
-          "annualPeriod": "/год",
-          "annualEquivalent": "$6.67",
-          "includesPrefix": "Все функции Free +",
-          "features": [
-            "Безлимитная облачная транскрипция",
-            "20 часов записи встреч/месяц",
-            "Синхронизация между устройствами",
-            "Персональный доступ к API",
-            "Интеграция MCP во всех ваших приложениях",
-            "Мобильное приложение (iOS скоро)",
-            "Поддержка по электронной почте"
-          ],
-          "cta": "Начать",
-          "switchToAnnual": "Перейти на годовой"
-        },
-        "business": {
-          "name": "Business",
-          "monthlyPrice": "$20",
-          "monthlyPeriod": "/мес.",
-          "annualPrice": "$200",
-          "annualPeriod": "/год",
-          "annualEquivalent": "$16.67",
-          "includesPrefix": "Все функции Pro +",
-          "badge": "Самый популярный",
-          "features": [
-            "Безлимитные записи встреч",
-            "Режим агента",
-            "Чат с вашими данными",
-            "Приоритетная поддержка"
-          ],
-          "cta": "Начать",
-          "switchToAnnual": "Перейти на годовой"
-        },
-        "enterprise": {
-          "name": "Enterprise",
-          "price": "Индивидуально",
-          "subtitle": "Для расширенной безопасности и поддержки",
-          "includesPrefix": "Все функции Business +",
-          "features": [
-            "Управляемые кредиты API",
-            "Облачная синхронизация между устройствами",
-            "Командные функции и администрирование",
-            "SSO и соответствие требованиям",
-            "Выделенная поддержка"
-          ],
-          "cta": "Связаться с отделом продаж"
-        },
-        "currentPlan": "Текущий тариф",
-        "upgrade": "Улучшить план",
-        "downgrade": "Понизить план",
-        "planSwitched": "План успешно обновлён",
-        "confirmSwitch": {
-          "title": "Подтвердите смену плана",
-          "description": "Перейти на {{plan}} ({{interval}})",
-          "monthly": "ежемесячно",
-          "yearly": "ежегодно",
-          "chargeToday": "Списание сегодня",
-          "accountCredit": "Кредит на счёте",
-          "newPrice": "Новая цена",
-          "nextBilling": "Следующее списание",
-          "mo": "mo",
-          "yr": "yr",
-          "cancel": "Отмена",
-          "confirm": "Подтвердить"
-        }
-      },
-      "signedOutPlans": {
-        "button": "Создать бесплатный аккаунт"
-      },
-      "user": "Пользователь",
-      "wordsRemaining": "Осталось {{remaining}}",
-      "deleteAccount": {
-        "label": "Удалить аккаунт",
-        "labelDescription": "Навсегда удалить ваш аккаунт, все облачные и локальные данные. Это действие нельзя отменить.",
-        "button": "Удалить мой аккаунт",
-        "deleting": "Удаление...",
-        "title": "Удалить ваш аккаунт?",
-        "description": "Это навсегда удалит ваш аккаунт OpenWhispr, все синхронизированные облачные заметки и все локальные данные, включая транскрипции, аудиозаписи, загруженные модели, подключения календаря и настройки. Это действие нельзя отменить.",
-        "confirmText": "Удалить всё",
-        "successTitle": "Аккаунт удалён",
-        "successDescription": "Ваш аккаунт и все данные были удалены. Приложение сейчас перезагрузится.",
-        "failedTitle": "Ошибка удаления",
-        "failedDescription": "Что-то пошло не так при удалении вашего аккаунта. Ваши локальные данные могли быть частично удалены. Попробуйте снова."
-      }
-    },
     "agentConfig": {
       "agentName": "Имя агента",
       "description": "Назовите вашего ИИ-помощника, чтобы обращаться к нему во время диктовки",
@@ -1260,25 +999,18 @@
       "enableTextCleanup": "Включить очистку текста",
       "enableTextCleanupDescription": "ИИ убирает слова-паразиты, исправляет грамматику и пунктуацию",
       "modes": {
-        "openwhispr": "OpenWhispr Cloud",
         "providers": "Облачные провайдеры",
         "local": "Локально",
         "selfHosted": "Свой сервер",
-        "openwhisprDesc": "Надёжные результаты. Без настройки.",
         "providersDesc": "Используйте свой API-ключ.",
         "localDesc": "Модели на устройстве. Полная приватность.",
         "selfHostedDesc": "Свой сервер в вашей сети.",
         "enterprise": "Корпоративный",
         "enterpriseDesc": "Используйте облачный аккаунт вашей организации (AWS, Azure, GCP)."
       },
-      "openwhisprCloud": "OpenWhispr Cloud",
       "openwhisprCloudDescription": "Надёжные результаты. Без настройки.",
       "title": "ИИ-улучшение текста",
       "toasts": {
-        "switchedCloud": {
-          "description": "Улучшение текста будет использовать облачный сервис OpenWhispr.",
-          "title": "Переключено на OpenWhispr Cloud"
-        },
         "switchedCustom": {
           "description": "Настройте собственного провайдера и API-ключ.",
           "title": "Переключено на пользовательскую настройку"
@@ -1356,7 +1088,7 @@
       "appearance": {
         "auto": "Авто",
         "dark": "Тёмная",
-        "description": "Управляйте внешним видом OpenWhispr",
+        "description": "Управляйте внешним видом Roomtone",
         "light": "Светлая",
         "theme": "Тема",
         "themeDescription": "Выберите светлую, тёмную тему или следуйте системным настройкам",
@@ -1384,8 +1116,8 @@
         "linuxPttSetupDescription": "Вашему пользователю нужен доступ к устройствам ввода с клавиатуры.",
         "linuxPttSetupNote": "После выполнения команды выйдите из системы и войдите снова.",
         "hyprlandConfigWriteWarningTitle": "Привязки клавиш Hyprland не будут сохраняться",
-        "hyprlandConfigWriteWarningDescription": "OpenWhispr не может записывать в {{path}}, поэтому привязки клавиш не сохранятся после перезагрузки конфигурации Hyprland. Убедитесь, что файл существует и доступен для записи.",
-        "hyprlandUnbindDescription": "В Hyprland OpenWhispr занимает выбранное сочетание клавиш. Любая существующая привязка Hyprland с тем же сочетанием будет снята, когда OpenWhispr зарегистрирует свой хоткей."
+        "hyprlandConfigWriteWarningDescription": "Roomtone не может записывать в {{path}}, поэтому привязки клавиш не сохранятся после перезагрузки конфигурации Hyprland. Убедитесь, что файл существует и доступен для записи.",
+        "hyprlandUnbindDescription": "В Hyprland Roomtone занимает выбранное сочетание клавиш. Любая существующая привязка Hyprland с тем же сочетанием будет снята, когда Roomtone зарегистрирует свой хоткей."
       },
       "meetingHotkey": {
         "title": "Горячая клавиша режима встречи",
@@ -1411,7 +1143,7 @@
       },
       "notifications": {
         "title": "Уведомления",
-        "description": "Настройте, какие уведомления может показывать OpenWhispr",
+        "description": "Настройте, какие уведомления может показывать Roomtone",
         "disableAll": "Отключить все уведомления",
         "disableAllDescription": "Отключить всё, кроме сообщений об ошибках",
         "meetingDetection": "Обнаружение встреч",
@@ -1430,9 +1162,9 @@
       },
       "startup": {
         "launchAtLogin": "Запускать при входе",
-        "launchAtLoginDescription": "Автоматически запускать OpenWhispr при входе в систему",
+        "launchAtLoginDescription": "Автоматически запускать Roomtone при входе в систему",
         "title": "Автозапуск",
-        "description": "Управляйте поведением OpenWhispr при запуске",
+        "description": "Управляйте поведением Roomtone при запуске",
         "startMinimized": "Запуск в свёрнутом виде",
         "startMinimizedDescription": "Запускать без отображения окна панели управления"
       },
@@ -1478,7 +1210,7 @@
           "group": {
             "step1Title": "Добавить пользователя в группу input",
             "step2Title": "Выйти и войти снова",
-            "step2Desc": "Изменения групп вступают в силу только после нового входа в систему. Выйдите из рабочего стола, войдите снова и откройте OpenWhispr."
+            "step2Desc": "Изменения групп вступают в силу только после нового входа в систему. Выйдите из рабочего стола, войдите снова и откройте Roomtone."
           },
           "service": {
             "step1Title": "Создать каталог службы",
@@ -1502,7 +1234,7 @@
           "manualTitle": "Добавьте это в свою конфигурацию",
           "manualDesc": "Настройте вручную, затем выполните пересборку.",
           "flakeTitle": "Устанавливаете через наш flake?",
-          "flakeDesc": "Если вы устанавливаете OpenWhispr из flake, programs.openwhispr.enable автоматически включает ydotool, модуль uinput и нужные группы пользователей.",
+          "flakeDesc": "Если вы устанавливаете Roomtone из flake, programs.openwhispr.enable автоматически включает ydotool, модуль uinput и нужные группы пользователей.",
           "rebuildNote": "Выполните sudo nixos-rebuild switch, затем выйдите из системы и войдите снова, чтобы изменение группы и правило /dev/uinput вступили в силу. Замените <you> на ваше имя пользователя."
         }
       },
@@ -1535,7 +1267,7 @@
           },
           "installUpdate": {
             "confirmText": "Установить и перезапустить",
-            "description": "OpenWhispr перезапустится для применения обновления.",
+            "description": "Roomtone перезапустится для применения обновления.",
             "title": "Установить обновление"
           },
           "noUpdates": {
@@ -1566,13 +1298,13 @@
     "permissions": {
       "accessibilityDescription": "Необходимо для автоматической вставки после транскрипции",
       "accessibilityTitle": "Универсальный доступ",
-      "description": "Проверяйте и управляйте системными разрешениями, необходимыми для работы OpenWhispr",
+      "description": "Проверяйте и управляйте системными разрешениями, необходимыми для работы Roomtone",
       "microphoneDescription": "Записывает ваш голос для диктовки и транскрипции",
       "microphoneTitle": "Микрофон",
       "resetAccessibility": {
-        "description": "OpenWhispr будет удалён из разрешений универсального доступа. Вам потребуется повторно предоставить доступ в Системные настройки > Конфиденциальность и безопасность > Универсальный доступ.",
+        "description": "Roomtone будет удалён из разрешений универсального доступа. Вам потребуется повторно предоставить доступ в Системные настройки > Конфиденциальность и безопасность > Универсальный доступ.",
         "label": "Сбросить разрешения универсального доступа",
-        "rowDescription": "Исправьте проблемы после переустановки или пересборки приложения, удалив и повторно добавив OpenWhispr в системных настройках",
+        "rowDescription": "Исправьте проблемы после переустановки или пересборки приложения, удалив и повторно добавив Roomtone в системных настройках",
         "title": "Сбросить разрешения универсального доступа"
       },
       "optional": "Необязательно",
@@ -1586,20 +1318,12 @@
       "troubleshootingTitle": "Устранение неполадок"
     },
     "privacy": {
-      "cloudBackup": "Облачное резервное копирование",
-      "cloudBackupDescription": "Сохраняйте транскрипции и заметки в облаке для удобного доступа со всех устройств.",
-      "cloudNotesMigration": "Резервное копирование заметок… {{done}} / {{total}}",
-      "cloudNotesMigrationDone": "Все заметки скопированы в облако",
       "description": "Контролируйте, какие данные покидают ваше устройство. По умолчанию всё отключено.",
       "title": "Конфиденциальность",
       "usageAnalytics": "Аналитика использования",
-      "usageAnalyticsDescription": "Помогите нам улучшить OpenWhispr, делясь анонимными метриками производительности. Мы никогда не отправляем содержимое транскрипций — только данные о времени и ошибках.",
+      "usageAnalyticsDescription": "Помогите нам улучшить Roomtone, делясь анонимными метриками производительности. Мы никогда не отправляем содержимое транскрипций — только данные о времени и ошибках.",
       "dataRetention": "Хранение данных",
       "dataRetentionDescription": "Сохранять транскрипции и аудио локально в истории. При отключении транскрипции вставляются, но не сохраняются.",
-      "hoursAgo": "{{count}}ч назад",
-      "justNow": "только что",
-      "lastSynced": "Последняя синхронизация {{time}}",
-      "minutesAgo": "{{count}}мин назад",
       "audioRetention": "Хранение аудио",
       "audioRetentionDescription": "Сохранять аудиозаписи локально для повторной расшифровки и скачивания. Файлы автоматически удаляются по истечении срока хранения.",
       "audioRetentionDisabled": "Отключено",
@@ -1644,25 +1368,18 @@
     "transcription": {
       "customSetup": "Пользовательская настройка",
       "customSetupDescription": "Используйте собственного провайдера и API-ключ.",
-      "description": "Выберите, как OpenWhispr будет транскрибировать вашу речь",
+      "description": "Выберите, как Roomtone будет транскрибировать вашу речь",
       "modes": {
-        "openwhispr": "OpenWhispr Cloud",
         "providers": "Облачные провайдеры",
         "local": "Локально",
         "selfHosted": "Свой сервер",
-        "openwhisprDesc": "Надёжные результаты. Без настройки.",
         "providersDesc": "Используйте свой API-ключ.",
         "localDesc": "Модели на устройстве. Полная приватность.",
         "selfHostedDesc": "Свой сервер в вашей сети."
       },
-      "openwhisprCloud": "OpenWhispr Cloud",
       "openwhisprCloudDescription": "Надёжные результаты. Без настройки.",
       "title": "Распознавание речи",
       "toasts": {
-        "switchedCloud": {
-          "description": "Транскрипция будет использовать облачный сервис OpenWhispr.",
-          "title": "Переключено на OpenWhispr Cloud"
-        },
         "switchedCustom": {
           "description": "Настройте собственного провайдера и API-ключ.",
           "title": "Переключено на пользовательскую настройку"
@@ -1747,91 +1464,6 @@
       "endpointUrl": "URL эндпоинта",
       "serverUrl": "URL сервера",
       "apiKeyOptional": "API-ключ (необязательно)"
-    },
-    "workspace": {
-      "title": "Workspace",
-      "description": "Arbeiten Sie zusammen, teilen Sie Notizen und verwalten Sie die Abrechnung an einem Ort.",
-      "empty": {
-        "title": "Ersten Workspace erstellen",
-        "description": "Workspaces ermöglichen die Zusammenarbeit und das Teilen von Notizen.",
-        "create": "Workspace erstellen"
-      },
-      "tab": {
-        "general": "Allgemein",
-        "members": "Mitglieder",
-        "teams": "Teams",
-        "billing": "Abrechnung",
-        "developer": "Entwickler"
-      },
-      "role": {
-        "owner": "Inhaber",
-        "admin": "Administrator",
-        "member": "Mitglied"
-      },
-      "general": {
-        "nameLabel": "Workspace-Name",
-        "slugLabel": "Slug",
-        "slugHint": "Wird in URLs verwendet. Nur Kleinbuchstaben, Ziffern und Bindestriche.",
-        "saved": "Workspace aktualisiert",
-        "dangerTitle": "Workspace löschen",
-        "dangerDescription": "Alle geteilten Notizen, Ordner und Integrationen werden gelöscht. Dies kann nicht rückgängig gemacht werden.",
-        "delete": "Workspace löschen",
-        "confirmTitle": "{{name}} löschen?",
-        "confirmDescription": "Dies kündigt das Abonnement und entfernt alle Workspace-Daten dauerhaft."
-      },
-      "members": {
-        "title": "Mitglieder",
-        "description": "{{count}} von {{seats}} Plätzen belegt.",
-        "invite": "Einladen",
-        "empty": "Noch keine Mitglieder.",
-        "roleUpdated": "Rolle aktualisiert",
-        "promote": "Zum Administrator machen",
-        "demote": "Zum Mitglied machen",
-        "transferOwnership": "Eigentum übertragen",
-        "remove": "Aus Workspace entfernen"
-      },
-      "invites": {
-        "title": "Ausstehende Einladungen",
-        "resend": "Erneut senden",
-        "revoke": "Widerrufen",
-        "resent": "Einladung erneut gesendet"
-      },
-      "teams": {
-        "title": "Teams",
-        "description": "Mitglieder gruppieren für gezieltes Teilen.",
-        "new": "Neues Team",
-        "empty": "Noch keine Teams.",
-        "createFirst": "Erstellen Sie Ihr erstes Team",
-        "createTitle": "Team erstellen",
-        "nameLabel": "Team-Name",
-        "descriptionLabel": "Beschreibung",
-        "memberCount": "{{count}} Mitglieder"
-      },
-      "billing": {
-        "title": "Abrechnung",
-        "description": "Plan, Plätze und Zahlung.",
-        "plan": "Plan",
-        "seats": "Plätze",
-        "nextInvoice": "Nächste Rechnung",
-        "manageStripe": "In Stripe verwalten",
-        "startSubscription": "Abonnement starten"
-      },
-      "developer": {
-        "title": "API-Schlüssel",
-        "description": "Programmatischer Zugriff auf diesen Workspace.",
-        "empty": "Noch keine API-Schlüssel. Erstellen Sie einen für Integrationen.",
-        "new": "Neuer Schlüssel",
-        "create": "Schlüssel erstellen",
-        "createTitle": "API-Schlüssel erstellen",
-        "createDescription": "Wählen Sie die Berechtigungen. Sie können den Schlüssel jederzeit widerrufen.",
-        "nameLabel": "Schlüsselname",
-        "namePlaceholder": "Produktionsintegration",
-        "revoke": "Schlüssel widerrufen",
-        "lastUsed": "Zuletzt verwendet {{date}}",
-        "neverUsed": "Nie verwendet",
-        "keyCreatedTitle": "API-Schlüssel erstellt",
-        "keyCreatedDescription": "Kopieren Sie diesen Schlüssel jetzt — Sie können ihn nicht erneut sehen."
-      }
     }
   },
   "models": {
@@ -1932,78 +1564,6 @@
       }
     }
   },
-  "referral": {
-    "modalTitle": "Реферальная программа",
-    "title": "Приглашайте и получайте награды",
-    "subtitle": "Подарите месяц. Получите месяц.",
-    "tabs": {
-      "refer": "Пригласить",
-      "pastInvites": "Отправленные приглашения"
-    },
-    "howItWorks": {
-      "shareLink": "Поделитесь ссылкой-приглашением",
-      "theySignUp": "Они регистрируются и получают ",
-      "freeMonthOfPro": "бесплатный месяц Pro",
-      "youGet": "Вы получаете ",
-      "freeMonth": "бесплатный месяц",
-      "whenTheyDictate": ", когда они надиктуют 2 000 слов"
-    },
-    "inviteLink": {
-      "title": "Ваша ссылка-приглашение",
-      "copy": "Копировать",
-      "copied": "Скопировано"
-    },
-    "sendInvites": {
-      "title": "Отправить приглашения",
-      "placeholder": "friend@example.com",
-      "send": "Отправить",
-      "sending": "Отправка"
-    },
-    "stats": {
-      "referred": "Приглашено",
-      "converted": "Активировано",
-      "monthsEarned": "Месяцев заработано"
-    },
-    "status": {
-      "converted": "Активировано",
-      "opened": "Открыто",
-      "failed": "Не удалось",
-      "sent": "Отправлено"
-    },
-    "empty": {
-      "title": "Приглашения ещё не отправлены",
-      "description": "Поделитесь ссылкой или отправьте приглашение, чтобы начать"
-    },
-    "toasts": {
-      "copiedTitle": "Скопировано!",
-      "copiedDescription": "Реферальная ссылка скопирована в буфер обмена",
-      "copyFailedTitle": "Ошибка копирования",
-      "copyFailedDescription": "Не удалось скопировать ссылку в буфер обмена",
-      "invalidEmailTitle": "Неверный адрес электронной почты",
-      "invalidEmailDescription": "Пожалуйста, введите корректный адрес электронной почты",
-      "inviteSentTitle": "Приглашение отправлено!",
-      "inviteSentDescription": "Приглашение отправлено на {{email}}",
-      "sendFailedTitle": "Ошибка отправки",
-      "sendFailedDescription": "Не удалось отправить приглашение. Пожалуйста, попробуйте ещё раз."
-    },
-    "errors": {
-      "unableToLoad": "Не удалось загрузить данные реферальной программы",
-      "unableToLoadStats": "Не удалось загрузить статистику рефералов. Пожалуйста, попробуйте позже."
-    },
-    "tryAgain": "Попробовать снова",
-    "card": {
-      "brand": "OpenWhispr",
-      "signalId": "Signal ID",
-      "audioSignature": "Ваша аудиоподпись",
-      "stop": "Стоп",
-      "playSignal": "Воспроизвести сигнал"
-    },
-    "friends": {
-      "title": "Друзья",
-      "completed": "Завершено",
-      "sentInvites": "Отправленные приглашения"
-    }
-  },
   "notes": {
     "sidebar": {
       "newNote": "Новая заметка",
@@ -2074,7 +1634,6 @@
       "dropToUpload": "Отпустите для загрузки",
       "transcribe": "Транскрибировать",
       "cancel": "Отмена",
-      "transcribingCloud": "Транскрибирование через облако...",
       "transcribingLocal": "Локальное транскрибирование...",
       "transcribingProvider": "Транскрибирование через {{provider}}...",
       "cancelTranscription": "Отменить транскрибирование",
@@ -2086,7 +1645,6 @@
       "newFolder": "Новая папка",
       "folderName": "Название папки",
       "create": "Создать",
-      "openwhisprCloud": "OpenWhispr Cloud",
       "custom": "Другой",
       "selectFolder": "Выбрать папку",
       "transcriptionFailed": "Ошибка транскрибирования",
@@ -2095,18 +1653,9 @@
       "noProviderTitle": "Провайдер транскрипции не настроен",
       "noProviderDescription": "Добавьте API-ключ или скачайте локальную модель, чтобы начать транскрипцию.",
       "noProviderAction": "Открыть настройки транскрипции",
-      "fileTooLarge": "Этот файл превышает ограничение в 500 MB.",
-      "largeFileNote": "Большие файлы разделяются и транскрибируются параллельно.",
       "chunkProgress": "Транскрибирование части {{completed}} из {{total}}...",
-      "paidPlanRequired": "Облачная транскрипция файлов более 25 МБ требует платного плана. Большие файлы обрабатываются через OpenWhispr Cloud для надёжных и качественных результатов.",
       "byokTooLarge": "Сторонние API-ключи поддерживают файлы только до 25 МБ.",
-      "byokTooLargeDetail": "Для файлов более 25 МБ OpenWhispr Cloud выполняет разделение, параллельную обработку и сборку — для надёжных результатов без ограничений сторонних провайдеров.",
-      "byokTooLargeNeedsAccount": "Создайте аккаунт и перейдите на платный план, чтобы транскрибировать большие файлы через OpenWhispr Cloud.",
-      "byokTooLargeNeedsUpgrade": "Перейдите на платный план, чтобы транскрибировать большие файлы через OpenWhispr Cloud.",
-      "switchToCloudForLargeFiles": "Переключитесь на OpenWhispr Cloud, чтобы транскрибировать этот файл.",
-      "createAccount": "Создать аккаунт",
-      "upgrade": "Обновить",
-      "switchToCloud": "OpenWhispr Cloud"
+      "byokTooLargeDetail": "Для файлов более 25 МБ Roomtone Cloud выполняет разделение, параллельную обработку и сборку — для надёжных результатов без ограничений сторонних провайдеров."
     },
     "meeting": {
       "title": "Заметки со встреч",
@@ -2194,10 +1743,6 @@
         "enabled": "Включено"
       }
     },
-    "realtimeBanner": {
-      "message": "Транскрипция в реальном времени доступна в Pro",
-      "upgrade": "Перейти"
-    },
     "enhance": {
       "title": "Ошибка улучшения"
     },
@@ -2277,7 +1822,7 @@
     "addWord": "Добавить слово",
     "removeWord": "Удалить {{word}}",
     "clearAll": "Очистить все",
-    "addPlaceholder": "Добавьте слова через запятую — OpenWhispr, Supabase, John Snow, ARR",
+    "addPlaceholder": "Добавьте слова через запятую — Roomtone, Supabase, John Snow, ARR",
     "clearTitle": "Очистить словарь?",
     "clearDescription": "Все слова будут удалены без возможности восстановления.",
     "add": "Добавить",
@@ -2310,7 +1855,7 @@
       "duplicate": "Сниппет с таким триггером уже существует",
       "emptyTitle": "То, что не нужно повторять",
       "emptyTitleAccent": "дважды",
-      "emptyDescription": "Произнесите слово-триггер, и OpenWhispr заменит его сохранённым текстом: ссылки, приветствия, подписи, промпты.",
+      "emptyDescription": "Произнесите слово-триггер, и Roomtone заменит его сохранённым текстом: ссылки, приветствия, подписи, промпты.",
       "new": "Новый сниппет",
       "examples": {
         "linkedinTrigger": "Мой LinkedIn",
@@ -2335,21 +1880,10 @@
     "notes": "Заметки",
     "upload": "Загрузить",
     "dictionary": "Словарь",
-    "referral": "Получить бесплатный месяц",
     "settings": "Настройки",
     "support": "Поддержка",
-    "limitReached": "Недельный лимит достигнут",
-    "limitReachedDescription": "Перейдите на Pro для безлимитных транскрипций.",
-    "viewPlans": "Посмотреть тарифы",
-    "upgradeTitle": "Перейдите на Pro",
-    "upgradeDescription": "Безлимитные транскрипции, транскрипция в реальном времени и многое другое.",
-    "learnMore": "Узнать больше",
     "integrations": "Интеграции",
-    "defaultUser": "Пользователь",
-    "notSignedIn": "Не авторизован",
     "chat": "Чат",
-    "inviteTeammate": "Teammitglied einladen",
-    "createWorkspace": "Workspace erstellen",
     "companion": "Компаньон"
   },
   "chat": {
@@ -2396,12 +1930,10 @@
   },
   "support": {
     "documentation": "Документация",
-    "joinDiscord": "Присоединиться к Discord",
-    "contactSupport": "Связаться с поддержкой",
     "submitBug": "Сообщить об ошибке"
   },
   "postMigration": {
-    "title": "С возвращением в OpenWhispr",
+    "title": "С возвращением в Roomtone",
     "description": "Ваши заметки и настройки перенесены из предыдущей версии. Однако macOS считает это новым приложением, поэтому потребуется заново предоставить несколько разрешений.",
     "done": "Готово",
     "remindLater": "Напомнить позже"
@@ -2443,7 +1975,7 @@
       "undo": "Отменить",
       "accessibilityMissing": {
         "title": "Требуются разрешения универсального доступа",
-        "description": "OpenWhispr нужны разрешения универсального доступа для распознавания горячей клавиши и вставки текста. Включите их в Панели управления."
+        "description": "Roomtone нужны разрешения универсального доступа для распознавания горячей клавиши и вставки текста. Включите их в Панели управления."
       }
     },
     "mic": {
@@ -2466,8 +1998,6 @@
     "enabled": "Включить голосового агента",
     "enabledDescription": "Диктуйте инструкции своему агенту. Активируется словом \"{{agentName}}\". Настраивается ниже.",
     "modes": {
-      "openwhispr": "OpenWhispr Cloud",
-      "openwhisprDesc": "Используйте агента под управлением OpenWhispr, без API-ключа.",
       "providers": "Свой ключ",
       "providersDesc": "Подключитесь к OpenAI, Anthropic, Gemini или Groq со своим API-ключом.",
       "local": "Локально",
@@ -2492,18 +2022,15 @@
       "systemPromptDescription": "Пользовательские инструкции для агента",
       "systemPromptPlaceholder": "Введите пользовательский системный промпт...",
       "modes": {
-        "openwhispr": "OpenWhispr Cloud",
         "providers": "Облачные провайдеры",
         "local": "Локально",
         "selfHosted": "Свой сервер",
-        "openwhisprDesc": "Надёжные результаты. Без настройки.",
         "providersDesc": "Свой API-ключ.",
         "localDesc": "Модели на устройстве. Полная приватность.",
         "selfHostedDesc": "Ваш сервер в вашей сети.",
         "enterprise": "Корпоративный",
         "enterpriseDesc": "Используйте облачный аккаунт вашей организации (AWS, Azure, GCP)."
       },
-      "openwhisprCloud": "OpenWhispr Cloud",
       "openwhisprCloudDescription": "Надёжные результаты. Без настройки.",
       "customSetup": "Своя настройка (BYOK)",
       "customSetupDescription": "Используйте собственные API-ключи и выберите предпочтительную модель"
@@ -2572,7 +2099,7 @@
       "disconnectConfirm": "Отключить {{email}}?",
       "disconnectDescription": "Заметки встреч больше не будут записываться из этого календаря.",
       "systemAudioRequired": "Требуется разрешение «Системное аудио»",
-      "systemAudioDescription": "Для транскрипции встреч OpenWhispr нужно разрешение «Системное аудио» для записи звука других участников. Мы никогда не записываем ваш экран. Вы будете перенаправлены в Системные настройки для включения.",
+      "systemAudioDescription": "Для транскрипции встреч Roomtone нужно разрешение «Системное аудио» для записи звука других участников. Мы никогда не записываем ваш экран. Вы будете перенаправлены в Системные настройки для включения.",
       "openSettings": "Открыть Системные настройки"
     },
     "sections": {
@@ -2580,45 +2107,6 @@
       "api": "API",
       "mcp": "MCP",
       "cli": "CLI"
-    },
-    "api": {
-      "title": "API-ключи",
-      "description": "Управление API-ключами для программного доступа",
-      "proRequired": "Перейдите на платный план, чтобы получить доступ к API",
-      "manage": "Управлять ключами",
-      "viewPlans": "Посмотреть планы",
-      "dialogTitle": "API-ключи"
-    },
-    "mcp": {
-      "title": "Перенесите заметки в ваши инструменты ИИ",
-      "description": "Общайтесь, ищите и работайте с заметками в Claude, ChatGPT и Cursor.",
-      "step1": "В вашем инструменте ИИ добавьте OpenWhispr MCP, используя публичный URL",
-      "step2": "Создайте API-ключ выше с нужными разрешениями.",
-      "step3": "Вставьте ключ в заголовок Authorization для подключения.",
-      "learnMore": "Узнать больше",
-      "viewPlans": "Посмотреть планы",
-      "copyUrl": "Копировать URL MCP",
-      "proRequired": "Перейдите на платный план, чтобы подключить OpenWhispr к Claude, ChatGPT и Cursor.",
-      "copied": "Скопировано"
-    },
-    "cli": {
-      "title": "Доступ через командную строку",
-      "description": "Дайте своему агенту доступ к заметкам из терминала.",
-      "installLabel": "Установить",
-      "learnMore": "Открыть документацию",
-      "copyDocsLink": "Скопировать ссылку на документацию",
-      "docsLinkCopied": "Ссылка на документацию скопирована",
-      "viewPlans": "Посмотреть планы",
-      "local": {
-        "label": "Локально",
-        "freeBadge": "Бесплатно",
-        "description": "Читайте свои локальные заметки напрямую. Без входа в аккаунт и API-ключа — работает, пока OpenWhispr запущен."
-      },
-      "cloud": {
-        "label": "Облако",
-        "description": "Синхронизируйте устройства с помощью API-ключа.",
-        "proRequired": "Перейдите на платный план, чтобы использовать CLI в облачном режиме."
-      }
     },
     "plan": {
       "title": "Ваш план",
@@ -2632,8 +2120,8 @@
       "upgrade": "Улучшить"
     },
     "notABot": {
-      "title": "OpenWhispr — это запись встреч, а не бот",
-      "description": "OpenWhispr захватывает аудио напрямую из вашей системы — он никогда не присоединяется к встречам как участник. Просто подключите календарь и делайте заметки как обычно."
+      "title": "Roomtone — это запись встреч, а не бот",
+      "description": "Roomtone захватывает аудио напрямую из вашей системы — он никогда не присоединяется к встречам как участник. Просто подключите календарь и делайте заметки как обычно."
     }
   },
   "calendar": {
@@ -2669,11 +2157,8 @@
     "untitledEvent": "Без названия",
     "systemAudioRequired": "Разрешение «Системное аудио» необходимо для записи звука других участников.",
     "openSettings": "Открыть Системные настройки",
-    "signInRequired": "Войдите, чтобы записывать встречи",
-    "signInDescription": "Создайте аккаунт или войдите для записи и транскрипции встреч.",
     "connectCalendar": "Подключите календарь",
     "connectCalendarDescription": "Свяжите Google Календарь, чтобы видеть предстоящие встречи и автоматически записывать заметки.",
-    "notABot": "OpenWhispr записывает через системный звук — он никогда не присоединяется к встречам как бот.",
     "connectCalendarButton": "Подключить календарь"
   },
   "notesView": {
@@ -2698,37 +2183,7 @@
     "deleteNote": "Удалить заметку",
     "deleteConfirmTitle": "Удалить заметку?",
     "deleteConfirmDescription": "Эта заметка будет удалена безвозвратно.",
-    "deleteConfirm": "Удалить",
-    "share": {
-      "button": "Поделиться",
-      "dialog": {
-        "title": "Поделиться заметкой",
-        "searchPlaceholder": "Добавьте людей по эл. почте",
-        "emailLabel": "Эл. почта получателя",
-        "shareButton": "Поделиться",
-        "copyLink": "Скопировать ссылку",
-        "copied": "Скопировано",
-        "owner": "Владелец",
-        "pending": "Ожидает",
-        "accepted": "Имеет доступ",
-        "resend": "Отправить приглашение снова",
-        "revoke": "Удалить",
-        "invitationActions": "Действия с приглашением",
-        "permissionRequired": "Изменять настройки публикации может только владелец заметки.",
-        "visibility": {
-          "label": "Видимость",
-          "link": "Любой со ссылкой",
-          "domain": "Все в {{domain}} со ссылкой",
-          "invited": "Только приглашённые"
-        },
-        "error": {
-          "invalidEmail": "Введите корректный адрес эл. почты",
-          "alreadyInvited": "{{email}} уже приглашён",
-          "inviteFailed": "Не удалось отправить приглашение. Попробуйте ещё раз.",
-          "linkUnavailable": "Сгенерируйте или обновите ссылку, чтобы скопировать её"
-        }
-      }
-    }
+    "deleteConfirm": "Удалить"
   },
   "commandSearch": {
     "title": "Поиск",
@@ -2748,62 +2203,14 @@
     }
   },
   "updateNotification": {
-    "title": "Доступно обновление OpenWhispr",
+    "title": "Доступно обновление Roomtone",
     "body": "Версия {{version}} готова к загрузке",
     "cta": "Обновить"
   },
   "permissionsGate": {
     "title": "Требуются разрешения",
-    "description": "OpenWhispr нужны некоторые разрешения для работы на этом компьютере.",
+    "description": "Roomtone нужны некоторые разрешения для работы на этом компьютере.",
     "continue": "Продолжить"
-  },
-  "apiKeysSection": {
-    "title": "API-ключи",
-    "description": "Создавайте ключи для программного доступа к API OpenWhispr.",
-    "docsLink": "Документация API",
-    "empty": "API-ключей пока нет",
-    "createButton": "Создать API-ключ",
-    "create": {
-      "title": "Создать API-ключ",
-      "nameLabel": "Название ключа",
-      "namePlaceholder": "напр. Моя интеграция",
-      "scopesLabel": "Разрешения",
-      "expiryLabel": "Срок действия",
-      "expiryOptions": {
-        "never": "Бессрочно",
-        "30days": "30 дней",
-        "60days": "60 дней",
-        "90days": "90 дней",
-        "1year": "1 год"
-      },
-      "submit": "Создать",
-      "cancel": "Отмена"
-    },
-    "created": {
-      "title": "API-ключ создан",
-      "warning": "Скопируйте этот ключ сейчас. Он больше не будет показан.",
-      "copied": "Скопировано!",
-      "copyButton": "Скопировать в буфер обмена",
-      "done": "Готово"
-    },
-    "scopes": {
-      "notesRead": "Чтение заметок",
-      "notesWrite": "Создание и редактирование заметок",
-      "transcriptionsRead": "Чтение транскрипций"
-    },
-    "revoke": {
-      "button": "Отозвать",
-      "confirm": "Отозвать этот ключ? Интеграции, использующие его, перестанут работать.",
-      "success": "API-ключ отозван"
-    },
-    "neverUsed": "Не использовался",
-    "lastUsed": "Последнее использование {{time}}",
-    "maxKeysReached": "Максимум {{max}} ключей разрешено",
-    "errors": {
-      "loadFailed": "Не удалось загрузить API-ключи",
-      "createFailed": "Не удалось создать API-ключ",
-      "revokeFailed": "Не удалось отозвать API-ключ"
-    }
   },
   "embeddedChat": {
     "askPlaceholder": "Спросите что-нибудь...",
@@ -2829,54 +2236,6 @@
     "speaker": {
       "you": "Вы",
       "others": "Другие"
-    }
-  },
-  "workspaces": {
-    "switcher": {
-      "personal": "Persönlich",
-      "workspaces": "Workspaces",
-      "empty": "Noch keine Workspaces",
-      "create": "Workspace erstellen…"
-    },
-    "create": {
-      "title": "Workspace erstellen",
-      "description": "Workspaces ermöglichen Zusammenarbeit, geteilte Notizen und gemeinsame Abrechnung.",
-      "nameLabel": "Workspace-Name",
-      "namePlaceholder": "Acme Corp",
-      "submit": "Workspace erstellen",
-      "submitting": "Erstelle…",
-      "errorTitle": "Workspace konnte nicht erstellt werden"
-    },
-    "created": {
-      "title": "Workspace erstellt",
-      "description": "Sie sind nun Inhaber von {{name}}."
-    },
-    "invite": {
-      "title": "Zu {{workspace}} einladen",
-      "description": "Fügen Sie Teammitglieder per E-Mail hinzu. Sie erhalten einen Beitrittslink.",
-      "emailLabel": "E-Mail",
-      "roleLabel": "Rolle",
-      "teamsLabel": "Zu Teams hinzufügen",
-      "submit": "Einladung senden",
-      "submitting": "Sende…",
-      "sentTitle": "Einladung gesendet",
-      "sentDescription": "Einladung an {{email}} gesendet.",
-      "errorTitle": "Einladung konnte nicht gesendet werden",
-      "role": {
-        "admin": "Administrator",
-        "member": "Mitglied"
-      }
-    },
-    "accept": {
-      "title": "Workspace beitreten",
-      "description": "{{inviter}} hat Sie eingeladen, {{workspace}} als {{role}} beizutreten.",
-      "loading": "Lade Einladung…",
-      "accept": "Einladung annehmen",
-      "accepting": "Annehmen…",
-      "signInToAccept": "Anmelden zum Annehmen",
-      "successTitle": "Beigetreten",
-      "successDescription": "Willkommen bei {{name}}.",
-      "errorTitle": "Einladung konnte nicht angenommen werden"
     }
   },
   "companion": {

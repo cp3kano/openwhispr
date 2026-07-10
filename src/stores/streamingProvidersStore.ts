@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import logger from "../utils/logger";
 
 export interface NoteRecordingProviderModel {
   id: string;
@@ -21,28 +20,6 @@ export const useStreamingProvidersStore = create<StreamingProvidersState>()(() =
   providers: null,
 }));
 
-let inFlight: Promise<NoteRecordingProvider[] | null> | null = null;
-
-export async function fetchProviders(): Promise<NoteRecordingProvider[] | null> {
-  if (inFlight) return inFlight;
-  if (!window.electronAPI?.getNoteRecordingConfig) return null;
-
-  inFlight = (async () => {
-    try {
-      const data = await window.electronAPI.getNoteRecordingConfig!();
-      if (!data?.success) {
-        throw new Error("Note recording config unavailable");
-      }
-      const providers = Array.isArray(data.providers) ? data.providers : [];
-      useStreamingProvidersStore.setState({ providers });
-      return providers;
-    } catch (err) {
-      logger.warn("Failed to fetch note recording providers", err, "streamingProviders");
-      return null;
-    } finally {
-      inFlight = null;
-    }
-  })();
-
-  return inFlight;
-}
+// The provider catalog used to be served by the hosted API. With the hosted
+// tier gone there is no catalog to fetch; consumers fall back to their
+// built-in defaults when the store holds null.

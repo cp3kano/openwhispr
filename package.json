@@ -84,8 +84,8 @@
     "desktop-app"
   ],
   "author": {
-    "name": "OpenWhispr Team",
-    "email": "support@openwhispr.com"
+    "name": "Common Cause",
+    "email": "cory@commoncauseworks.com"
   },
   "license": "MIT",
   "devDependencies": {
